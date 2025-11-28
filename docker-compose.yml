@@ -1,0 +1,52 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: fraud_postgres
+    environment:
+      POSTGRES_USER: fraud_user
+      POSTGRES_PASSWORD: fraud_password@@!!_2
+      POSTGRES_DB: fraud_db
+    ports:
+      - "5432:5432"
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: fraud_minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123@@!!_2
+    ports:
+      - "9002:9000"
+      - "9003:9001"
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: fraud_zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: fraud_kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+  spark-master:
+    image: apache/spark:3.5.7-scala2.12-java11-python3-r-ubuntu
+    container_name: fraud_spark_master
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
+    ports:
+      - "8081:8080"
+      - "7077:7077"
+  spark-worker:
+    image: apache/spark:3.5.7-scala2.12-java11-python3-r-ubuntu
+    container_name: fraud_spark_worker
+    depends_on:
+      - spark-master
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+    

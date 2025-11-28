@@ -1,0 +1,802 @@
+[
+  {
+    "customer_id": "86a756a6-dce1-40fe-a6ea-a7b10796a9b6",
+    "name": "Daniel Pereira",
+    "email": "cliente0@email.com",
+    "cpf": "749.340.478-62",
+    "city": "Recife",
+    "created_at": "2025-10-18T03:24:22.742553"
+  },
+  {
+    "customer_id": "7f1d8bc2-4b9b-4837-a932-88ea0f654571",
+    "name": "Isabela Pereira",
+    "email": "cliente1@email.com",
+    "cpf": "166.647.489-89",
+    "city": "Manaus",
+    "created_at": "2025-04-09T03:24:22.742649"
+  },
+  {
+    "customer_id": "2f65e1cd-d078-4de5-8375-18a06b341867",
+    "name": "Isabela Souza",
+    "email": "cliente2@email.com",
+    "cpf": "880.190.256-85",
+    "city": "Salvador",
+    "created_at": "2025-02-05T03:24:22.742672"
+  },
+  {
+    "customer_id": "d272779e-5e23-4ae6-9b8e-c1e0426ad322",
+    "name": "Daniel Oliveira",
+    "email": "cliente3@email.com",
+    "cpf": "526.347.716-55",
+    "city": "Curitiba",
+    "created_at": "2025-06-03T03:24:22.742690"
+  },
+  {
+    "customer_id": "3c5ebe0a-d91e-4559-9b1d-c24053aee604",
+    "name": "Eduarda Oliveira",
+    "email": "cliente4@email.com",
+    "cpf": "377.824.271-56",
+    "city": "Salvador",
+    "created_at": "2025-03-19T03:24:22.742705"
+  },
+  {
+    "customer_id": "00891ae6-86d2-43fe-9e79-b6ff2ae96305",
+    "name": "Felipe Ribeiro",
+    "email": "cliente5@email.com",
+    "cpf": "632.679.332-89",
+    "city": "Brasília",
+    "created_at": "2025-03-25T03:24:22.742721"
+  },
+  {
+    "customer_id": "4776c78f-363f-4c7f-8901-1f556ed2b779",
+    "name": "Ana Pereira",
+    "email": "cliente6@email.com",
+    "cpf": "356.229.817-17",
+    "city": "Recife",
+    "created_at": "2025-03-22T03:24:22.742735"
+  },
+  {
+    "customer_id": "57283d19-5ab6-4e14-937e-8f2423389ef7",
+    "name": "Felipe Santos",
+    "email": "cliente7@email.com",
+    "cpf": "339.851.310-17",
+    "city": "Belo Horizonte",
+    "created_at": "2025-05-30T03:24:22.742749"
+  },
+  {
+    "customer_id": "61916252-a123-41fd-831a-a574d77a7c78",
+    "name": "Carla Pereira",
+    "email": "cliente8@email.com",
+    "cpf": "396.272.500-12",
+    "city": "Brasília",
+    "created_at": "2025-09-26T03:24:22.742771"
+  },
+  {
+    "customer_id": "76c3cd90-1a92-45e1-9bfb-c0f083abbe95",
+    "name": "João Santos",
+    "email": "cliente9@email.com",
+    "cpf": "744.940.365-48",
+    "city": "Recife",
+    "created_at": "2025-04-22T03:24:22.742791"
+  },
+  {
+    "customer_id": "4c6f0e3f-c7ca-4526-a9a2-04f6fd189541",
+    "name": "Henrique Almeida",
+    "email": "cliente10@email.com",
+    "cpf": "164.962.229-94",
+    "city": "São Paulo",
+    "created_at": "2025-04-14T03:24:22.742846"
+  },
+  {
+    "customer_id": "7192aee0-13e8-4607-88b1-bbc4c33921dc",
+    "name": "Felipe Santos",
+    "email": "cliente11@email.com",
+    "cpf": "175.530.415-15",
+    "city": "Fortaleza",
+    "created_at": "2025-07-27T03:24:22.742867"
+  },
+  {
+    "customer_id": "28c69d37-ec99-461f-9ac6-6f406139878e",
+    "name": "Bruno Lima",
+    "email": "cliente12@email.com",
+    "cpf": "814.243.891-75",
+    "city": "São Paulo",
+    "created_at": "2025-06-06T03:24:22.742880"
+  },
+  {
+    "customer_id": "54a12020-215a-49ca-b6a8-531dc11232ca",
+    "name": "Bruno Silva",
+    "email": "cliente13@email.com",
+    "cpf": "482.948.477-57",
+    "city": "Salvador",
+    "created_at": "2025-03-21T03:24:22.742893"
+  },
+  {
+    "customer_id": "2d44492a-75c8-42a0-a5d3-74d6fe38105a",
+    "name": "Isabela Oliveira",
+    "email": "cliente14@email.com",
+    "cpf": "872.579.274-38",
+    "city": "Brasília",
+    "created_at": "2025-01-01T03:24:22.742916"
+  },
+  {
+    "customer_id": "dcd77f51-3e42-454e-b95c-9d4441a1a6d1",
+    "name": "Ana Santos",
+    "email": "cliente15@email.com",
+    "cpf": "386.642.275-30",
+    "city": "Fortaleza",
+    "created_at": "2025-07-17T03:24:22.742930"
+  },
+  {
+    "customer_id": "c2703383-a1f9-4f2a-943a-cf62ca1c4c34",
+    "name": "Ana Pereira",
+    "email": "cliente16@email.com",
+    "cpf": "436.381.414-81",
+    "city": "Manaus",
+    "created_at": "2025-03-02T03:24:22.742943"
+  },
+  {
+    "customer_id": "32917719-efee-4a41-9598-4ecc99318d9a",
+    "name": "Carla Ribeiro",
+    "email": "cliente17@email.com",
+    "cpf": "994.699.509-32",
+    "city": "Recife",
+    "created_at": "2025-05-06T03:24:22.742963"
+  },
+  {
+    "customer_id": "d1e11906-950a-4df4-817f-3f7559bb4852",
+    "name": "Felipe Santos",
+    "email": "cliente18@email.com",
+    "cpf": "807.583.794-21",
+    "city": "Manaus",
+    "created_at": "2025-07-28T03:24:22.742976"
+  },
+  {
+    "customer_id": "3acb27fd-9f29-4674-bfc8-ffa658e02cac",
+    "name": "Ana Pereira",
+    "email": "cliente19@email.com",
+    "cpf": "308.302.872-93",
+    "city": "Fortaleza",
+    "created_at": "2025-06-17T03:24:22.742990"
+  },
+  {
+    "customer_id": "7767e44b-faeb-4b86-bcdf-27a52fe8023b",
+    "name": "Ana Santos",
+    "email": "cliente20@email.com",
+    "cpf": "764.381.610-65",
+    "city": "Fortaleza",
+    "created_at": "2025-03-27T03:24:22.743003"
+  },
+  {
+    "customer_id": "5f2cc578-e20c-4e29-a868-1354ea524c19",
+    "name": "Bruno Lima",
+    "email": "cliente21@email.com",
+    "cpf": "425.619.157-39",
+    "city": "Brasília",
+    "created_at": "2025-07-18T03:24:22.743016"
+  },
+  {
+    "customer_id": "a555753a-cd15-44a8-ac76-0906785b9ecd",
+    "name": "Ana Souza",
+    "email": "cliente22@email.com",
+    "cpf": "995.863.646-80",
+    "city": "Salvador",
+    "created_at": "2025-10-04T03:24:22.743030"
+  },
+  {
+    "customer_id": "10d80f70-b983-412c-a7b2-20c6e72c55c4",
+    "name": "Felipe Souza",
+    "email": "cliente23@email.com",
+    "cpf": "786.657.687-66",
+    "city": "Belo Horizonte",
+    "created_at": "2025-08-20T03:24:22.743042"
+  },
+  {
+    "customer_id": "1fc68c78-8e3e-48c1-a7bf-ee185bb50982",
+    "name": "Henrique Lima",
+    "email": "cliente24@email.com",
+    "cpf": "705.524.799-78",
+    "city": "Manaus",
+    "created_at": "2025-01-08T03:24:22.743060"
+  },
+  {
+    "customer_id": "2c74a004-d1cc-43f2-bfda-4f51d34c7862",
+    "name": "Felipe Silva",
+    "email": "cliente25@email.com",
+    "cpf": "994.301.126-83",
+    "city": "Manaus",
+    "created_at": "2025-04-19T03:24:22.743074"
+  },
+  {
+    "customer_id": "945c5db0-cb7d-40c6-bbd7-573c898b90aa",
+    "name": "Henrique Silva",
+    "email": "cliente26@email.com",
+    "cpf": "986.781.858-65",
+    "city": "Rio de Janeiro",
+    "created_at": "2025-05-28T03:24:22.743087"
+  },
+  {
+    "customer_id": "53b54d30-4015-4e17-b861-9ea5b95fa0a2",
+    "name": "Eduarda Almeida",
+    "email": "cliente27@email.com",
+    "cpf": "961.796.984-90",
+    "city": "Manaus",
+    "created_at": "2025-04-27T03:24:22.743100"
+  },
+  {
+    "customer_id": "551561b6-5e48-407a-bee4-16e26d17f71a",
+    "name": "Gabriela Ribeiro",
+    "email": "cliente28@email.com",
+    "cpf": "735.626.845-84",
+    "city": "Fortaleza",
+    "created_at": "2025-02-20T03:24:22.743118"
+  },
+  {
+    "customer_id": "f5fbd8d5-8d29-49b3-90c8-d0b9154c4c41",
+    "name": "Bruno Lima",
+    "email": "cliente29@email.com",
+    "cpf": "891.152.921-51",
+    "city": "Salvador",
+    "created_at": "2024-12-09T03:24:22.743131"
+  },
+  {
+    "customer_id": "d4da10c6-2605-438a-9a7e-6ec46f4a4fbb",
+    "name": "João Pereira",
+    "email": "cliente30@email.com",
+    "cpf": "771.908.169-59",
+    "city": "Belo Horizonte",
+    "created_at": "2025-08-10T03:24:22.743144"
+  },
+  {
+    "customer_id": "d55ec0ca-0a9e-4591-998d-8c563f6bc8d4",
+    "name": "João Costa",
+    "email": "cliente31@email.com",
+    "cpf": "622.224.712-21",
+    "city": "Rio de Janeiro",
+    "created_at": "2025-03-02T03:24:22.743157"
+  },
+  {
+    "customer_id": "c81d9fd7-75a6-44b8-b89c-4a6546117f67",
+    "name": "Isabela Santos",
+    "email": "cliente32@email.com",
+    "cpf": "904.615.116-86",
+    "city": "Curitiba",
+    "created_at": "2024-12-27T03:24:22.743169"
+  },
+  {
+    "customer_id": "6f0b912c-8016-4d33-8971-090176f44162",
+    "name": "Ana Almeida",
+    "email": "cliente33@email.com",
+    "cpf": "449.304.633-77",
+    "city": "Salvador",
+    "created_at": "2025-01-03T03:24:22.743183"
+  },
+  {
+    "customer_id": "d8106630-7bd5-4e94-83a9-b1a21e2e661c",
+    "name": "Bruno Costa",
+    "email": "cliente34@email.com",
+    "cpf": "519.665.722-93",
+    "city": "São Paulo",
+    "created_at": "2025-05-01T03:24:22.743196"
+  },
+  {
+    "customer_id": "e93a09bf-3ac4-4275-a614-f44babfbcfba",
+    "name": "Isabela Silva",
+    "email": "cliente35@email.com",
+    "cpf": "766.886.540-84",
+    "city": "Rio de Janeiro",
+    "created_at": "2025-07-27T03:24:22.743208"
+  },
+  {
+    "customer_id": "342899cd-fdf4-416b-9b33-25530c153117",
+    "name": "Daniel Almeida",
+    "email": "cliente36@email.com",
+    "cpf": "704.459.364-56",
+    "city": "Fortaleza",
+    "created_at": "2024-12-28T03:24:22.743221"
+  },
+  {
+    "customer_id": "27ce2184-0e3b-442d-b7a3-fdfc079afc2c",
+    "name": "Bruno Costa",
+    "email": "cliente37@email.com",
+    "cpf": "863.523.211-78",
+    "city": "Curitiba",
+    "created_at": "2025-03-20T03:24:22.743233"
+  },
+  {
+    "customer_id": "4855ada0-4337-4c15-ab97-73982f9db675",
+    "name": "Bruno Silva",
+    "email": "cliente38@email.com",
+    "cpf": "318.302.194-46",
+    "city": "Porto Alegre",
+    "created_at": "2025-08-02T03:24:22.743246"
+  },
+  {
+    "customer_id": "cdab8cc3-ca76-4ad3-8497-d19349f17d74",
+    "name": "Carla Santos",
+    "email": "cliente39@email.com",
+    "cpf": "469.599.924-16",
+    "city": "Brasília",
+    "created_at": "2025-10-29T03:24:22.743259"
+  },
+  {
+    "customer_id": "7eea6197-e4ac-4959-badc-0fe2ea8345bf",
+    "name": "João Silva",
+    "email": "cliente40@email.com",
+    "cpf": "615.944.360-96",
+    "city": "Salvador",
+    "created_at": "2025-03-15T03:24:22.743271"
+  },
+  {
+    "customer_id": "9a47e9d6-913a-431f-ad70-11385b6bb605",
+    "name": "Henrique Souza",
+    "email": "cliente41@email.com",
+    "cpf": "113.938.299-35",
+    "city": "Recife",
+    "created_at": "2025-08-19T03:24:22.743290"
+  },
+  {
+    "customer_id": "c50e7645-8f87-4cb9-81b4-c686ec98bedd",
+    "name": "Ana Gomes",
+    "email": "cliente42@email.com",
+    "cpf": "105.411.613-95",
+    "city": "Porto Alegre",
+    "created_at": "2025-04-09T03:24:22.743304"
+  },
+  {
+    "customer_id": "39ba377c-5cda-4e11-9490-979afd1e244e",
+    "name": "Daniel Silva",
+    "email": "cliente43@email.com",
+    "cpf": "317.895.833-18",
+    "city": "Curitiba",
+    "created_at": "2025-01-18T03:24:22.743317"
+  },
+  {
+    "customer_id": "134d7fa0-7b90-4cca-823f-d7255b12f50e",
+    "name": "Gabriela Lima",
+    "email": "cliente44@email.com",
+    "cpf": "506.312.180-68",
+    "city": "Brasília",
+    "created_at": "2025-03-21T03:24:22.743330"
+  },
+  {
+    "customer_id": "fd73ac75-471a-484d-af0d-e79f8926756f",
+    "name": "Carla Santos",
+    "email": "cliente45@email.com",
+    "cpf": "948.111.621-38",
+    "city": "Belo Horizonte",
+    "created_at": "2024-12-19T03:24:22.743342"
+  },
+  {
+    "customer_id": "c07b93d3-80c1-4624-b059-df68e8a4845f",
+    "name": "Daniel Gomes",
+    "email": "cliente46@email.com",
+    "cpf": "836.293.850-90",
+    "city": "Curitiba",
+    "created_at": "2025-03-13T03:24:22.743355"
+  },
+  {
+    "customer_id": "ea66a933-c0a4-4d88-b34f-2f75c4176da5",
+    "name": "Carla Lima",
+    "email": "cliente47@email.com",
+    "cpf": "804.993.990-92",
+    "city": "Curitiba",
+    "created_at": "2024-12-25T03:24:22.743367"
+  },
+  {
+    "customer_id": "b7afd691-ea8a-42c6-88d8-afa657bc177c",
+    "name": "Gabriela Costa",
+    "email": "cliente48@email.com",
+    "cpf": "987.173.100-59",
+    "city": "Belo Horizonte",
+    "created_at": "2024-12-10T03:24:22.743392"
+  },
+  {
+    "customer_id": "084b052e-da23-4151-a610-24fa19d60372",
+    "name": "Isabela Almeida",
+    "email": "cliente49@email.com",
+    "cpf": "448.901.833-79",
+    "city": "Brasília",
+    "created_at": "2025-10-02T03:24:22.743406"
+  },
+  {
+    "customer_id": "088a7da5-a65e-4f3c-901f-84afaa5dbb56",
+    "name": "Daniel Silva",
+    "email": "cliente50@email.com",
+    "cpf": "686.920.808-19",
+    "city": "Recife",
+    "created_at": "2025-01-12T03:24:22.743420"
+  },
+  {
+    "customer_id": "181eece7-db96-468d-b7bd-84cd71d16a54",
+    "name": "Ana Santos",
+    "email": "cliente51@email.com",
+    "cpf": "558.662.484-42",
+    "city": "Fortaleza",
+    "created_at": "2025-07-19T03:24:22.743433"
+  },
+  {
+    "customer_id": "111e2e3c-1298-4009-9118-5a31623197e2",
+    "name": "Ana Gomes",
+    "email": "cliente52@email.com",
+    "cpf": "858.739.143-86",
+    "city": "São Paulo",
+    "created_at": "2024-12-17T03:24:22.743445"
+  },
+  {
+    "customer_id": "aba18b35-d7fd-429c-8ffc-532d09f0a498",
+    "name": "Daniel Gomes",
+    "email": "cliente53@email.com",
+    "cpf": "736.339.363-66",
+    "city": "Salvador",
+    "created_at": "2025-05-22T03:24:22.743458"
+  },
+  {
+    "customer_id": "8f308742-d80d-4b93-8c35-649b4796913d",
+    "name": "Carla Costa",
+    "email": "cliente54@email.com",
+    "cpf": "589.641.218-93",
+    "city": "Belo Horizonte",
+    "created_at": "2025-04-26T03:24:22.743471"
+  },
+  {
+    "customer_id": "e7128f5d-a883-4d5f-b102-039dfd836f05",
+    "name": "João Gomes",
+    "email": "cliente55@email.com",
+    "cpf": "161.424.315-95",
+    "city": "Brasília",
+    "created_at": "2025-02-08T03:24:22.743484"
+  },
+  {
+    "customer_id": "c9abb9d3-2586-428c-8e62-010a693901c6",
+    "name": "Gabriela Pereira",
+    "email": "cliente56@email.com",
+    "cpf": "478.149.632-93",
+    "city": "Porto Alegre",
+    "created_at": "2025-05-09T03:24:22.743497"
+  },
+  {
+    "customer_id": "148753fb-9bb3-4789-9e27-a201cf5a8774",
+    "name": "Ana Gomes",
+    "email": "cliente57@email.com",
+    "cpf": "717.738.448-69",
+    "city": "Salvador",
+    "created_at": "2025-02-24T03:24:22.743516"
+  },
+  {
+    "customer_id": "ad2e9dc9-4145-4686-86ea-3edc50ea52d9",
+    "name": "Gabriela Oliveira",
+    "email": "cliente58@email.com",
+    "cpf": "721.505.951-17",
+    "city": "São Paulo",
+    "created_at": "2024-12-06T03:24:22.743530"
+  },
+  {
+    "customer_id": "3ee3e4a6-fa6f-4c10-82a3-57b3a20da1b9",
+    "name": "Bruno Almeida",
+    "email": "cliente59@email.com",
+    "cpf": "181.297.777-68",
+    "city": "Manaus",
+    "created_at": "2024-12-01T03:24:22.743544"
+  },
+  {
+    "customer_id": "fe5fd7ff-1462-481e-8843-fc28b9588d7b",
+    "name": "Felipe Almeida",
+    "email": "cliente60@email.com",
+    "cpf": "348.129.357-58",
+    "city": "Salvador",
+    "created_at": "2025-01-28T03:24:22.743556"
+  },
+  {
+    "customer_id": "a52a44f7-3752-43a5-acab-b8ed83a6e44b",
+    "name": "Eduarda Souza",
+    "email": "cliente61@email.com",
+    "cpf": "787.289.243-51",
+    "city": "Rio de Janeiro",
+    "created_at": "2025-03-29T03:24:22.743568"
+  },
+  {
+    "customer_id": "ca3ac8c8-aa61-488e-a4fc-924ff6899612",
+    "name": "Carla Ribeiro",
+    "email": "cliente62@email.com",
+    "cpf": "771.827.732-48",
+    "city": "Brasília",
+    "created_at": "2024-12-27T03:24:22.743581"
+  },
+  {
+    "customer_id": "39bacb60-d55d-45ea-8a91-22a6af9e6af1",
+    "name": "Ana Santos",
+    "email": "cliente63@email.com",
+    "cpf": "118.179.536-15",
+    "city": "Brasília",
+    "created_at": "2025-07-04T03:24:22.743594"
+  },
+  {
+    "customer_id": "d7d40ab5-0e2f-4661-a148-1da2c21f8c29",
+    "name": "Bruno Souza",
+    "email": "cliente64@email.com",
+    "cpf": "388.978.540-17",
+    "city": "Manaus",
+    "created_at": "2025-07-04T03:24:22.743606"
+  },
+  {
+    "customer_id": "15c119a8-b022-4d0e-83fa-1f84404383be",
+    "name": "Isabela Oliveira",
+    "email": "cliente65@email.com",
+    "cpf": "335.955.205-60",
+    "city": "Rio de Janeiro",
+    "created_at": "2025-07-31T03:24:22.743619"
+  },
+  {
+    "customer_id": "be9bd48a-97f1-409c-aa0f-534e3e9cb0b8",
+    "name": "Daniel Silva",
+    "email": "cliente66@email.com",
+    "cpf": "721.763.397-35",
+    "city": "Curitiba",
+    "created_at": "2024-12-23T03:24:22.743637"
+  },
+  {
+    "customer_id": "fc5723cd-29b1-49a5-bab4-0568956eaa70",
+    "name": "Henrique Santos",
+    "email": "cliente67@email.com",
+    "cpf": "318.401.259-11",
+    "city": "Curitiba",
+    "created_at": "2025-07-13T03:24:22.743665"
+  },
+  {
+    "customer_id": "5cc5bb09-0103-4f54-93ff-e69e118e1c87",
+    "name": "Daniel Lima",
+    "email": "cliente68@email.com",
+    "cpf": "345.651.753-14",
+    "city": "Curitiba",
+    "created_at": "2025-06-16T03:24:22.743691"
+  },
+  {
+    "customer_id": "a5852034-952c-4afd-85fd-b909eae57820",
+    "name": "Daniel Pereira",
+    "email": "cliente69@email.com",
+    "cpf": "886.725.756-20",
+    "city": "Manaus",
+    "created_at": "2024-12-29T03:24:22.743716"
+  },
+  {
+    "customer_id": "890eda04-b296-428d-b5e4-c8d8f85e7369",
+    "name": "Isabela Costa",
+    "email": "cliente70@email.com",
+    "cpf": "698.536.421-44",
+    "city": "Rio de Janeiro",
+    "created_at": "2025-01-22T03:24:22.743731"
+  },
+  {
+    "customer_id": "0d8d5442-6042-494a-b1dc-59d4de4e92a3",
+    "name": "Henrique Oliveira",
+    "email": "cliente71@email.com",
+    "cpf": "859.331.780-73",
+    "city": "Rio de Janeiro",
+    "created_at": "2025-03-31T03:24:22.743744"
+  },
+  {
+    "customer_id": "69e1a066-8870-4eb1-b7b0-8358f2800f4f",
+    "name": "Henrique Oliveira",
+    "email": "cliente72@email.com",
+    "cpf": "164.762.668-44",
+    "city": "Recife",
+    "created_at": "2025-09-14T03:24:22.743757"
+  },
+  {
+    "customer_id": "62ff4edb-69c4-4401-9c8b-412c6136bcf4",
+    "name": "Felipe Pereira",
+    "email": "cliente73@email.com",
+    "cpf": "729.136.807-38",
+    "city": "Fortaleza",
+    "created_at": "2025-07-26T03:24:22.743776"
+  },
+  {
+    "customer_id": "19d5e379-c50b-4afa-9f6d-18e6381251ac",
+    "name": "Eduarda Silva",
+    "email": "cliente74@email.com",
+    "cpf": "129.932.683-28",
+    "city": "São Paulo",
+    "created_at": "2025-10-12T03:24:22.743790"
+  },
+  {
+    "customer_id": "e9acdaf0-8a74-4447-9ffe-c86c38fedac5",
+    "name": "Henrique Costa",
+    "email": "cliente75@email.com",
+    "cpf": "486.225.936-37",
+    "city": "Curitiba",
+    "created_at": "2025-07-14T03:24:22.743802"
+  },
+  {
+    "customer_id": "10d34282-25f2-42b3-85e8-3d3b3dce3842",
+    "name": "Carla Silva",
+    "email": "cliente76@email.com",
+    "cpf": "779.678.316-19",
+    "city": "Brasília",
+    "created_at": "2025-01-08T03:24:22.743833"
+  },
+  {
+    "customer_id": "a09b4cc9-1f37-4285-9f9a-6268953a0b7d",
+    "name": "Eduarda Ribeiro",
+    "email": "cliente77@email.com",
+    "cpf": "980.507.149-30",
+    "city": "Salvador",
+    "created_at": "2024-12-08T03:24:22.743847"
+  },
+  {
+    "customer_id": "a908c3c1-5535-4ffd-ac56-c9785b488cfc",
+    "name": "Carla Lima",
+    "email": "cliente78@email.com",
+    "cpf": "736.718.651-10",
+    "city": "Brasília",
+    "created_at": "2025-08-05T03:24:22.743859"
+  },
+  {
+    "customer_id": "fa3b9ccc-50f2-431d-a0ac-3b0cb678a8de",
+    "name": "João Costa",
+    "email": "cliente79@email.com",
+    "cpf": "536.222.131-27",
+    "city": "Porto Alegre",
+    "created_at": "2025-09-18T03:24:22.743872"
+  },
+  {
+    "customer_id": "a7c022bc-f2aa-41a0-baa2-c2b9cd12fdc8",
+    "name": "Eduarda Pereira",
+    "email": "cliente80@email.com",
+    "cpf": "530.584.544-83",
+    "city": "Fortaleza",
+    "created_at": "2025-07-01T03:24:22.743885"
+  },
+  {
+    "customer_id": "8294ed69-4fab-4334-8c62-af0aa8b4b1cd",
+    "name": "Isabela Costa",
+    "email": "cliente81@email.com",
+    "cpf": "535.843.728-45",
+    "city": "Porto Alegre",
+    "created_at": "2025-09-26T03:24:22.743898"
+  },
+  {
+    "customer_id": "e3aee017-abe5-46b0-9681-ea70ece08123",
+    "name": "João Oliveira",
+    "email": "cliente82@email.com",
+    "cpf": "903.372.384-10",
+    "city": "Brasília",
+    "created_at": "2025-04-07T03:24:22.743911"
+  },
+  {
+    "customer_id": "183aec72-7e35-4075-b84c-0532ee853311",
+    "name": "Isabela Silva",
+    "email": "cliente83@email.com",
+    "cpf": "700.182.348-84",
+    "city": "Rio de Janeiro",
+    "created_at": "2025-09-24T03:24:22.743923"
+  },
+  {
+    "customer_id": "bc695bc7-4045-49b5-9048-386cb868da34",
+    "name": "Henrique Pereira",
+    "email": "cliente84@email.com",
+    "cpf": "141.150.358-58",
+    "city": "Manaus",
+    "created_at": "2025-09-10T03:24:22.743935"
+  },
+  {
+    "customer_id": "89b20543-86b8-44c0-81fb-b1bdcd25528a",
+    "name": "João Gomes",
+    "email": "cliente85@email.com",
+    "cpf": "669.904.312-33",
+    "city": "Brasília",
+    "created_at": "2025-07-24T03:24:22.743948"
+  },
+  {
+    "customer_id": "24020072-e377-4877-9578-235af1cdb63c",
+    "name": "Bruno Santos",
+    "email": "cliente86@email.com",
+    "cpf": "696.672.110-55",
+    "city": "Belo Horizonte",
+    "created_at": "2025-03-17T03:24:22.743961"
+  },
+  {
+    "customer_id": "80c5ac45-6aaf-412c-a3cc-cc80b92460a0",
+    "name": "Carla Almeida",
+    "email": "cliente87@email.com",
+    "cpf": "471.627.736-11",
+    "city": "Fortaleza",
+    "created_at": "2025-02-15T03:24:22.743979"
+  },
+  {
+    "customer_id": "7b360668-0130-49b9-8452-af0927702b63",
+    "name": "Eduarda Santos",
+    "email": "cliente88@email.com",
+    "cpf": "178.998.881-99",
+    "city": "Manaus",
+    "created_at": "2025-04-23T03:24:22.743992"
+  },
+  {
+    "customer_id": "a034a64c-e92d-4f2a-9bd7-9e6c31c0846b",
+    "name": "Ana Almeida",
+    "email": "cliente89@email.com",
+    "cpf": "358.880.742-29",
+    "city": "Rio de Janeiro",
+    "created_at": "2025-04-06T03:24:22.744005"
+  },
+  {
+    "customer_id": "107e453a-3fd4-4f19-933a-e8819ed6cfd8",
+    "name": "Bruno Ribeiro",
+    "email": "cliente90@email.com",
+    "cpf": "692.416.695-56",
+    "city": "Salvador",
+    "created_at": "2025-06-21T03:24:22.744025"
+  },
+  {
+    "customer_id": "813cb1aa-72c7-426f-8f50-6f58d27bdca5",
+    "name": "Eduarda Santos",
+    "email": "cliente91@email.com",
+    "cpf": "810.674.340-40",
+    "city": "Salvador",
+    "created_at": "2025-08-30T03:24:22.744038"
+  },
+  {
+    "customer_id": "5c9b0af7-a5b8-479a-98d5-0d95a1031b8d",
+    "name": "Gabriela Souza",
+    "email": "cliente92@email.com",
+    "cpf": "729.382.362-54",
+    "city": "Brasília",
+    "created_at": "2025-05-01T03:24:22.744051"
+  },
+  {
+    "customer_id": "e5777b50-fe69-424a-88ec-29d9493d7f9d",
+    "name": "Gabriela Souza",
+    "email": "cliente93@email.com",
+    "cpf": "145.601.205-14",
+    "city": "Porto Alegre",
+    "created_at": "2024-12-30T03:24:22.744065"
+  },
+  {
+    "customer_id": "564d6e5b-aa55-4d5f-b6d0-b6ffdd53d14c",
+    "name": "Felipe Souza",
+    "email": "cliente94@email.com",
+    "cpf": "163.104.942-14",
+    "city": "Porto Alegre",
+    "created_at": "2024-12-17T03:24:22.744077"
+  },
+  {
+    "customer_id": "981a44a0-72d5-4a51-ad11-9e65b374f731",
+    "name": "João Pereira",
+    "email": "cliente95@email.com",
+    "cpf": "486.518.616-88",
+    "city": "Porto Alegre",
+    "created_at": "2025-07-18T03:24:22.744090"
+  },
+  {
+    "customer_id": "dd7f085b-9117-48be-ac8f-9377bac12081",
+    "name": "Daniel Oliveira",
+    "email": "cliente96@email.com",
+    "cpf": "374.941.765-89",
+    "city": "São Paulo",
+    "created_at": "2025-09-04T03:24:22.744102"
+  },
+  {
+    "customer_id": "0eb9bb29-3bce-4c87-a836-6d6f3b034e11",
+    "name": "Bruno Gomes",
+    "email": "cliente97@email.com",
+    "cpf": "347.784.195-13",
+    "city": "São Paulo",
+    "created_at": "2025-01-07T03:24:22.744115"
+  },
+  {
+    "customer_id": "9e487d61-a2fb-4a4f-91c5-4c74c1b5dce2",
+    "name": "Ana Ribeiro",
+    "email": "cliente98@email.com",
+    "cpf": "223.827.161-42",
+    "city": "Rio de Janeiro",
+    "created_at": "2025-04-23T03:24:22.744128"
+  },
+  {
+    "customer_id": "11b5a593-f001-4e08-91c4-e5a6641de732",
+    "name": "Henrique Lima",
+    "email": "cliente99@email.com",
+    "cpf": "406.657.617-48",
+    "city": "Brasília",
+    "created_at": "2025-06-14T03:24:22.744140"
+  }
+]
