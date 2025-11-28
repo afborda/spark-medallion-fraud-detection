@@ -79,15 +79,18 @@ def generate_transactions(customers, num_transactions, fraud_ratio):
 
 def save_to_json(data, filename):
 	"""
-	Salvar dados em arquivos JSON.
+	Salvar dados em formato JSON Lines (um JSON por linha).
+	Formato ideal para processamento distribuído com Spark.
 	"""
 	filepath = OUTPUT_DIR / filename
 	OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 	with open(filepath, "w", encoding="utf-8") as f:
-		json.dump(data, f, ensure_ascii = False, indent=2)
+		for record in data:
+			# Cada registro em uma linha separada
+			f.write(json.dumps(record, ensure_ascii=False) + "\n")
 	
-	print(f"✅ Dados salvos em {filepath} registrados.")
+	print(f"✅ Dados salvos em {filepath} ({len(data)} registros)")
 
 
 # Teste: gerar 3 clientes e mostrar
