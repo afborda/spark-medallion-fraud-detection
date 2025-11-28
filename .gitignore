@@ -1,0 +1,35 @@
+# Arquivo de progresso (local apenas)
+LEARNING_PROGRESS.md
+
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+
+# Spark
+*.jar
+spark-warehouse/
+metastore_db/
+derby.log
+
+# Dados processados (regeneráveis)
+# Descomenta se não quiseres versionar os dados:
+# data/bronze/
+# data/silver/
+# data/gold/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
