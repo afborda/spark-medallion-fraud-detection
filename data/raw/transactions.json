@@ -1,0 +1,4002 @@
+[
+  {
+    "transaction_id": "3e621f23-154b-4c29-b5db-134332710427",
+    "customer_id": "fe5fd7ff-1462-481e-8843-fc28b9588d7b",
+    "amount": 435.54,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-22T02:24:22.744221",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "2165879e-532f-40d5-87fe-48e0b0058e58",
+    "customer_id": "3acb27fd-9f29-4674-bfc8-ffa658e02cac",
+    "amount": 362.13,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-13T19:24:22.744245",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8f252474-c53d-4114-a4c7-0db588383371",
+    "customer_id": "53b54d30-4015-4e17-b861-9ea5b95fa0a2",
+    "amount": 15.91,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-15T18:24:22.744260",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "38c83d9b-c665-4994-bbf8-df0d97da6293",
+    "customer_id": "fd73ac75-471a-484d-af0d-e79f8926756f",
+    "amount": 461.89,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-10-31T20:24:22.744272",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "d960d857-1da8-4578-ba41-b80bcc51d7e9",
+    "customer_id": "e7128f5d-a883-4d5f-b102-039dfd836f05",
+    "amount": 437.17,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-15T07:24:22.744285",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "07c4688d-98b4-4bf1-b7fc-0ff29b39d954",
+    "customer_id": "dd7f085b-9117-48be-ac8f-9377bac12081",
+    "amount": 91.89,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-05T21:24:22.744297",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5b510e59-b694-4f7c-ab78-ea00ba47dbc4",
+    "customer_id": "dcd77f51-3e42-454e-b95c-9d4441a1a6d1",
+    "amount": 478.51,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-16T11:24:22.744316",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5280debb-0441-4c3c-8830-60e4fa2c9b7c",
+    "customer_id": "4776c78f-363f-4c7f-8901-1f556ed2b779",
+    "amount": 235.99,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-17T02:24:22.744327",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "16cb6607-f04b-45c0-ad90-227056cc6f4e",
+    "customer_id": "9e487d61-a2fb-4a4f-91c5-4c74c1b5dce2",
+    "amount": 496.08,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-12T00:24:22.744338",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "6e087751-fa16-4278-b9db-f9232a94ee06",
+    "customer_id": "a52a44f7-3752-43a5-acab-b8ed83a6e44b",
+    "amount": 482.93,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-05T01:24:22.744349",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "860c0901-14fd-434a-b351-e65c9bbdccb8",
+    "customer_id": "11b5a593-f001-4e08-91c4-e5a6641de732",
+    "amount": 409.08,
+    "merchant": "Loja Online",
+    "timestamp": "2025-10-30T01:24:22.744360",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "1e6a5c06-c96a-45e5-aa65-1cf06001abe2",
+    "customer_id": "fc5723cd-29b1-49a5-bab4-0568956eaa70",
+    "amount": 248.25,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-05T07:24:22.744370",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "3d1766c3-b66e-4cac-9eb3-bff3cd3ca637",
+    "customer_id": "9a47e9d6-913a-431f-ad70-11385b6bb605",
+    "amount": 251.39,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-07T22:24:22.744381",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e160b3f1-18ee-423b-b6eb-becbb7ace458",
+    "customer_id": "e7128f5d-a883-4d5f-b102-039dfd836f05",
+    "amount": 334.71,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-01T18:24:22.744392",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "755007d8-a777-49e9-b5dd-355f766c4a23",
+    "customer_id": "813cb1aa-72c7-426f-8f50-6f58d27bdca5",
+    "amount": 438.73,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-18T00:24:22.744402",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "1256498f-f769-4586-9937-c982ef3c88ea",
+    "customer_id": "d55ec0ca-0a9e-4591-998d-8c563f6bc8d4",
+    "amount": 341.51,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-05T08:24:22.744418",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "2def241b-22f2-4e30-afe4-2712bb7078fa",
+    "customer_id": "c2703383-a1f9-4f2a-943a-cf62ca1c4c34",
+    "amount": 128.53,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-03T19:24:22.744430",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "9301cb81-2e3f-4f2f-bdc4-7a84d36bbd21",
+    "customer_id": "a09b4cc9-1f37-4285-9f9a-6268953a0b7d",
+    "amount": 315.34,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-21T13:24:22.744441",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "00e8e8a6-940d-4a78-b363-a03c8585e166",
+    "customer_id": "c9abb9d3-2586-428c-8e62-010a693901c6",
+    "amount": 257.31,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-18T14:24:22.744452",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "24d6fe96-dcee-48d1-be00-9605d8df54ed",
+    "customer_id": "551561b6-5e48-407a-bee4-16e26d17f71a",
+    "amount": 4943.05,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-13T19:24:22.744464",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "4b2d1467-fdb0-4016-b53c-31d71737f2a6",
+    "customer_id": "2f65e1cd-d078-4de5-8375-18a06b341867",
+    "amount": 115.93,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-20T18:24:22.744476",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b2778658-afeb-40f1-b099-0457eda655ad",
+    "customer_id": "dcd77f51-3e42-454e-b95c-9d4441a1a6d1",
+    "amount": 4153.48,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-01T00:24:22.744488",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "671db761-59dd-439c-b495-97bd6700a092",
+    "customer_id": "c9abb9d3-2586-428c-8e62-010a693901c6",
+    "amount": 197.4,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-10-30T12:24:22.744505",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "216976b3-7ee9-4d03-8112-735eae04ca4d",
+    "customer_id": "53b54d30-4015-4e17-b861-9ea5b95fa0a2",
+    "amount": 222.16,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-02T06:24:22.744517",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b07f382d-d1d6-46ba-9fd0-66b7c6bcffbc",
+    "customer_id": "dcd77f51-3e42-454e-b95c-9d4441a1a6d1",
+    "amount": 446.87,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-10-29T08:24:22.744528",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5b91a4a5-24cb-4583-b2fc-c4189e6189e7",
+    "customer_id": "dd7f085b-9117-48be-ac8f-9377bac12081",
+    "amount": 230.26,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-21T21:24:22.744539",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "bf9be2ca-0d47-4d83-aa57-d5a51af1e7ae",
+    "customer_id": "a034a64c-e92d-4f2a-9bd7-9e6c31c0846b",
+    "amount": 165.16,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-27T17:24:22.744555",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "6a6f036b-961d-4940-ba0c-6dfa318adf56",
+    "customer_id": "5c9b0af7-a5b8-479a-98d5-0d95a1031b8d",
+    "amount": 64.99,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-03T15:24:22.744566",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "9302b0d6-8f46-43ea-82b4-d31a8a8d7db0",
+    "customer_id": "107e453a-3fd4-4f19-933a-e8819ed6cfd8",
+    "amount": 433.63,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-19T05:24:22.744577",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "576bf9df-4899-41d0-9dff-0a0d2f2fa6df",
+    "customer_id": "a52a44f7-3752-43a5-acab-b8ed83a6e44b",
+    "amount": 218.66,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-11T12:24:22.744588",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "01140018-9e7c-41a6-b8aa-3ec06171e8c4",
+    "customer_id": "9e487d61-a2fb-4a4f-91c5-4c74c1b5dce2",
+    "amount": 265.64,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-10-31T05:24:22.744598",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "df0caee3-461d-4a26-a57e-525735f20e9b",
+    "customer_id": "148753fb-9bb3-4789-9e27-a201cf5a8774",
+    "amount": 88.12,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-18T17:24:22.744609",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "4c5dd815-4351-477e-a628-8b5b9575c9d4",
+    "customer_id": "00891ae6-86d2-43fe-9e79-b6ff2ae96305",
+    "amount": 22.41,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-21T13:24:22.744619",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c447f154-64e7-454a-80f4-ddd065dcc9a4",
+    "customer_id": "fd73ac75-471a-484d-af0d-e79f8926756f",
+    "amount": 422.28,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-01T17:24:22.744630",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "9723cda4-d3a9-41fd-9ebb-576113179192",
+    "customer_id": "a908c3c1-5535-4ffd-ac56-c9785b488cfc",
+    "amount": 251.37,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-10T01:24:22.744641",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c9b7b061-140f-4c78-ae80-42da2a9bad6d",
+    "customer_id": "d1e11906-950a-4df4-817f-3f7559bb4852",
+    "amount": 370.52,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-10T19:24:22.744651",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "82621e3a-b56b-4dcc-8015-7116dc7293d9",
+    "customer_id": "32917719-efee-4a41-9598-4ecc99318d9a",
+    "amount": 350.12,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-06T08:24:22.744662",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "57ec04d1-9760-407d-9ace-85f875f06f58",
+    "customer_id": "80c5ac45-6aaf-412c-a3cc-cc80b92460a0",
+    "amount": 112.44,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-01T00:24:22.744672",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "35afa915-e64e-4698-a9a2-da924242e9ae",
+    "customer_id": "a555753a-cd15-44a8-ac76-0906785b9ecd",
+    "amount": 139.84,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-11T06:24:22.744682",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "232817e4-f7a6-4f2f-b507-e7ff42cc1bed",
+    "customer_id": "61916252-a123-41fd-831a-a574d77a7c78",
+    "amount": 453.36,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-06T16:24:22.744693",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "db156ec9-575f-436b-9c80-d5f9c9602045",
+    "customer_id": "19d5e379-c50b-4afa-9f6d-18e6381251ac",
+    "amount": 176.54,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-19T20:24:22.744704",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "111982e7-2c77-4cb5-8ed6-049e940fee9f",
+    "customer_id": "3ee3e4a6-fa6f-4c10-82a3-57b3a20da1b9",
+    "amount": 285.87,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-08T09:24:22.744721",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "2ef9209d-22e5-4d06-9bbe-e3b582bedf74",
+    "customer_id": "00891ae6-86d2-43fe-9e79-b6ff2ae96305",
+    "amount": 481.59,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-14T23:24:22.744733",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "f2eafb51-1a2c-4318-be59-d768221366b2",
+    "customer_id": "89b20543-86b8-44c0-81fb-b1bdcd25528a",
+    "amount": 411.26,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-04T23:24:22.744743",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "d416aff5-502d-4aa8-8be5-8096a778c07c",
+    "customer_id": "8294ed69-4fab-4334-8c62-af0aa8b4b1cd",
+    "amount": 274.34,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-07T09:24:22.744754",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "d64b2bf3-e799-4136-a58f-40a4c455cd79",
+    "customer_id": "111e2e3c-1298-4009-9118-5a31623197e2",
+    "amount": 354.31,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-14T18:24:22.744769",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "488c43e7-4a39-4ea7-98ab-45f2a90c2f4f",
+    "customer_id": "d272779e-5e23-4ae6-9b8e-c1e0426ad322",
+    "amount": 72.35,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-08T02:24:22.744780",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "783ff596-cab2-47c1-a568-08cf9a72ba36",
+    "customer_id": "111e2e3c-1298-4009-9118-5a31623197e2",
+    "amount": 66.63,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-14T22:24:22.744791",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "016edd95-896b-4bad-a7f5-ea8cad588028",
+    "customer_id": "15c119a8-b022-4d0e-83fa-1f84404383be",
+    "amount": 207.13,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-15T22:24:22.744801",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "de7f366f-0dbc-43dd-abbf-b846054ebf59",
+    "customer_id": "e7128f5d-a883-4d5f-b102-039dfd836f05",
+    "amount": 216.79,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-10-31T10:24:22.744837",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "ef38e2bf-e3ee-4e9a-9edf-2e13a46a59ed",
+    "customer_id": "7192aee0-13e8-4607-88b1-bbc4c33921dc",
+    "amount": 333.85,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-21T07:24:22.744848",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "2bee6f3c-37e4-46c5-b713-f85529d87054",
+    "customer_id": "088a7da5-a65e-4f3c-901f-84afaa5dbb56",
+    "amount": 238.98,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-22T06:24:22.744859",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "bcd0bbac-a872-4acf-8c3a-72d41a874e87",
+    "customer_id": "7767e44b-faeb-4b86-bcdf-27a52fe8023b",
+    "amount": 200.35,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-22T19:24:22.744869",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "2047730d-2755-4892-9036-13f2c60b84f8",
+    "customer_id": "11b5a593-f001-4e08-91c4-e5a6641de732",
+    "amount": 107.46,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-17T18:24:22.744889",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "ea17900e-2ed8-4e8d-ba76-66004fd3cca9",
+    "customer_id": "890eda04-b296-428d-b5e4-c8d8f85e7369",
+    "amount": 100.26,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-10T21:24:22.744899",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "a6def08d-863d-40e5-b690-cc10efffac39",
+    "customer_id": "ea66a933-c0a4-4d88-b34f-2f75c4176da5",
+    "amount": 3179.46,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-17T03:24:22.744910",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "c3549b6f-d94d-4e98-91fc-08d60b5c4a92",
+    "customer_id": "86a756a6-dce1-40fe-a6ea-a7b10796a9b6",
+    "amount": 437.1,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-27T06:24:22.744921",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "84fa0f1c-5a8a-4a64-97a1-f6ec7fe2e33b",
+    "customer_id": "d1e11906-950a-4df4-817f-3f7559bb4852",
+    "amount": 330.47,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-03T11:24:22.744932",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "98dce959-d2f6-4b7f-9843-dcf50d8481d7",
+    "customer_id": "107e453a-3fd4-4f19-933a-e8819ed6cfd8",
+    "amount": 3874.02,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-19T08:24:22.744943",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "792b244f-d8b2-4013-9a90-1ea5518b2f2c",
+    "customer_id": "00891ae6-86d2-43fe-9e79-b6ff2ae96305",
+    "amount": 33.71,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-07T23:24:22.744953",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "057cc470-8b57-4aa6-9e9e-96b94646bd07",
+    "customer_id": "10d34282-25f2-42b3-85e8-3d3b3dce3842",
+    "amount": 296.67,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-04T18:24:22.744964",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "46e82aec-3e48-4a4b-861c-e4fd5e9a918f",
+    "customer_id": "ad2e9dc9-4145-4686-86ea-3edc50ea52d9",
+    "amount": 314.75,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-07T07:24:22.744974",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "7632c89c-874b-4b19-a0b0-9b52546f0fa2",
+    "customer_id": "fc5723cd-29b1-49a5-bab4-0568956eaa70",
+    "amount": 377.66,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-07T15:24:22.744985",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5cd263ce-542a-42c5-9d9f-abd30b2df19b",
+    "customer_id": "2f65e1cd-d078-4de5-8375-18a06b341867",
+    "amount": 338.92,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-03T11:24:22.744996",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "7eb9a601-847a-4cca-8abb-2ddf1d728bef",
+    "customer_id": "111e2e3c-1298-4009-9118-5a31623197e2",
+    "amount": 486.76,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-25T21:24:22.745006",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "964a7794-e697-4a1a-8be7-3bbfc96dc3df",
+    "customer_id": "54a12020-215a-49ca-b6a8-531dc11232ca",
+    "amount": 252.47,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-19T16:24:22.745024",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b9166aa3-3dd2-40fb-889d-3d601515a545",
+    "customer_id": "7b360668-0130-49b9-8452-af0927702b63",
+    "amount": 344.39,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-15T18:24:22.745040",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "f83aaaca-68f4-46af-af76-daa8e16a9c52",
+    "customer_id": "fe5fd7ff-1462-481e-8843-fc28b9588d7b",
+    "amount": 1439.35,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-19T11:24:22.745051",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "da7de2f2-fb94-40e5-84eb-d77ad07ea86a",
+    "customer_id": "7eea6197-e4ac-4959-badc-0fe2ea8345bf",
+    "amount": 253.67,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-17T13:24:22.745061",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "6796c135-ffe6-4653-8176-c0d60c069d9f",
+    "customer_id": "57283d19-5ab6-4e14-937e-8f2423389ef7",
+    "amount": 207.75,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-27T09:24:22.745071",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8ac731de-ee9a-4c8f-ade6-db8f9e07a67e",
+    "customer_id": "d55ec0ca-0a9e-4591-998d-8c563f6bc8d4",
+    "amount": 174.13,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-19T15:24:22.745082",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5d641fbf-37fd-4350-b137-08647c4236c3",
+    "customer_id": "5f2cc578-e20c-4e29-a868-1354ea524c19",
+    "amount": 438.96,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-25T16:24:22.745093",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e18f0949-8139-428a-8998-529f395d8bef",
+    "customer_id": "d4da10c6-2605-438a-9a7e-6ec46f4a4fbb",
+    "amount": 405.24,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-18T05:24:22.745103",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "9f4e1a12-f842-45f1-9187-bd717d45b107",
+    "customer_id": "088a7da5-a65e-4f3c-901f-84afaa5dbb56",
+    "amount": 94.18,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-21T03:24:22.745113",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "d3a8e57d-f08d-46ce-8bdf-b2a13b1a06ec",
+    "customer_id": "183aec72-7e35-4075-b84c-0532ee853311",
+    "amount": 197.95,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-10-31T14:24:22.745123",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "97241c18-0441-4bf1-91c7-386652c37475",
+    "customer_id": "15c119a8-b022-4d0e-83fa-1f84404383be",
+    "amount": 417.57,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-05T22:24:22.745134",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "6a2737df-a9f4-40f0-8470-419178beb22d",
+    "customer_id": "a034a64c-e92d-4f2a-9bd7-9e6c31c0846b",
+    "amount": 468.86,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-06T18:24:22.745144",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "887e7713-4590-4283-9b16-4b06cafd3c33",
+    "customer_id": "28c69d37-ec99-461f-9ac6-6f406139878e",
+    "amount": 40.29,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-19T08:24:22.745156",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5e79726c-045e-4252-8ca1-3769de155a3d",
+    "customer_id": "8f308742-d80d-4b93-8c35-649b4796913d",
+    "amount": 29.64,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-02T13:24:22.745166",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "23624399-0aa0-4716-ab3a-03e62e3faf66",
+    "customer_id": "fe5fd7ff-1462-481e-8843-fc28b9588d7b",
+    "amount": 305.69,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-04T01:24:22.745176",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "85117bc4-340f-4983-9368-27ebecdbc31e",
+    "customer_id": "a7c022bc-f2aa-41a0-baa2-c2b9cd12fdc8",
+    "amount": 18.09,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-06T21:24:22.745187",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "9b97321b-157b-4cbc-a16c-1efbe89f9d74",
+    "customer_id": "084b052e-da23-4151-a610-24fa19d60372",
+    "amount": 155.92,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-06T12:24:22.745208",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "3ede9ac3-5478-49a3-968d-5fef5c161eae",
+    "customer_id": "39bacb60-d55d-45ea-8a91-22a6af9e6af1",
+    "amount": 476.83,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-09T21:24:22.745219",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "6232eea4-0757-466a-84fc-53a2e0d81e5b",
+    "customer_id": "dcd77f51-3e42-454e-b95c-9d4441a1a6d1",
+    "amount": 394.41,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-06T04:24:22.745229",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "dd25484d-6ce0-452b-9563-0ad473b90aac",
+    "customer_id": "fe5fd7ff-1462-481e-8843-fc28b9588d7b",
+    "amount": 341.29,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-19T23:24:22.745245",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "dbc91e45-77d8-4f76-a91e-5cfdc737051b",
+    "customer_id": "a5852034-952c-4afd-85fd-b909eae57820",
+    "amount": 264.08,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-19T00:24:22.745256",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "db3c85a2-f4e7-4f1a-aeea-75b705ac00bd",
+    "customer_id": "5cc5bb09-0103-4f54-93ff-e69e118e1c87",
+    "amount": 474.73,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-02T19:24:22.745277",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5a42da73-1260-40d2-9f0f-661de4fe4aac",
+    "customer_id": "8f308742-d80d-4b93-8c35-649b4796913d",
+    "amount": 26.37,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-05T09:24:22.745291",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "94e467b0-c4d5-4e2c-a77d-2834ef65ca0f",
+    "customer_id": "c07b93d3-80c1-4624-b059-df68e8a4845f",
+    "amount": 2117.86,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-16T00:24:22.745303",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "436263f0-49ea-4989-a905-e75bb36575c4",
+    "customer_id": "c07b93d3-80c1-4624-b059-df68e8a4845f",
+    "amount": 129.69,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-10-31T05:24:22.745314",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "f1352190-5431-4360-8ac5-775166ddd027",
+    "customer_id": "5c9b0af7-a5b8-479a-98d5-0d95a1031b8d",
+    "amount": 188.56,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-16T09:24:22.745325",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "17fdab3a-42e7-4dbb-841e-596162c7454c",
+    "customer_id": "7f1d8bc2-4b9b-4837-a932-88ea0f654571",
+    "amount": 29.71,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-01T07:24:22.745340",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "cbe76f05-c763-4500-a9a9-177dc49c76d9",
+    "customer_id": "c81d9fd7-75a6-44b8-b89c-4a6546117f67",
+    "amount": 2039.51,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-26T17:24:22.745353",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "26d71083-b7e3-4646-a98c-7f5ed259d21b",
+    "customer_id": "2c74a004-d1cc-43f2-bfda-4f51d34c7862",
+    "amount": 133.19,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-18T15:24:22.745364",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "68f8c7da-2cbf-4ed2-a633-ef5057b4fc2c",
+    "customer_id": "e7128f5d-a883-4d5f-b102-039dfd836f05",
+    "amount": 3430.92,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-18T04:24:22.745374",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "a26a94a5-3693-4a1e-bb5a-f66217dfd582",
+    "customer_id": "3c5ebe0a-d91e-4559-9b1d-c24053aee604",
+    "amount": 120.41,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-08T20:24:22.745385",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b9b68816-9ecc-4fff-83cf-58f61bdf545b",
+    "customer_id": "c2703383-a1f9-4f2a-943a-cf62ca1c4c34",
+    "amount": 353.35,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-04T01:24:22.745396",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b28e892b-ab4e-4190-bc20-702f93153a2f",
+    "customer_id": "890eda04-b296-428d-b5e4-c8d8f85e7369",
+    "amount": 300.64,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-11T10:24:22.745406",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "2d00a6db-24eb-46e3-b3cc-43483c6ee8d4",
+    "customer_id": "39bacb60-d55d-45ea-8a91-22a6af9e6af1",
+    "amount": 246.83,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-12T21:24:22.745416",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "25db61e1-591d-425c-bd24-3ac74e8ef8c3",
+    "customer_id": "53b54d30-4015-4e17-b861-9ea5b95fa0a2",
+    "amount": 275.44,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-22T17:24:22.745427",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "a956076c-16df-447e-b99b-ab8ae0e8b2f4",
+    "customer_id": "b7afd691-ea8a-42c6-88d8-afa657bc177c",
+    "amount": 128.61,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-09T21:24:22.745439",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c722d561-771c-4f49-804f-146c1a446619",
+    "customer_id": "d8106630-7bd5-4e94-83a9-b1a21e2e661c",
+    "amount": 276.25,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-10-30T15:24:22.745450",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "70dfe5fc-729d-40a6-9a27-a76ac828c5ee",
+    "customer_id": "27ce2184-0e3b-442d-b7a3-fdfc079afc2c",
+    "amount": 422.89,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-14T21:24:22.745461",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "35c14626-25f2-47f9-8ac9-a1e64af76b51",
+    "customer_id": "4c6f0e3f-c7ca-4526-a9a2-04f6fd189541",
+    "amount": 478.16,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-22T21:24:22.745471",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "bc26fdba-51ff-48c1-84d8-3dbafab35f97",
+    "customer_id": "7767e44b-faeb-4b86-bcdf-27a52fe8023b",
+    "amount": 352.41,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-22T05:24:22.745493",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "d0040e6d-7aff-4bae-a76a-d293096a8d33",
+    "customer_id": "111e2e3c-1298-4009-9118-5a31623197e2",
+    "amount": 1325.1,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-11T23:24:22.745505",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "c4852d93-646c-4a5a-b74c-0490ac7234ed",
+    "customer_id": "8294ed69-4fab-4334-8c62-af0aa8b4b1cd",
+    "amount": 112.18,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-13T08:24:22.745522",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "ac8b40b9-4f83-42c8-b7fa-48af8d3a0da8",
+    "customer_id": "89b20543-86b8-44c0-81fb-b1bdcd25528a",
+    "amount": 414.3,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-03T01:24:22.745532",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "447fe6f4-5b4e-4b51-ba3b-cdf80eaa625f",
+    "customer_id": "3c5ebe0a-d91e-4559-9b1d-c24053aee604",
+    "amount": 63.85,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-08T04:24:22.745543",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "374b5112-4413-429d-8e9c-8ac136b8ed37",
+    "customer_id": "e7128f5d-a883-4d5f-b102-039dfd836f05",
+    "amount": 1240.54,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-10-29T19:24:22.745554",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "41c28353-40d3-46ff-a712-e4d934201a7c",
+    "customer_id": "2d44492a-75c8-42a0-a5d3-74d6fe38105a",
+    "amount": 20.95,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-14T14:24:22.745564",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8b8f418b-890a-4876-b8ff-fccc793ab4ab",
+    "customer_id": "2c74a004-d1cc-43f2-bfda-4f51d34c7862",
+    "amount": 70.4,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-10T16:24:22.745575",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8d8c303d-b838-4cb8-bc63-08eb37b15390",
+    "customer_id": "53b54d30-4015-4e17-b861-9ea5b95fa0a2",
+    "amount": 495.52,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-06T02:24:22.745585",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "457d9b56-1c4c-499d-8141-983240741045",
+    "customer_id": "86a756a6-dce1-40fe-a6ea-a7b10796a9b6",
+    "amount": 325.21,
+    "merchant": "Loja Online",
+    "timestamp": "2025-10-29T11:24:22.745595",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "ddca7069-0add-4eed-9e10-8aed34e92446",
+    "customer_id": "084b052e-da23-4151-a610-24fa19d60372",
+    "amount": 18.27,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-03T16:24:22.745606",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "716399db-e0ab-4a7c-b1cc-02c81342a52d",
+    "customer_id": "9e487d61-a2fb-4a4f-91c5-4c74c1b5dce2",
+    "amount": 3588.14,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-19T18:24:22.745617",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "ae042c02-3c31-4d4e-a184-3a3e73e4739e",
+    "customer_id": "4855ada0-4337-4c15-ab97-73982f9db675",
+    "amount": 404.79,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-09T03:24:22.745627",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "742d3fb0-ba03-465c-a841-40a0e6178768",
+    "customer_id": "dcd77f51-3e42-454e-b95c-9d4441a1a6d1",
+    "amount": 320.23,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-17T05:24:22.745643",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "0b060fd0-54e1-4cac-8307-f405e41ad655",
+    "customer_id": "7f1d8bc2-4b9b-4837-a932-88ea0f654571",
+    "amount": 433.3,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-10-29T05:24:22.745655",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5db190c8-7f50-48c4-9630-dac32da3ebca",
+    "customer_id": "c81d9fd7-75a6-44b8-b89c-4a6546117f67",
+    "amount": 171.67,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-18T23:24:22.745666",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e634a028-dc02-4c99-bb1d-b9452f870295",
+    "customer_id": "c50e7645-8f87-4cb9-81b4-c686ec98bedd",
+    "amount": 449.73,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-18T06:24:22.745676",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "0decf84c-3627-4167-88ea-b5195d4fb6bc",
+    "customer_id": "9a47e9d6-913a-431f-ad70-11385b6bb605",
+    "amount": 359.47,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-25T02:24:22.745687",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "2337e6f1-e8ae-46e7-a741-ed4fbea7059a",
+    "customer_id": "a52a44f7-3752-43a5-acab-b8ed83a6e44b",
+    "amount": 45.95,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-08T00:24:22.745698",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5dec6c2f-afcc-4ba1-b6fe-8d3aa8bdb902",
+    "customer_id": "8f308742-d80d-4b93-8c35-649b4796913d",
+    "amount": 265.8,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-26T11:24:22.745713",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "26171257-3b15-40b5-83f5-eea9f9bb6f0a",
+    "customer_id": "69e1a066-8870-4eb1-b7b0-8358f2800f4f",
+    "amount": 144.51,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-12T23:24:22.745740",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5a3573a2-ef1a-44ec-8900-24d511295da2",
+    "customer_id": "c2703383-a1f9-4f2a-943a-cf62ca1c4c34",
+    "amount": 459.85,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-10-29T16:24:22.745751",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8d2a1ead-2b15-43f2-9046-a04079490d41",
+    "customer_id": "c07b93d3-80c1-4624-b059-df68e8a4845f",
+    "amount": 428.51,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-10-31T04:24:22.745772",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5b3897ee-ec95-457e-aea4-a86746dbfc08",
+    "customer_id": "8f308742-d80d-4b93-8c35-649b4796913d",
+    "amount": 346.53,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-22T05:24:22.745782",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "2489cde4-ffdc-4f43-876d-01dcb3eb22f4",
+    "customer_id": "c9abb9d3-2586-428c-8e62-010a693901c6",
+    "amount": 477.72,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-07T05:24:22.745793",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "6ae79668-7fd8-4eb3-a1b0-04117ee69357",
+    "customer_id": "7767e44b-faeb-4b86-bcdf-27a52fe8023b",
+    "amount": 491.24,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-26T18:24:22.745815",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5b3c2c38-ea97-4596-ab5d-32424ad089d1",
+    "customer_id": "342899cd-fdf4-416b-9b33-25530c153117",
+    "amount": 117.69,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-11T21:24:22.745830",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "490bc49d-011e-4267-91e5-b23c32f8a3f3",
+    "customer_id": "24020072-e377-4877-9578-235af1cdb63c",
+    "amount": 398.42,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-04T23:24:22.745841",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "1358d1b0-48f1-428f-b47e-551b83545f99",
+    "customer_id": "4c6f0e3f-c7ca-4526-a9a2-04f6fd189541",
+    "amount": 1125.13,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-05T09:24:22.745851",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "67605137-a2d0-471b-81c2-c99e2409f640",
+    "customer_id": "19d5e379-c50b-4afa-9f6d-18e6381251ac",
+    "amount": 183.26,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-19T05:24:22.745862",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e1a649b9-8ba5-4d15-b960-ffe9d990c6db",
+    "customer_id": "54a12020-215a-49ca-b6a8-531dc11232ca",
+    "amount": 89.46,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-10-29T11:24:22.745872",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "6fae10e3-c00d-4b67-9ab7-d8af86ce8978",
+    "customer_id": "e9acdaf0-8a74-4447-9ffe-c86c38fedac5",
+    "amount": 412.3,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-14T23:24:22.745882",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "63b1ef8b-d3bf-4ea9-ba01-7d88b14f162d",
+    "customer_id": "2c74a004-d1cc-43f2-bfda-4f51d34c7862",
+    "amount": 272.68,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-13T16:24:22.745893",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "917e2a5c-ff19-408d-8e8d-eb23cca0d437",
+    "customer_id": "fc5723cd-29b1-49a5-bab4-0568956eaa70",
+    "amount": 224.04,
+    "merchant": "Loja Online",
+    "timestamp": "2025-10-30T17:24:22.745903",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "ff939d36-6b70-4f59-bff4-cf8416f7713f",
+    "customer_id": "00891ae6-86d2-43fe-9e79-b6ff2ae96305",
+    "amount": 31.2,
+    "merchant": "Loja Online",
+    "timestamp": "2025-10-29T09:24:22.745914",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "89d140a3-81e8-4c5d-8624-a14ef81949fb",
+    "customer_id": "813cb1aa-72c7-426f-8f50-6f58d27bdca5",
+    "amount": 427.21,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-10-30T18:24:22.745924",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "93be894a-a292-4b7b-8d2c-1eb94f222907",
+    "customer_id": "d55ec0ca-0a9e-4591-998d-8c563f6bc8d4",
+    "amount": 373.63,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-10-29T16:24:22.745935",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "7605415a-8b91-4356-8f09-fe00cd9407bb",
+    "customer_id": "53b54d30-4015-4e17-b861-9ea5b95fa0a2",
+    "amount": 107.85,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-24T05:24:22.745945",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "68d1edfb-649e-4497-8023-656f20f5c3a5",
+    "customer_id": "10d34282-25f2-42b3-85e8-3d3b3dce3842",
+    "amount": 361.49,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-07T13:24:22.745956",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "3df91064-24b0-411c-b016-e800a48d0454",
+    "customer_id": "5f2cc578-e20c-4e29-a868-1354ea524c19",
+    "amount": 417.78,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-10-30T18:24:22.746018",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "520f67b3-232f-4c64-a391-b10c1099f9ce",
+    "customer_id": "5cc5bb09-0103-4f54-93ff-e69e118e1c87",
+    "amount": 58.15,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-02T09:24:22.746030",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "18e9899f-b4c1-430d-8017-5b011202bba0",
+    "customer_id": "2c74a004-d1cc-43f2-bfda-4f51d34c7862",
+    "amount": 15.96,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-20T12:24:22.746041",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "aff65542-51b9-4c40-89fe-88d410c4ab31",
+    "customer_id": "551561b6-5e48-407a-bee4-16e26d17f71a",
+    "amount": 216.23,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-15T16:24:22.746051",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "04443f26-464b-4319-8c6d-effd845e9544",
+    "customer_id": "a034a64c-e92d-4f2a-9bd7-9e6c31c0846b",
+    "amount": 112.68,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-09T07:24:22.746062",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "0c8f13cd-7ccb-4d95-9ef3-d9351d7d51a2",
+    "customer_id": "a908c3c1-5535-4ffd-ac56-c9785b488cfc",
+    "amount": 497.97,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-17T03:24:22.746073",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "4dfc1e97-2f65-44ac-bc2d-5e51c64b1180",
+    "customer_id": "111e2e3c-1298-4009-9118-5a31623197e2",
+    "amount": 310.74,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-06T14:24:22.746088",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "69dba30d-51b0-41ed-86d7-21c578f84477",
+    "customer_id": "fd73ac75-471a-484d-af0d-e79f8926756f",
+    "amount": 1089.01,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-21T07:24:22.746101",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "8592dc82-0bf5-4cf6-be1e-7965a7dc62ba",
+    "customer_id": "2c74a004-d1cc-43f2-bfda-4f51d34c7862",
+    "amount": 178.31,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-11T16:24:22.746111",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "ab273092-b404-4186-a511-9a4a0e6ad16c",
+    "customer_id": "76c3cd90-1a92-45e1-9bfb-c0f083abbe95",
+    "amount": 498.08,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-10T15:24:22.746122",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "90930a61-3bde-4345-9947-584f4dcc4c2d",
+    "customer_id": "a5852034-952c-4afd-85fd-b909eae57820",
+    "amount": 53.49,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-09T17:24:22.746132",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "4911cbfb-d48f-48ab-9a65-9e84f3b9b4e7",
+    "customer_id": "32917719-efee-4a41-9598-4ecc99318d9a",
+    "amount": 1437.48,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-11T16:24:22.746143",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "28c36972-9d35-4f0d-8682-eac68dca1406",
+    "customer_id": "d4da10c6-2605-438a-9a7e-6ec46f4a4fbb",
+    "amount": 2952.41,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-18T20:24:22.746154",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "d1fa1ecf-8f4d-4f5a-a91f-ba6dd1486944",
+    "customer_id": "00891ae6-86d2-43fe-9e79-b6ff2ae96305",
+    "amount": 293.73,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-22T20:24:22.746164",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e0908095-1e4d-49cb-a780-47623441d0e7",
+    "customer_id": "3acb27fd-9f29-4674-bfc8-ffa658e02cac",
+    "amount": 330.57,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-10-30T11:24:22.746175",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "4f688c97-59dd-4f4b-9a50-6a74495fcf37",
+    "customer_id": "981a44a0-72d5-4a51-ad11-9e65b374f731",
+    "amount": 114.95,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-27T19:24:22.746185",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "43365296-6281-496f-b620-1c040d349dd3",
+    "customer_id": "7767e44b-faeb-4b86-bcdf-27a52fe8023b",
+    "amount": 244.73,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-06T00:24:22.746195",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "0fbdc385-dba0-457f-b3c7-70822a48ff12",
+    "customer_id": "cdab8cc3-ca76-4ad3-8497-d19349f17d74",
+    "amount": 289.86,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-22T07:24:22.746207",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "2eaa9366-b676-421d-9f4a-4787029a0922",
+    "customer_id": "a5852034-952c-4afd-85fd-b909eae57820",
+    "amount": 341.55,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-10-29T04:24:22.746217",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "216c5ec7-e3c1-471e-bd37-e3c041b10dd4",
+    "customer_id": "134d7fa0-7b90-4cca-823f-d7255b12f50e",
+    "amount": 197.79,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-03T16:24:22.746232",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "f7cdb3f6-0941-453a-bb39-6cccabf45c91",
+    "customer_id": "3ee3e4a6-fa6f-4c10-82a3-57b3a20da1b9",
+    "amount": 4242.71,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-13T04:24:22.746244",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "64b0ffe3-7a53-4b07-8b4d-ff85fb405840",
+    "customer_id": "0eb9bb29-3bce-4c87-a836-6d6f3b034e11",
+    "amount": 292.16,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-21T22:24:22.746254",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "01bf9f69-3505-4dbe-acb9-ffd3fa845b40",
+    "customer_id": "dd7f085b-9117-48be-ac8f-9377bac12081",
+    "amount": 254.26,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-10-29T22:24:22.746265",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "515bc9e4-0bef-436f-9695-b47eb64b9075",
+    "customer_id": "10d34282-25f2-42b3-85e8-3d3b3dce3842",
+    "amount": 108.23,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-23T09:24:22.746283",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "70c18bde-4e60-424a-80a1-f8e4ace369aa",
+    "customer_id": "d4da10c6-2605-438a-9a7e-6ec46f4a4fbb",
+    "amount": 39.18,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-20T05:24:22.746293",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "0bdd32ee-7367-4f89-b754-09583fb95fef",
+    "customer_id": "a555753a-cd15-44a8-ac76-0906785b9ecd",
+    "amount": 204.67,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-14T05:24:22.746355",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5992ba4f-f1a4-45d7-b661-0939d4a57e4e",
+    "customer_id": "fc5723cd-29b1-49a5-bab4-0568956eaa70",
+    "amount": 86.6,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-14T07:24:22.746370",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "1d290823-76e4-459d-b199-edf29d3b430c",
+    "customer_id": "cdab8cc3-ca76-4ad3-8497-d19349f17d74",
+    "amount": 352.38,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-04T20:24:22.746380",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "67d2e51d-5750-408e-a8b6-1f4a0f6213de",
+    "customer_id": "0d8d5442-6042-494a-b1dc-59d4de4e92a3",
+    "amount": 437.72,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-15T05:24:22.746391",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "00bc4b9a-6483-419c-a7c7-ef0c3a4606fb",
+    "customer_id": "183aec72-7e35-4075-b84c-0532ee853311",
+    "amount": 118.62,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-10T15:24:22.746402",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "305cb542-acfc-44de-83c9-fb65058568d1",
+    "customer_id": "ca3ac8c8-aa61-488e-a4fc-924ff6899612",
+    "amount": 414.5,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-03T00:24:22.746413",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "6865bb1c-c02d-4ac2-ae26-823c094ffcaf",
+    "customer_id": "9e487d61-a2fb-4a4f-91c5-4c74c1b5dce2",
+    "amount": 121.24,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-26T16:24:22.746423",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "980ce1b5-8f01-4b07-ade1-bea2b450cf80",
+    "customer_id": "cdab8cc3-ca76-4ad3-8497-d19349f17d74",
+    "amount": 251.5,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-12T06:24:22.746434",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "a1cab70a-1676-4210-9e70-42d785a082d9",
+    "customer_id": "fa3b9ccc-50f2-431d-a0ac-3b0cb678a8de",
+    "amount": 206.25,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-26T18:24:22.746444",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "bb8c6f47-6d54-4084-b4d9-56562f342a42",
+    "customer_id": "fa3b9ccc-50f2-431d-a0ac-3b0cb678a8de",
+    "amount": 369.18,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-01T05:24:22.746455",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "cc492110-2195-457f-94a6-4a789065153a",
+    "customer_id": "a034a64c-e92d-4f2a-9bd7-9e6c31c0846b",
+    "amount": 276.24,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-10-31T14:24:22.746466",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "ef02c139-7277-47ef-827e-72fbc3fba9be",
+    "customer_id": "69e1a066-8870-4eb1-b7b0-8358f2800f4f",
+    "amount": 66.29,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-09T16:24:22.746477",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "34742571-2ffb-4902-b53d-8646462d3df2",
+    "customer_id": "be9bd48a-97f1-409c-aa0f-534e3e9cb0b8",
+    "amount": 201.16,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-12T05:24:22.746488",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "702df1c0-fb80-48f5-9570-eaafb6bd99b1",
+    "customer_id": "d4da10c6-2605-438a-9a7e-6ec46f4a4fbb",
+    "amount": 135.0,
+    "merchant": "Loja Online",
+    "timestamp": "2025-10-30T07:24:22.746499",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "99d38bb4-1bd8-4ac5-abb9-2534a36e799f",
+    "customer_id": "69e1a066-8870-4eb1-b7b0-8358f2800f4f",
+    "amount": 225.13,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-13T11:24:22.746525",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "00cb286d-58a7-419f-a0c3-0683f49cbdd3",
+    "customer_id": "86a756a6-dce1-40fe-a6ea-a7b10796a9b6",
+    "amount": 393.49,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-08T08:24:22.746538",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "d588dbde-15ea-46fa-9731-8522211a4200",
+    "customer_id": "cdab8cc3-ca76-4ad3-8497-d19349f17d74",
+    "amount": 62.45,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-26T09:24:22.746549",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e79c5596-7a01-447b-8877-571c3aefebda",
+    "customer_id": "54a12020-215a-49ca-b6a8-531dc11232ca",
+    "amount": 374.8,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-20T02:24:22.746559",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "4a0ed890-c3bf-4dcd-a54a-cd52389deae1",
+    "customer_id": "5c9b0af7-a5b8-479a-98d5-0d95a1031b8d",
+    "amount": 167.14,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-18T02:24:22.746570",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "22213faa-ddfb-4609-b997-c8556f647032",
+    "customer_id": "86a756a6-dce1-40fe-a6ea-a7b10796a9b6",
+    "amount": 445.34,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-11T19:24:22.746580",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c3674e25-15d7-4061-9dd6-9216dc42c18f",
+    "customer_id": "3acb27fd-9f29-4674-bfc8-ffa658e02cac",
+    "amount": 425.48,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-04T02:24:22.746590",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "0f85afe6-f0f0-4212-aeff-2f32b033241c",
+    "customer_id": "ad2e9dc9-4145-4686-86ea-3edc50ea52d9",
+    "amount": 256.84,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-10-29T22:24:22.746601",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "859bab50-7364-40d7-8e11-93998d6ae70e",
+    "customer_id": "111e2e3c-1298-4009-9118-5a31623197e2",
+    "amount": 330.0,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-16T07:24:22.746612",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5fb0e1f6-8261-4e5c-88f2-17a878705103",
+    "customer_id": "32917719-efee-4a41-9598-4ecc99318d9a",
+    "amount": 410.09,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-11T01:24:22.746623",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b1230d44-fe25-4799-8bba-41e124e22f70",
+    "customer_id": "8f308742-d80d-4b93-8c35-649b4796913d",
+    "amount": 18.8,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-16T08:24:22.746633",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e2e96916-d242-45e2-acd9-16ca081911ba",
+    "customer_id": "80c5ac45-6aaf-412c-a3cc-cc80b92460a0",
+    "amount": 372.03,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-06T00:24:22.746650",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "1963757b-5cfd-41bb-bc7d-6779ffc52c61",
+    "customer_id": "a52a44f7-3752-43a5-acab-b8ed83a6e44b",
+    "amount": 377.0,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-25T20:24:22.746662",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "857e6297-2121-46fe-abf9-8da58315f51c",
+    "customer_id": "c81d9fd7-75a6-44b8-b89c-4a6546117f67",
+    "amount": 489.61,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-17T16:24:22.746673",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "cf764ef1-bde5-4707-875d-42af4e9029e4",
+    "customer_id": "084b052e-da23-4151-a610-24fa19d60372",
+    "amount": 272.46,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-13T19:24:22.746684",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "9941ad4b-2f64-4e7f-8f97-94a01e8ad13f",
+    "customer_id": "148753fb-9bb3-4789-9e27-a201cf5a8774",
+    "amount": 480.56,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-18T08:24:22.746694",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "63b54004-51e2-4b0f-bb50-fe22362ccb1c",
+    "customer_id": "61916252-a123-41fd-831a-a574d77a7c78",
+    "amount": 308.18,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-22T22:24:22.746705",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c5a103a7-0390-419e-ad6e-89e81164eb0e",
+    "customer_id": "5cc5bb09-0103-4f54-93ff-e69e118e1c87",
+    "amount": 372.08,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-21T19:24:22.746715",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5f4bb1bc-b086-477b-966b-41a81be57b82",
+    "customer_id": "69e1a066-8870-4eb1-b7b0-8358f2800f4f",
+    "amount": 3297.86,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-13T09:24:22.746726",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "397f02c7-5615-453f-a6bb-42d40189e0ae",
+    "customer_id": "76c3cd90-1a92-45e1-9bfb-c0f083abbe95",
+    "amount": 499.76,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-11T15:24:22.746747",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "fb2f08df-b2c8-45fd-ba48-954910dd105f",
+    "customer_id": "ca3ac8c8-aa61-488e-a4fc-924ff6899612",
+    "amount": 171.57,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-05T20:24:22.746760",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "79a6b636-dd3b-42e0-a3ee-a0b69a39b347",
+    "customer_id": "80c5ac45-6aaf-412c-a3cc-cc80b92460a0",
+    "amount": 183.28,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-07T04:24:22.746771",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "33a8acd9-e3f3-40c0-bb86-e0eaf2e076fa",
+    "customer_id": "2c74a004-d1cc-43f2-bfda-4f51d34c7862",
+    "amount": 303.24,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-16T21:24:22.746781",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "201c1355-af3c-49c1-8cc5-4d0cf89b3ac2",
+    "customer_id": "5c9b0af7-a5b8-479a-98d5-0d95a1031b8d",
+    "amount": 382.52,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-01T22:24:22.746792",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "cef9fa68-6398-4b06-ab80-e99473d47b78",
+    "customer_id": "a555753a-cd15-44a8-ac76-0906785b9ecd",
+    "amount": 138.52,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-18T01:24:22.746815",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8be668c8-0cec-4288-b55a-71a9eb9d40ec",
+    "customer_id": "2f65e1cd-d078-4de5-8375-18a06b341867",
+    "amount": 452.14,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-19T10:24:22.746829",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "9d21e729-72a2-4f2c-b2ff-1ddeb815009a",
+    "customer_id": "a908c3c1-5535-4ffd-ac56-c9785b488cfc",
+    "amount": 396.47,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-09T12:24:22.746841",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "f7d81836-89db-4988-8d7f-a78599afde81",
+    "customer_id": "7192aee0-13e8-4607-88b1-bbc4c33921dc",
+    "amount": 429.19,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-20T19:24:22.746851",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "1d5ce4a1-e1de-4413-8c8e-bb8e16857ba4",
+    "customer_id": "3c5ebe0a-d91e-4559-9b1d-c24053aee604",
+    "amount": 11.53,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-10T15:24:22.746862",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "db28a8c3-8d8d-4f46-88ea-b83423609810",
+    "customer_id": "a908c3c1-5535-4ffd-ac56-c9785b488cfc",
+    "amount": 179.1,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-10T14:24:22.746872",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "da51fd15-9dc7-4b7c-95f0-956f44af4b14",
+    "customer_id": "a555753a-cd15-44a8-ac76-0906785b9ecd",
+    "amount": 98.47,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-05T11:24:22.746882",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "bfbee507-2d31-40cf-88ec-091da8c4369a",
+    "customer_id": "d55ec0ca-0a9e-4591-998d-8c563f6bc8d4",
+    "amount": 174.74,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-27T19:24:22.746904",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "2e8e20c6-d96d-46c0-a73e-320a87fb72d2",
+    "customer_id": "5f2cc578-e20c-4e29-a868-1354ea524c19",
+    "amount": 324.1,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-13T20:24:22.746918",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "2dfdae30-c91d-4c97-af8f-883a34bc7871",
+    "customer_id": "86a756a6-dce1-40fe-a6ea-a7b10796a9b6",
+    "amount": 283.1,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-23T05:24:22.746929",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "748e85fc-bd20-4b4d-9144-530b26b176bd",
+    "customer_id": "fa3b9ccc-50f2-431d-a0ac-3b0cb678a8de",
+    "amount": 322.28,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-12T13:24:22.746940",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "6ea1b8f6-a022-495b-b11a-add7520bd1a2",
+    "customer_id": "fc5723cd-29b1-49a5-bab4-0568956eaa70",
+    "amount": 400.5,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-10-29T19:24:22.746950",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e367c95c-a32a-40d9-8f24-c6ee2c2727eb",
+    "customer_id": "2c74a004-d1cc-43f2-bfda-4f51d34c7862",
+    "amount": 61.44,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-22T01:24:22.746961",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "dbcad250-8376-44e2-97ab-8d6213fbf9de",
+    "customer_id": "981a44a0-72d5-4a51-ad11-9e65b374f731",
+    "amount": 85.07,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-22T15:24:22.746977",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5ae0a6fa-f0ca-4460-b209-7a8e0e2d83ae",
+    "customer_id": "7f1d8bc2-4b9b-4837-a932-88ea0f654571",
+    "amount": 58.29,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-22T17:24:22.746989",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8c93973b-d5e8-4ddd-86a0-91beef3eb536",
+    "customer_id": "0d8d5442-6042-494a-b1dc-59d4de4e92a3",
+    "amount": 102.06,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-05T07:24:22.747005",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "26682020-8fe6-4939-8f25-9ca322dee3f9",
+    "customer_id": "e9acdaf0-8a74-4447-9ffe-c86c38fedac5",
+    "amount": 364.08,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-07T21:24:22.747016",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "95a6b340-baec-456b-9b3b-24da0cf9fe59",
+    "customer_id": "4776c78f-363f-4c7f-8901-1f556ed2b779",
+    "amount": 2901.54,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-13T22:24:22.747027",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "96090135-759f-47bb-95bd-abcc07f70478",
+    "customer_id": "945c5db0-cb7d-40c6-bbd7-573c898b90aa",
+    "amount": 128.09,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-21T16:24:22.747037",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e7ee5e2c-a22b-4685-98d7-b2cdab9da98e",
+    "customer_id": "d7d40ab5-0e2f-4661-a148-1da2c21f8c29",
+    "amount": 174.09,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-06T16:24:22.747048",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e8020fa1-df4f-4f7b-a720-d1e03e3b48b0",
+    "customer_id": "a09b4cc9-1f37-4285-9f9a-6268953a0b7d",
+    "amount": 342.76,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-26T00:24:22.747059",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "ede6dde7-7505-4a70-b51e-786490cb97a6",
+    "customer_id": "4c6f0e3f-c7ca-4526-a9a2-04f6fd189541",
+    "amount": 284.96,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-18T08:24:22.747070",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "037e83c3-bf71-4dd4-8eb4-74a48bd50d46",
+    "customer_id": "76c3cd90-1a92-45e1-9bfb-c0f083abbe95",
+    "amount": 90.8,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-25T22:24:22.747081",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "11970390-0304-451d-8a16-bba3d789d186",
+    "customer_id": "3c5ebe0a-d91e-4559-9b1d-c24053aee604",
+    "amount": 329.79,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-22T11:24:22.747091",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "26eb0a36-931a-4bfe-85b8-ec1a059359c6",
+    "customer_id": "7f1d8bc2-4b9b-4837-a932-88ea0f654571",
+    "amount": 92.56,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-04T16:24:22.747102",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "3ae8820d-4fb4-4d12-9ab0-188e8874f8ae",
+    "customer_id": "fa3b9ccc-50f2-431d-a0ac-3b0cb678a8de",
+    "amount": 110.29,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-12T15:24:22.747113",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "154ba786-bac6-45fa-9cab-61daccbfa297",
+    "customer_id": "a555753a-cd15-44a8-ac76-0906785b9ecd",
+    "amount": 493.89,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-14T12:24:22.747129",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "6d7d7bbd-d8ae-40d4-9684-e50b414fcb41",
+    "customer_id": "5cc5bb09-0103-4f54-93ff-e69e118e1c87",
+    "amount": 379.91,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-25T07:24:22.747140",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "3130c8f8-9cb4-492c-9949-355945e28934",
+    "customer_id": "107e453a-3fd4-4f19-933a-e8819ed6cfd8",
+    "amount": 52.58,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-04T08:24:22.747150",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "13aff273-62c8-40d2-93b3-be324ec52d4b",
+    "customer_id": "e93a09bf-3ac4-4275-a614-f44babfbcfba",
+    "amount": 96.2,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-24T09:24:22.747161",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5c044b0c-a88b-4894-9447-15f0c4a0a3c3",
+    "customer_id": "c07b93d3-80c1-4624-b059-df68e8a4845f",
+    "amount": 89.97,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-10T15:24:22.747172",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b61e52f3-3028-466a-bee1-10a0ecc2948a",
+    "customer_id": "10d34282-25f2-42b3-85e8-3d3b3dce3842",
+    "amount": 335.52,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-07T22:24:22.747182",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "1d266043-971d-4548-ad12-4c460b7143f5",
+    "customer_id": "d8106630-7bd5-4e94-83a9-b1a21e2e661c",
+    "amount": 15.11,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-24T00:24:22.747193",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "03f428f6-01dc-472e-9d03-9a1d456865ce",
+    "customer_id": "111e2e3c-1298-4009-9118-5a31623197e2",
+    "amount": 279.14,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-09T02:24:22.747204",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8c3425d9-f0fc-415a-b69b-6400c50d457a",
+    "customer_id": "00891ae6-86d2-43fe-9e79-b6ff2ae96305",
+    "amount": 49.65,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-07T19:24:22.747219",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "6e29152f-414f-436c-8bc0-ea28557ae905",
+    "customer_id": "cdab8cc3-ca76-4ad3-8497-d19349f17d74",
+    "amount": 208.49,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-16T12:24:22.747230",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "48d22f1a-b8af-46b4-9bbd-bf804bbd4724",
+    "customer_id": "890eda04-b296-428d-b5e4-c8d8f85e7369",
+    "amount": 241.08,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-17T07:24:22.747241",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "aa7a0448-1372-445a-8caf-9b59b9261199",
+    "customer_id": "e7128f5d-a883-4d5f-b102-039dfd836f05",
+    "amount": 148.45,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-23T12:24:22.747251",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e5bc3c9c-489c-4946-8d0b-afc33617c5a2",
+    "customer_id": "39ba377c-5cda-4e11-9490-979afd1e244e",
+    "amount": 358.43,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-09T03:24:22.747263",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "64292a0a-9bd5-4f31-bf91-301a26eb2123",
+    "customer_id": "134d7fa0-7b90-4cca-823f-d7255b12f50e",
+    "amount": 457.03,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-08T22:24:22.747285",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "51cedf47-bdb1-40c1-a645-cebc105c05cd",
+    "customer_id": "54a12020-215a-49ca-b6a8-531dc11232ca",
+    "amount": 460.81,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-10T12:24:22.747298",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "349415d6-e6ac-4100-92e5-5f67c24ce091",
+    "customer_id": "80c5ac45-6aaf-412c-a3cc-cc80b92460a0",
+    "amount": 386.88,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-01T10:24:22.747309",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e0cf76f5-3ed2-4273-8309-bf228cb7ae7e",
+    "customer_id": "15c119a8-b022-4d0e-83fa-1f84404383be",
+    "amount": 344.75,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-10T03:24:22.747319",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "a4345c8f-67a7-44c1-8d95-7bd6c9b0054e",
+    "customer_id": "27ce2184-0e3b-442d-b7a3-fdfc079afc2c",
+    "amount": 439.69,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-05T10:24:22.747330",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b2bd2b0e-6825-45ea-8fb0-ae7e4482098f",
+    "customer_id": "be9bd48a-97f1-409c-aa0f-534e3e9cb0b8",
+    "amount": 254.35,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-01T06:24:22.747341",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "4746932b-d162-4355-9df0-a1468921ae94",
+    "customer_id": "57283d19-5ab6-4e14-937e-8f2423389ef7",
+    "amount": 414.5,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-20T04:24:22.747351",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "f029fa92-5645-4aa3-b638-a7a0f2a780ff",
+    "customer_id": "945c5db0-cb7d-40c6-bbd7-573c898b90aa",
+    "amount": 261.57,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-27T12:24:22.747361",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "60d7e5d9-e2f0-43da-bc9b-a8563392cd43",
+    "customer_id": "5c9b0af7-a5b8-479a-98d5-0d95a1031b8d",
+    "amount": 40.11,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-20T03:24:22.747372",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "9bf772cc-ba19-4967-b830-dbb5fbc96ce5",
+    "customer_id": "3c5ebe0a-d91e-4559-9b1d-c24053aee604",
+    "amount": 92.03,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-22T19:24:22.747382",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "7b55078c-6954-41bf-94c8-cf6906a6cd31",
+    "customer_id": "bc695bc7-4045-49b5-9048-386cb868da34",
+    "amount": 424.23,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-13T22:24:22.747392",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "a4449013-8355-480c-8b42-07ef82bb537e",
+    "customer_id": "a908c3c1-5535-4ffd-ac56-c9785b488cfc",
+    "amount": 372.11,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-23T14:24:22.747404",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "941035c7-c8f2-43ab-94be-d0ff0035af0c",
+    "customer_id": "148753fb-9bb3-4789-9e27-a201cf5a8774",
+    "amount": 442.73,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-23T22:24:22.747415",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "be1f32cb-48cb-4170-99bf-82b40778439e",
+    "customer_id": "0eb9bb29-3bce-4c87-a836-6d6f3b034e11",
+    "amount": 191.54,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-16T01:24:22.747426",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "9613efec-3ffb-4807-a3a2-1067790acdf9",
+    "customer_id": "c07b93d3-80c1-4624-b059-df68e8a4845f",
+    "amount": 448.04,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-22T20:24:22.747437",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "898d2ee2-807f-4705-9214-cb0b66ceea5a",
+    "customer_id": "39ba377c-5cda-4e11-9490-979afd1e244e",
+    "amount": 355.03,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-01T00:24:22.747462",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "72046088-706b-4da8-9fdb-f3c7f5506785",
+    "customer_id": "d272779e-5e23-4ae6-9b8e-c1e0426ad322",
+    "amount": 250.56,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-07T10:24:22.747473",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "7786c358-8347-45ad-9e90-cc7b8639df15",
+    "customer_id": "c9abb9d3-2586-428c-8e62-010a693901c6",
+    "amount": 312.48,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-10T21:24:22.747484",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "6fef0cd3-e219-4970-94a7-f75921c7d1c9",
+    "customer_id": "69e1a066-8870-4eb1-b7b0-8358f2800f4f",
+    "amount": 413.35,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-14T04:24:22.747495",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "62fcd2d5-7fd6-4429-807d-c3ea8519500c",
+    "customer_id": "7192aee0-13e8-4607-88b1-bbc4c33921dc",
+    "amount": 283.39,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-15T08:24:22.747505",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5b936bb4-2eb9-4989-b720-c7c630e943d4",
+    "customer_id": "a908c3c1-5535-4ffd-ac56-c9785b488cfc",
+    "amount": 408.26,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-17T09:24:22.747516",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "aa77085e-8e5c-4d70-a68f-a3416499ec45",
+    "customer_id": "890eda04-b296-428d-b5e4-c8d8f85e7369",
+    "amount": 42.57,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-12T02:24:22.747526",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b97a8e1c-cb39-4084-b268-4a5526ce377f",
+    "customer_id": "111e2e3c-1298-4009-9118-5a31623197e2",
+    "amount": 124.72,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-19T17:24:22.747537",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "34362fed-f94f-41d2-91e5-ac48e78da459",
+    "customer_id": "3ee3e4a6-fa6f-4c10-82a3-57b3a20da1b9",
+    "amount": 289.4,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-09T08:24:22.747548",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "12f24f66-817e-4adc-83e8-c5757ef66475",
+    "customer_id": "148753fb-9bb3-4789-9e27-a201cf5a8774",
+    "amount": 183.87,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-19T04:24:22.747559",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "bf237f32-6453-4ea2-bfd9-87c67af9f66d",
+    "customer_id": "4776c78f-363f-4c7f-8901-1f556ed2b779",
+    "amount": 382.47,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-07T02:24:22.747580",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "1689ff7d-60b7-4d10-932e-b42b7f6485f5",
+    "customer_id": "2f65e1cd-d078-4de5-8375-18a06b341867",
+    "amount": 470.98,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-01T20:24:22.747592",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "0753b34c-edd2-4a46-aa31-d9ca4a768f24",
+    "customer_id": "19d5e379-c50b-4afa-9f6d-18e6381251ac",
+    "amount": 103.32,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-17T00:24:22.747603",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b02c8427-d15b-4c35-8563-64be9fc37d7b",
+    "customer_id": "15c119a8-b022-4d0e-83fa-1f84404383be",
+    "amount": 316.01,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-20T19:24:22.747613",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "01659e98-6b2d-4eaa-8ada-f6e517731b19",
+    "customer_id": "19d5e379-c50b-4afa-9f6d-18e6381251ac",
+    "amount": 320.4,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-25T01:24:22.747624",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b23c5dc0-9396-4694-858f-20a970627cc5",
+    "customer_id": "ea66a933-c0a4-4d88-b34f-2f75c4176da5",
+    "amount": 41.73,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-10-30T18:24:22.747635",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "59ea673d-aa43-4b9a-ade5-f30eb27d9df1",
+    "customer_id": "7eea6197-e4ac-4959-badc-0fe2ea8345bf",
+    "amount": 447.31,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-17T11:24:22.747646",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "f685b0f2-f40c-4e58-926d-e32e74807b1b",
+    "customer_id": "5c9b0af7-a5b8-479a-98d5-0d95a1031b8d",
+    "amount": 387.81,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-15T12:24:22.747660",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8326d2fb-edac-4812-9737-463c741477e5",
+    "customer_id": "aba18b35-d7fd-429c-8ffc-532d09f0a498",
+    "amount": 62.98,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-22T20:24:22.747673",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "a9ad7fce-87c9-48b0-ab98-9af76d76541b",
+    "customer_id": "3ee3e4a6-fa6f-4c10-82a3-57b3a20da1b9",
+    "amount": 208.0,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-16T00:24:22.747688",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b6ea23d9-1bb4-442f-8f80-329fbf9554c9",
+    "customer_id": "89b20543-86b8-44c0-81fb-b1bdcd25528a",
+    "amount": 399.66,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-11T14:24:22.747700",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c9373216-5302-46df-ae6a-56e1967d45ee",
+    "customer_id": "a555753a-cd15-44a8-ac76-0906785b9ecd",
+    "amount": 12.3,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-12T04:24:22.747710",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b2b91711-fb39-46c2-b2bd-0a407fd399bb",
+    "customer_id": "80c5ac45-6aaf-412c-a3cc-cc80b92460a0",
+    "amount": 487.1,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-10-31T00:24:22.747721",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "d3b4f7b0-b42e-4365-b908-2cb2be64f2da",
+    "customer_id": "e7128f5d-a883-4d5f-b102-039dfd836f05",
+    "amount": 129.85,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-03T02:24:22.747732",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5d2817ab-cc68-4a7c-b8b1-0db6759c7d21",
+    "customer_id": "813cb1aa-72c7-426f-8f50-6f58d27bdca5",
+    "amount": 211.61,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-21T16:24:22.747742",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8c584a8e-993e-4443-9e3e-5eca3eab63ae",
+    "customer_id": "24020072-e377-4877-9578-235af1cdb63c",
+    "amount": 171.5,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-10-31T08:24:22.747753",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "da4e9324-64a8-407e-a97d-abbf2a66a875",
+    "customer_id": "00891ae6-86d2-43fe-9e79-b6ff2ae96305",
+    "amount": 450.7,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-13T10:24:22.747764",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "3ec5c334-4bfe-4296-80cf-f4426cc9b90b",
+    "customer_id": "00891ae6-86d2-43fe-9e79-b6ff2ae96305",
+    "amount": 4115.91,
+    "merchant": "Loja Online",
+    "timestamp": "2025-10-30T07:24:22.747775",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "7ecc9a59-35b5-4ed4-84e6-addf880fd406",
+    "customer_id": "10d80f70-b983-412c-a7b2-20c6e72c55c4",
+    "amount": 497.12,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-20T00:24:22.747785",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "af6b0fd3-a82d-48e9-b408-8bc5ccfb7862",
+    "customer_id": "0eb9bb29-3bce-4c87-a836-6d6f3b034e11",
+    "amount": 274.4,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-18T22:24:22.747796",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "31189c66-e951-4e9e-b359-d5d0bf543745",
+    "customer_id": "ea66a933-c0a4-4d88-b34f-2f75c4176da5",
+    "amount": 247.46,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-20T15:24:22.747819",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "51072e6e-b07e-448b-a1e2-a12f7b23ddf8",
+    "customer_id": "dcd77f51-3e42-454e-b95c-9d4441a1a6d1",
+    "amount": 78.42,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-10-29T04:24:22.747832",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c3407402-15ec-4966-80ed-ea7d88be9e08",
+    "customer_id": "bc695bc7-4045-49b5-9048-386cb868da34",
+    "amount": 231.14,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-25T02:24:22.747843",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "22e85492-328d-4e88-a0a3-f061369a3f44",
+    "customer_id": "5f2cc578-e20c-4e29-a868-1354ea524c19",
+    "amount": 255.61,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-25T16:24:22.747854",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "928b1dfa-e6e4-4bca-92d9-df3690426974",
+    "customer_id": "c07b93d3-80c1-4624-b059-df68e8a4845f",
+    "amount": 189.57,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-05T00:24:22.747864",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e24da9cb-c222-496a-8529-dfce28d97b9d",
+    "customer_id": "ca3ac8c8-aa61-488e-a4fc-924ff6899612",
+    "amount": 329.51,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-18T14:24:22.747881",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "87b2c0a0-045e-4e9d-aac1-b664f99e5aac",
+    "customer_id": "d4da10c6-2605-438a-9a7e-6ec46f4a4fbb",
+    "amount": 293.42,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-24T20:24:22.747892",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "26f36c40-b488-4cfe-a77d-d759bec307ea",
+    "customer_id": "00891ae6-86d2-43fe-9e79-b6ff2ae96305",
+    "amount": 257.52,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-27T03:24:22.747903",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "888bf83b-fbf5-44b9-9160-f5605f214776",
+    "customer_id": "be9bd48a-97f1-409c-aa0f-534e3e9cb0b8",
+    "amount": 171.0,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-14T13:24:22.747914",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c59def82-64dd-4a6b-a0b4-0c1093000799",
+    "customer_id": "dcd77f51-3e42-454e-b95c-9d4441a1a6d1",
+    "amount": 287.54,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-09T04:24:22.747930",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "be3ec8e5-5aa6-4e78-9d55-f171d8507125",
+    "customer_id": "69e1a066-8870-4eb1-b7b0-8358f2800f4f",
+    "amount": 174.07,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-04T18:24:22.747941",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "3fdc9f3a-ca77-441b-9989-29425e18fbf2",
+    "customer_id": "088a7da5-a65e-4f3c-901f-84afaa5dbb56",
+    "amount": 24.43,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-04T10:24:22.747952",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c4659fde-4dd1-46f8-b938-e3fff2e2f11e",
+    "customer_id": "9a47e9d6-913a-431f-ad70-11385b6bb605",
+    "amount": 289.43,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-10-29T07:24:22.747962",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8ee36aa6-57b6-429d-b177-7ab23453e6d7",
+    "customer_id": "134d7fa0-7b90-4cca-823f-d7255b12f50e",
+    "amount": 379.95,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-01T02:24:22.747973",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "77653316-4c46-4e0c-b2bd-c0f1b6d46e8c",
+    "customer_id": "2f65e1cd-d078-4de5-8375-18a06b341867",
+    "amount": 72.37,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-01T07:24:22.747984",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8c014c7e-bd6f-44b2-8ae3-a438e03bf274",
+    "customer_id": "10d34282-25f2-42b3-85e8-3d3b3dce3842",
+    "amount": 154.97,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-21T09:24:22.747994",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c2777f39-2f20-46b5-b157-a252142e7d34",
+    "customer_id": "b7afd691-ea8a-42c6-88d8-afa657bc177c",
+    "amount": 98.66,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-20T11:24:22.748005",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "81ea30a1-d7e9-4640-8881-2bf93cb48cf8",
+    "customer_id": "3c5ebe0a-d91e-4559-9b1d-c24053aee604",
+    "amount": 297.57,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-05T13:24:22.748015",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "d82786f4-9c8e-45a1-b87f-6b94b9b93d08",
+    "customer_id": "a7c022bc-f2aa-41a0-baa2-c2b9cd12fdc8",
+    "amount": 158.6,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-20T18:24:22.748026",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "3562ffab-98ac-4782-87a0-b94f327c15f1",
+    "customer_id": "d7d40ab5-0e2f-4661-a148-1da2c21f8c29",
+    "amount": 73.77,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-25T03:24:22.748037",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "d5f5e89d-f362-47f1-8947-8f15d542e713",
+    "customer_id": "a908c3c1-5535-4ffd-ac56-c9785b488cfc",
+    "amount": 484.33,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-10-31T08:24:22.748048",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "dec028ce-3cf8-4d84-aaeb-eb618a8d6bbc",
+    "customer_id": "d55ec0ca-0a9e-4591-998d-8c563f6bc8d4",
+    "amount": 304.59,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-23T20:24:22.748058",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "3d2cf9b0-5128-48b2-8fba-21fbbf9eca64",
+    "customer_id": "62ff4edb-69c4-4401-9c8b-412c6136bcf4",
+    "amount": 497.02,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-06T03:24:22.748068",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "fca15925-a108-4c2e-a2cf-cc4ade5742c8",
+    "customer_id": "a908c3c1-5535-4ffd-ac56-c9785b488cfc",
+    "amount": 364.29,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-15T03:24:22.748079",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "454e3f85-5cb8-4806-9618-34ceaed38065",
+    "customer_id": "e9acdaf0-8a74-4447-9ffe-c86c38fedac5",
+    "amount": 115.64,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-10-29T22:24:22.748090",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b7422694-e62a-4663-8e99-a86c6d13b6a3",
+    "customer_id": "6f0b912c-8016-4d33-8971-090176f44162",
+    "amount": 70.62,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-11T03:24:22.748100",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "6336a30d-db17-41cf-8ee5-e46799fef9d2",
+    "customer_id": "890eda04-b296-428d-b5e4-c8d8f85e7369",
+    "amount": 463.35,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-06T06:24:22.748111",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "59252506-1577-46d8-9939-8fa82097567c",
+    "customer_id": "89b20543-86b8-44c0-81fb-b1bdcd25528a",
+    "amount": 71.36,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-10T21:24:22.748122",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "a97a654e-7ed0-49a0-b140-615f8b5dff58",
+    "customer_id": "148753fb-9bb3-4789-9e27-a201cf5a8774",
+    "amount": 374.4,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-09T22:24:22.748138",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b109bc06-d5df-4242-96dd-45a6bb8b2104",
+    "customer_id": "564d6e5b-aa55-4d5f-b6d0-b6ffdd53d14c",
+    "amount": 290.14,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-19T21:24:22.748149",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "7caf877a-0c70-4c7e-93bf-cc17963a56ca",
+    "customer_id": "148753fb-9bb3-4789-9e27-a201cf5a8774",
+    "amount": 53.59,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-09T23:24:22.748160",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "0ba888f6-ef52-4231-8fe3-edea16630238",
+    "customer_id": "3acb27fd-9f29-4674-bfc8-ffa658e02cac",
+    "amount": 153.67,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-15T06:24:22.748176",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "9f62f5bc-3b99-4ef6-8a83-87b167de9e87",
+    "customer_id": "dcd77f51-3e42-454e-b95c-9d4441a1a6d1",
+    "amount": 435.78,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-03T10:24:22.748187",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "626cded7-6142-43ab-a023-904c9bf83497",
+    "customer_id": "d1e11906-950a-4df4-817f-3f7559bb4852",
+    "amount": 340.49,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-04T16:24:22.748202",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "fa344ae0-0f98-4e9a-be39-9231a6704723",
+    "customer_id": "2d44492a-75c8-42a0-a5d3-74d6fe38105a",
+    "amount": 123.39,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-24T11:24:22.748240",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "4170a5cd-6cb0-4b7f-8243-f791704b230a",
+    "customer_id": "945c5db0-cb7d-40c6-bbd7-573c898b90aa",
+    "amount": 145.36,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-26T11:24:22.748273",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "1c79dda2-5046-4a64-8f6f-ab892b3bae33",
+    "customer_id": "5f2cc578-e20c-4e29-a868-1354ea524c19",
+    "amount": 447.11,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-21T15:24:22.748303",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "3a5f2eb7-ebd3-4950-8370-e9e500457dc9",
+    "customer_id": "d1e11906-950a-4df4-817f-3f7559bb4852",
+    "amount": 398.82,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-17T04:24:22.748325",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "1c819720-fb40-46e3-8976-eb4444fbbffa",
+    "customer_id": "7f1d8bc2-4b9b-4837-a932-88ea0f654571",
+    "amount": 388.67,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-22T11:24:22.748348",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "984c376d-7cfe-49fd-a6a7-a443ed51a198",
+    "customer_id": "32917719-efee-4a41-9598-4ecc99318d9a",
+    "amount": 464.9,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-22T14:24:22.748370",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "f7944ede-4343-4eba-9b24-f5ab6e72cf30",
+    "customer_id": "d7d40ab5-0e2f-4661-a148-1da2c21f8c29",
+    "amount": 225.88,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-04T09:24:22.748392",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b456875c-234e-4d04-bb9c-bf1854edf596",
+    "customer_id": "7f1d8bc2-4b9b-4837-a932-88ea0f654571",
+    "amount": 156.99,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-12T05:24:22.748413",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "ac1cd15e-08be-449f-84be-ecda76b25c70",
+    "customer_id": "134d7fa0-7b90-4cca-823f-d7255b12f50e",
+    "amount": 376.61,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-17T09:24:22.748434",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "4a12d8ef-6fd7-4b2e-95b3-be666658ac93",
+    "customer_id": "76c3cd90-1a92-45e1-9bfb-c0f083abbe95",
+    "amount": 326.32,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-10T01:24:22.748457",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "f5d93c6c-6bbe-4b95-8288-7e106f0dc6b2",
+    "customer_id": "c07b93d3-80c1-4624-b059-df68e8a4845f",
+    "amount": 1770.13,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-10T17:24:22.748482",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "ca4b37ab-30ad-4044-bae8-166bcbd48ea8",
+    "customer_id": "27ce2184-0e3b-442d-b7a3-fdfc079afc2c",
+    "amount": 214.81,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-04T20:24:22.748499",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "a2936a8d-f487-4e02-85d1-f3c00287b60e",
+    "customer_id": "7192aee0-13e8-4607-88b1-bbc4c33921dc",
+    "amount": 48.99,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-14T16:24:22.748510",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b7753b51-047a-424d-99ac-6f83f8127233",
+    "customer_id": "62ff4edb-69c4-4401-9c8b-412c6136bcf4",
+    "amount": 179.07,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-11T19:24:22.748521",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "226a1a3d-fa24-4cc2-9828-b065190cd78f",
+    "customer_id": "813cb1aa-72c7-426f-8f50-6f58d27bdca5",
+    "amount": 214.63,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-07T02:24:22.748543",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5f60d5af-3eb2-4b55-bb61-287656ed7f76",
+    "customer_id": "54a12020-215a-49ca-b6a8-531dc11232ca",
+    "amount": 15.37,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-09T01:24:22.748555",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "d04c041e-aa6a-4516-bdbd-ec67acec2233",
+    "customer_id": "890eda04-b296-428d-b5e4-c8d8f85e7369",
+    "amount": 342.87,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-12T18:24:22.748566",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "64aa67f6-5785-4627-aa02-f29030636f23",
+    "customer_id": "2d44492a-75c8-42a0-a5d3-74d6fe38105a",
+    "amount": 1250.3,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-12T06:24:22.748582",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "3a7ef91b-3820-4559-9d40-2cdb8a77e9fe",
+    "customer_id": "27ce2184-0e3b-442d-b7a3-fdfc079afc2c",
+    "amount": 79.3,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-05T22:24:22.748595",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8dbd7a2a-52ab-4506-ab55-bb660ff8f860",
+    "customer_id": "2c74a004-d1cc-43f2-bfda-4f51d34c7862",
+    "amount": 121.66,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-07T23:24:22.748606",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "dc78a704-a89b-499a-8a45-bfe303b12d00",
+    "customer_id": "6f0b912c-8016-4d33-8971-090176f44162",
+    "amount": 296.08,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-14T18:24:22.748617",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "495d782e-0678-4d66-a081-82e488756d17",
+    "customer_id": "7b360668-0130-49b9-8452-af0927702b63",
+    "amount": 31.86,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-13T10:24:22.748628",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "703a9d6b-70a5-487d-9fad-2b6290e8d673",
+    "customer_id": "181eece7-db96-468d-b7bd-84cd71d16a54",
+    "amount": 293.35,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-27T09:24:22.748639",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c4be2f48-d3b9-4b9c-a5a6-d711140ba07a",
+    "customer_id": "fc5723cd-29b1-49a5-bab4-0568956eaa70",
+    "amount": 355.72,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-01T03:24:22.748656",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5b80f2da-6e03-43a4-aed1-c29f601072d0",
+    "customer_id": "088a7da5-a65e-4f3c-901f-84afaa5dbb56",
+    "amount": 306.18,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-12T18:24:22.748668",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "16e6bec6-4f87-4084-a110-46247149846b",
+    "customer_id": "15c119a8-b022-4d0e-83fa-1f84404383be",
+    "amount": 487.29,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-19T04:24:22.748679",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "cefd786b-f690-48e4-9a16-50ab0fac5cc3",
+    "customer_id": "111e2e3c-1298-4009-9118-5a31623197e2",
+    "amount": 489.12,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-27T08:24:22.748690",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "565ea456-6a62-4b7c-92dd-c28fabaced62",
+    "customer_id": "8f308742-d80d-4b93-8c35-649b4796913d",
+    "amount": 461.09,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-10-29T07:24:22.748700",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "691f94fe-b805-4e32-87e1-234afd3fc0e0",
+    "customer_id": "5cc5bb09-0103-4f54-93ff-e69e118e1c87",
+    "amount": 449.2,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-01T16:24:22.748712",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "2a4bb2e8-4336-49b6-b290-f8a61cb9736f",
+    "customer_id": "cdab8cc3-ca76-4ad3-8497-d19349f17d74",
+    "amount": 401.57,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-12T14:24:22.748723",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "9ab5f538-5150-418e-9100-0ef557001b6a",
+    "customer_id": "e5777b50-fe69-424a-88ec-29d9493d7f9d",
+    "amount": 265.24,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-26T22:24:22.748734",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b67d805c-b552-4d41-bc63-d35f7f861542",
+    "customer_id": "00891ae6-86d2-43fe-9e79-b6ff2ae96305",
+    "amount": 271.48,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-20T05:24:22.748745",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "90b6c65c-df7b-4f87-a634-d7cc9bacb092",
+    "customer_id": "9e487d61-a2fb-4a4f-91c5-4c74c1b5dce2",
+    "amount": 267.13,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-12T23:24:22.748755",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "3999eecd-63f0-45ad-9aeb-d2f768f0d81a",
+    "customer_id": "1fc68c78-8e3e-48c1-a7bf-ee185bb50982",
+    "amount": 281.35,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-06T10:24:22.748772",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "9cdebd71-2736-4416-8cf7-31e15d28486b",
+    "customer_id": "d7d40ab5-0e2f-4661-a148-1da2c21f8c29",
+    "amount": 447.01,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-08T16:24:22.748784",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "4a5ac8ed-7c0c-4679-a6af-357641f753f0",
+    "customer_id": "342899cd-fdf4-416b-9b33-25530c153117",
+    "amount": 160.6,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-12T21:24:22.748800",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "17c010a0-8fa1-4646-a456-3a805f8dbc94",
+    "customer_id": "8f308742-d80d-4b93-8c35-649b4796913d",
+    "amount": 264.75,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-22T01:24:22.748839",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "7bce14f1-7f0e-44b3-9257-c39d2b5c7a0e",
+    "customer_id": "19d5e379-c50b-4afa-9f6d-18e6381251ac",
+    "amount": 216.85,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-23T14:24:22.748852",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e66027f6-aa3d-4535-b241-2c3076de560d",
+    "customer_id": "7767e44b-faeb-4b86-bcdf-27a52fe8023b",
+    "amount": 282.01,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-25T09:24:22.748862",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "600f5649-3465-46e6-924b-b534efc83ba2",
+    "customer_id": "4776c78f-363f-4c7f-8901-1f556ed2b779",
+    "amount": 119.74,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-17T06:24:22.748873",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "773bb3cc-0ad4-4e4c-b52a-97d72e4d23f3",
+    "customer_id": "4c6f0e3f-c7ca-4526-a9a2-04f6fd189541",
+    "amount": 497.95,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-16T13:24:22.748884",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "27ea2f11-f594-4c44-ac14-815082b581ee",
+    "customer_id": "61916252-a123-41fd-831a-a574d77a7c78",
+    "amount": 56.02,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-20T00:24:22.748895",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "0ddb091b-836d-40fa-b965-14058f69e604",
+    "customer_id": "bc695bc7-4045-49b5-9048-386cb868da34",
+    "amount": 353.75,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-15T04:24:22.748907",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "14babb5c-c79f-4d27-b062-eb7766539932",
+    "customer_id": "d7d40ab5-0e2f-4661-a148-1da2c21f8c29",
+    "amount": 154.51,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-09T16:24:22.748918",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "044f7b86-4c98-4c05-8862-01bbfae5e916",
+    "customer_id": "10d80f70-b983-412c-a7b2-20c6e72c55c4",
+    "amount": 164.02,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-17T20:24:22.748928",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "ca8aa2e0-9f4d-4650-9f7b-2a859430a429",
+    "customer_id": "57283d19-5ab6-4e14-937e-8f2423389ef7",
+    "amount": 141.4,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-07T15:24:22.748939",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "f04814cd-2483-45e4-9c35-f743e20e73c1",
+    "customer_id": "be9bd48a-97f1-409c-aa0f-534e3e9cb0b8",
+    "amount": 273.24,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-05T04:24:22.748950",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "96534ad9-e118-4358-983d-cfc8d98bbdc2",
+    "customer_id": "7767e44b-faeb-4b86-bcdf-27a52fe8023b",
+    "amount": 352.53,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-16T19:24:22.748961",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "1ab80e05-66a2-4f50-9d18-d89593ce9ce6",
+    "customer_id": "a09b4cc9-1f37-4285-9f9a-6268953a0b7d",
+    "amount": 281.59,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-06T19:24:22.748989",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c6354a3c-0036-450a-922e-cf56fe4eee25",
+    "customer_id": "00891ae6-86d2-43fe-9e79-b6ff2ae96305",
+    "amount": 238.48,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-01T13:24:22.749012",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "24e76dcb-a58b-45bb-bd89-13c214c65e00",
+    "customer_id": "24020072-e377-4877-9578-235af1cdb63c",
+    "amount": 267.89,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-06T04:24:22.749024",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "d7f1c3ef-9c21-4322-ad54-ab0eb0a24396",
+    "customer_id": "7f1d8bc2-4b9b-4837-a932-88ea0f654571",
+    "amount": 332.15,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-05T11:24:22.749035",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "75d79360-316c-41f5-a246-05d7f691f888",
+    "customer_id": "c2703383-a1f9-4f2a-943a-cf62ca1c4c34",
+    "amount": 2286.2,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-10T03:24:22.749047",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "717559c1-524b-4554-9c69-e726499f274a",
+    "customer_id": "ea66a933-c0a4-4d88-b34f-2f75c4176da5",
+    "amount": 49.27,
+    "merchant": "Loja Online",
+    "timestamp": "2025-10-30T05:24:22.749066",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8bd7f96f-71c6-446b-8dff-23bfd8e0cd1f",
+    "customer_id": "19d5e379-c50b-4afa-9f6d-18e6381251ac",
+    "amount": 264.09,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-04T04:24:22.749078",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "0d63ac20-3919-49bb-82aa-89fa554b35f2",
+    "customer_id": "ad2e9dc9-4145-4686-86ea-3edc50ea52d9",
+    "amount": 84.11,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-21T12:24:22.749090",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "49724fb4-629a-4a09-ad76-b9d3d245e5fb",
+    "customer_id": "32917719-efee-4a41-9598-4ecc99318d9a",
+    "amount": 436.4,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-13T18:24:22.749101",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8823feff-126c-4c54-b79b-934821d0dc85",
+    "customer_id": "4c6f0e3f-c7ca-4526-a9a2-04f6fd189541",
+    "amount": 254.79,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-13T04:24:22.749111",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5ec92ed2-6207-4c92-bf65-2a46f6b9e666",
+    "customer_id": "61916252-a123-41fd-831a-a574d77a7c78",
+    "amount": 218.91,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-11T08:24:22.749122",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "bb1f883f-2fb7-4b05-b38c-ff40cdfb45c5",
+    "customer_id": "3acb27fd-9f29-4674-bfc8-ffa658e02cac",
+    "amount": 375.22,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-10T14:24:22.749132",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "7915ed7c-5431-4851-924d-aa8ad097619d",
+    "customer_id": "945c5db0-cb7d-40c6-bbd7-573c898b90aa",
+    "amount": 55.4,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-02T08:24:22.749143",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "4202d6b7-544e-4776-8dd2-c9ae258f5d44",
+    "customer_id": "2d44492a-75c8-42a0-a5d3-74d6fe38105a",
+    "amount": 405.09,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-25T17:24:22.749153",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "deb9ac68-7c91-461c-abab-dbaa757214b5",
+    "customer_id": "088a7da5-a65e-4f3c-901f-84afaa5dbb56",
+    "amount": 273.16,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-16T16:24:22.749164",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "7b4d2079-52b1-47bf-8b78-e0b44d5931ef",
+    "customer_id": "e3aee017-abe5-46b0-9681-ea70ece08123",
+    "amount": 475.69,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-06T10:24:22.749175",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "57a762a0-3810-479d-91bf-832c337297be",
+    "customer_id": "d55ec0ca-0a9e-4591-998d-8c563f6bc8d4",
+    "amount": 330.2,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-06T04:24:22.749186",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "58b62a43-960b-47ea-93bd-484ff901b119",
+    "customer_id": "1fc68c78-8e3e-48c1-a7bf-ee185bb50982",
+    "amount": 276.85,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-17T10:24:22.749196",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c7f01edf-3e9a-4f8e-ae2c-b449fc881786",
+    "customer_id": "5c9b0af7-a5b8-479a-98d5-0d95a1031b8d",
+    "amount": 234.13,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-08T02:24:22.749207",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "0033816c-5603-4467-a291-677839efa692",
+    "customer_id": "fd73ac75-471a-484d-af0d-e79f8926756f",
+    "amount": 331.97,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-27T05:24:22.749219",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "d8334b73-f411-4fbc-a221-0e4c69c28809",
+    "customer_id": "27ce2184-0e3b-442d-b7a3-fdfc079afc2c",
+    "amount": 331.19,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-06T08:24:22.749229",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "fe21ffea-6e99-4781-b239-81df452b5a81",
+    "customer_id": "1fc68c78-8e3e-48c1-a7bf-ee185bb50982",
+    "amount": 126.27,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-10T12:24:22.749240",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8afdf949-55f7-41d7-9e27-4dace321f217",
+    "customer_id": "d1e11906-950a-4df4-817f-3f7559bb4852",
+    "amount": 179.13,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-14T10:24:22.749251",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "88e0d73f-f4b2-474b-9c8a-5d42dffb8915",
+    "customer_id": "5cc5bb09-0103-4f54-93ff-e69e118e1c87",
+    "amount": 355.76,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-22T18:24:22.749262",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "d8aac9d6-4736-4512-a958-46a4c17f3cfd",
+    "customer_id": "a52a44f7-3752-43a5-acab-b8ed83a6e44b",
+    "amount": 317.76,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-04T11:24:22.749278",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "3060fc4f-9bcb-4200-bda3-c074fad3e69a",
+    "customer_id": "342899cd-fdf4-416b-9b33-25530c153117",
+    "amount": 108.18,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-11T07:24:22.749294",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "56739e0f-e1b4-4fcd-ad64-8b6f1c31bf08",
+    "customer_id": "27ce2184-0e3b-442d-b7a3-fdfc079afc2c",
+    "amount": 221.62,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-24T03:24:22.749314",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b9af8ad9-1ded-499c-aacc-55e644de41f7",
+    "customer_id": "d8106630-7bd5-4e94-83a9-b1a21e2e661c",
+    "amount": 271.49,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-02T20:24:22.749325",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5b8cdfb1-ddb9-45ad-ae1d-533f4bc64b5e",
+    "customer_id": "5cc5bb09-0103-4f54-93ff-e69e118e1c87",
+    "amount": 267.82,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-01T22:24:22.749341",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "27675b07-6e54-41ef-a4eb-a17510c8bbb9",
+    "customer_id": "61916252-a123-41fd-831a-a574d77a7c78",
+    "amount": 305.33,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-03T23:24:22.749365",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e84f284f-5b26-4d6e-ae5f-ff38094e8917",
+    "customer_id": "80c5ac45-6aaf-412c-a3cc-cc80b92460a0",
+    "amount": 151.91,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-10-30T15:24:22.749388",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "9c768fb7-4538-478a-8df0-43620fb72aed",
+    "customer_id": "f5fbd8d5-8d29-49b3-90c8-d0b9154c4c41",
+    "amount": 209.57,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-07T06:24:22.749406",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "1af20fb8-f8b7-4839-a69a-a4b8c9817005",
+    "customer_id": "181eece7-db96-468d-b7bd-84cd71d16a54",
+    "amount": 359.55,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-02T18:24:22.749429",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "49eb42bf-1a52-4a02-b5d2-3c8f9330f611",
+    "customer_id": "39ba377c-5cda-4e11-9490-979afd1e244e",
+    "amount": 343.27,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-23T02:24:22.749442",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "da48b272-c50b-41ac-bc00-822d6d07a02f",
+    "customer_id": "e9acdaf0-8a74-4447-9ffe-c86c38fedac5",
+    "amount": 181.68,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-06T05:24:22.749453",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "11e6f169-3ed8-46af-96ea-72fd23e5cd7f",
+    "customer_id": "8294ed69-4fab-4334-8c62-af0aa8b4b1cd",
+    "amount": 141.68,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-08T20:24:22.749464",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "ddd10b3a-9c0a-4a7b-9dc4-c510f8a11c2a",
+    "customer_id": "fd73ac75-471a-484d-af0d-e79f8926756f",
+    "amount": 286.34,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-09T00:24:22.749474",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "800e45ba-9eb8-4ebb-970c-451b6b3c9100",
+    "customer_id": "5f2cc578-e20c-4e29-a868-1354ea524c19",
+    "amount": 4367.2,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-13T21:24:22.749486",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "8a060933-8f3e-4775-b92b-42281681ced2",
+    "customer_id": "a034a64c-e92d-4f2a-9bd7-9e6c31c0846b",
+    "amount": 490.67,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-12T03:24:22.749496",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e8ab1c63-58ce-4d55-b1e1-d9aa181c6211",
+    "customer_id": "cdab8cc3-ca76-4ad3-8497-d19349f17d74",
+    "amount": 118.35,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-19T00:24:22.749508",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5742050a-2fbe-4292-bbec-37bdbd1bdead",
+    "customer_id": "62ff4edb-69c4-4401-9c8b-412c6136bcf4",
+    "amount": 337.32,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-10-31T03:24:22.749520",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8dbc431d-3d86-416f-87f1-4b7441d0cd52",
+    "customer_id": "9a47e9d6-913a-431f-ad70-11385b6bb605",
+    "amount": 355.89,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-24T06:24:22.749531",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "2834853b-6775-490b-a7af-aaac945af79d",
+    "customer_id": "8294ed69-4fab-4334-8c62-af0aa8b4b1cd",
+    "amount": 276.74,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-21T22:24:22.749542",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "ddecf6db-1c8d-47c1-87fa-52f6f2a30fcb",
+    "customer_id": "54a12020-215a-49ca-b6a8-531dc11232ca",
+    "amount": 288.13,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-26T20:24:22.749553",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "def315da-daf8-4ba4-98eb-52a30b44eff1",
+    "customer_id": "d4da10c6-2605-438a-9a7e-6ec46f4a4fbb",
+    "amount": 374.35,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-13T06:24:22.749569",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "0ac0dc5b-2471-4273-ba76-71f35d2e7c69",
+    "customer_id": "4776c78f-363f-4c7f-8901-1f556ed2b779",
+    "amount": 350.88,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-22T18:24:22.749581",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "1b831e56-131f-4219-a035-3927e6282d88",
+    "customer_id": "27ce2184-0e3b-442d-b7a3-fdfc079afc2c",
+    "amount": 209.34,
+    "merchant": "Loja Online",
+    "timestamp": "2025-10-30T18:24:22.749592",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c167fb48-f177-4cc6-b159-a2eb6db84877",
+    "customer_id": "10d34282-25f2-42b3-85e8-3d3b3dce3842",
+    "amount": 348.74,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-01T05:24:22.749603",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5023274f-ffe6-4910-b8ce-65f9bf9ce971",
+    "customer_id": "15c119a8-b022-4d0e-83fa-1f84404383be",
+    "amount": 262.24,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-10-31T22:24:22.749613",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "516ffbe4-416d-4a95-b19a-316ccf82c430",
+    "customer_id": "183aec72-7e35-4075-b84c-0532ee853311",
+    "amount": 215.44,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-20T12:24:22.749624",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "3a779a7d-a9a8-4aa3-9e8e-527cdc876525",
+    "customer_id": "fd73ac75-471a-484d-af0d-e79f8926756f",
+    "amount": 388.52,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-01T15:24:22.749635",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c5e32036-7622-4b33-8f86-b51c22e1e613",
+    "customer_id": "a5852034-952c-4afd-85fd-b909eae57820",
+    "amount": 24.78,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-10-29T03:24:22.749650",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "6fcf4b97-6cd8-4f8d-a3e7-cd38dd786a46",
+    "customer_id": "cdab8cc3-ca76-4ad3-8497-d19349f17d74",
+    "amount": 396.38,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-26T00:24:22.749662",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "53067bee-dc75-40ee-98a7-fe643f4a0925",
+    "customer_id": "fe5fd7ff-1462-481e-8843-fc28b9588d7b",
+    "amount": 89.97,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-03T05:24:22.749673",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "70b5656b-a9af-4554-88dd-e6eddcc42271",
+    "customer_id": "6f0b912c-8016-4d33-8971-090176f44162",
+    "amount": 162.73,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-03T19:24:22.749683",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "3c6419dc-1f9b-4c9e-8313-af6406dc50e9",
+    "customer_id": "e93a09bf-3ac4-4275-a614-f44babfbcfba",
+    "amount": 318.96,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-10-30T23:24:22.749694",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "a7ff070a-a58f-42d1-b505-5cfe6d22360f",
+    "customer_id": "dd7f085b-9117-48be-ac8f-9377bac12081",
+    "amount": 490.67,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-22T17:24:22.749705",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "2d551a96-03b1-4bf7-8529-09b4e3b2f7fd",
+    "customer_id": "39ba377c-5cda-4e11-9490-979afd1e244e",
+    "amount": 127.02,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-10-29T06:24:22.749731",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "a29fdf60-8eb6-482a-81e6-fe0a72227704",
+    "customer_id": "86a756a6-dce1-40fe-a6ea-a7b10796a9b6",
+    "amount": 27.95,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-05T05:24:22.749751",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "6cffc5a8-1794-49c7-a582-ad5ba690ffdb",
+    "customer_id": "4855ada0-4337-4c15-ab97-73982f9db675",
+    "amount": 467.62,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-08T04:24:22.749763",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "786ea6bb-a661-4745-a42b-053a178250fc",
+    "customer_id": "890eda04-b296-428d-b5e4-c8d8f85e7369",
+    "amount": 494.91,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-14T07:24:22.749773",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "4c2c8dad-fc6d-4c6d-bda0-803fbf4a1046",
+    "customer_id": "b7afd691-ea8a-42c6-88d8-afa657bc177c",
+    "amount": 467.76,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-01T22:24:22.749784",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "b6600c71-f2f6-4eca-a461-ba4972f10057",
+    "customer_id": "32917719-efee-4a41-9598-4ecc99318d9a",
+    "amount": 17.12,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-01T12:24:22.749794",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "ea0400c0-05a6-4a29-bb14-745fab23d663",
+    "customer_id": "e7128f5d-a883-4d5f-b102-039dfd836f05",
+    "amount": 264.94,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-20T02:24:22.749844",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e7343ade-634b-4799-bb1c-298ecf1bda3a",
+    "customer_id": "8f308742-d80d-4b93-8c35-649b4796913d",
+    "amount": 56.53,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-01T22:24:22.749858",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "d4f6d9b5-e6ac-42d9-b3a8-f547141f3c12",
+    "customer_id": "c81d9fd7-75a6-44b8-b89c-4a6546117f67",
+    "amount": 469.01,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-17T14:24:22.749869",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "18ed3799-1e2b-4623-8119-73ce27d3248b",
+    "customer_id": "134d7fa0-7b90-4cca-823f-d7255b12f50e",
+    "amount": 208.53,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-10T14:24:22.749879",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "ab1704d5-7cfa-4c17-8ed4-7c78cdde21c7",
+    "customer_id": "7b360668-0130-49b9-8452-af0927702b63",
+    "amount": 483.95,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-10T04:24:22.749890",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "22b3a077-0fa0-4596-98b2-d5ee2199a060",
+    "customer_id": "57283d19-5ab6-4e14-937e-8f2423389ef7",
+    "amount": 419.86,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-10-31T22:24:22.749900",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "a96fde45-7d08-4ae6-b6d8-5458bd31e09c",
+    "customer_id": "7eea6197-e4ac-4959-badc-0fe2ea8345bf",
+    "amount": 227.46,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-23T22:24:22.749911",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c4f3afdb-ba04-49d0-9abd-ac8a8dcb3b93",
+    "customer_id": "d272779e-5e23-4ae6-9b8e-c1e0426ad322",
+    "amount": 372.15,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-15T02:24:22.749922",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "99cd2ec5-a610-4acd-9a9f-79eaccd8f4e6",
+    "customer_id": "dcd77f51-3e42-454e-b95c-9d4441a1a6d1",
+    "amount": 378.36,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-07T05:24:22.749932",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "fbab9c2e-db57-4059-a929-9a49543b419e",
+    "customer_id": "a034a64c-e92d-4f2a-9bd7-9e6c31c0846b",
+    "amount": 205.98,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-05T18:24:22.749943",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "61ba1987-c8fd-489c-a69f-6eda0ede9d9e",
+    "customer_id": "f5fbd8d5-8d29-49b3-90c8-d0b9154c4c41",
+    "amount": 351.56,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-19T15:24:22.749954",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "033b99e0-b46a-44e9-8c8b-b4ba02c7970d",
+    "customer_id": "fa3b9ccc-50f2-431d-a0ac-3b0cb678a8de",
+    "amount": 443.43,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-18T08:24:22.749966",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "225f241d-4dbc-4093-adee-1bda8960398f",
+    "customer_id": "ea66a933-c0a4-4d88-b34f-2f75c4176da5",
+    "amount": 251.29,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-20T11:24:22.749987",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "4bbd8f9f-2190-4fd5-a62d-d844de7dfd1d",
+    "customer_id": "d8106630-7bd5-4e94-83a9-b1a21e2e661c",
+    "amount": 4134.89,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-27T09:24:22.750010",
+    "is_fraud": true
+  },
+  {
+    "transaction_id": "ebeead3c-f38b-4749-b572-bc5a61087937",
+    "customer_id": "fd73ac75-471a-484d-af0d-e79f8926756f",
+    "amount": 19.46,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-10-30T02:24:22.750036",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "5c64be39-e6de-435e-9074-a74aefae6bab",
+    "customer_id": "9e487d61-a2fb-4a4f-91c5-4c74c1b5dce2",
+    "amount": 278.99,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-10-31T01:24:22.750049",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c258e3e6-fc1f-43a0-afcf-2e4248a4843d",
+    "customer_id": "54a12020-215a-49ca-b6a8-531dc11232ca",
+    "amount": 322.47,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-27T06:24:22.750060",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "93b43f2f-498e-4372-9053-fc5d02c75495",
+    "customer_id": "107e453a-3fd4-4f19-933a-e8819ed6cfd8",
+    "amount": 177.66,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-22T11:24:22.750070",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "974cabcc-a952-4334-a256-cc7f9190fb54",
+    "customer_id": "813cb1aa-72c7-426f-8f50-6f58d27bdca5",
+    "amount": 139.77,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-01T02:24:22.750081",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "fed07f2d-a411-4e8a-82de-403d8a041331",
+    "customer_id": "19d5e379-c50b-4afa-9f6d-18e6381251ac",
+    "amount": 235.84,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-02T11:24:22.750092",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e5a63f48-6a78-4879-ade8-18fa3bb8591c",
+    "customer_id": "28c69d37-ec99-461f-9ac6-6f406139878e",
+    "amount": 97.48,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-27T20:24:22.750108",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "be05b604-74f1-4151-ad35-bf3f0e63caee",
+    "customer_id": "148753fb-9bb3-4789-9e27-a201cf5a8774",
+    "amount": 301.51,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-13T21:24:22.750119",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "fcd599ef-24f5-4adb-be09-a89638087b17",
+    "customer_id": "5c9b0af7-a5b8-479a-98d5-0d95a1031b8d",
+    "amount": 153.22,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-13T19:24:22.750130",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "973a3ed2-66ec-475b-95d2-906a4dab0f5d",
+    "customer_id": "183aec72-7e35-4075-b84c-0532ee853311",
+    "amount": 333.78,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-01T23:24:22.750140",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "3d3f3133-2dff-44b0-bc32-c71500ae189a",
+    "customer_id": "b7afd691-ea8a-42c6-88d8-afa657bc177c",
+    "amount": 40.63,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-19T05:24:22.750151",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "48df5a37-eca5-4d8d-ad08-5dc6f7c1586a",
+    "customer_id": "27ce2184-0e3b-442d-b7a3-fdfc079afc2c",
+    "amount": 11.47,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-11T00:24:22.750162",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "f967bb2c-f511-4e11-af22-d2f8a61ebf26",
+    "customer_id": "dd7f085b-9117-48be-ac8f-9377bac12081",
+    "amount": 267.31,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-01T07:24:22.750173",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "aee42c1a-276a-4f0f-b14c-9c83282041ba",
+    "customer_id": "32917719-efee-4a41-9598-4ecc99318d9a",
+    "amount": 174.82,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-22T17:24:22.750184",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8f876a75-f012-41f7-8137-a128b2f34063",
+    "customer_id": "813cb1aa-72c7-426f-8f50-6f58d27bdca5",
+    "amount": 224.6,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-08T07:24:22.750195",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "0c4b80d3-2926-45d9-ab69-d67e94ac9268",
+    "customer_id": "4855ada0-4337-4c15-ab97-73982f9db675",
+    "amount": 290.27,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-24T06:24:22.750206",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "3714e125-a910-4041-b262-8b67e8c692ca",
+    "customer_id": "54a12020-215a-49ca-b6a8-531dc11232ca",
+    "amount": 374.13,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-13T13:24:22.750216",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "0a4d6132-e7bf-4a00-a927-ea120ccd3196",
+    "customer_id": "53b54d30-4015-4e17-b861-9ea5b95fa0a2",
+    "amount": 375.26,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-04T03:24:22.750227",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "1e9b4429-b57d-46f6-8de1-87aaa5169078",
+    "customer_id": "111e2e3c-1298-4009-9118-5a31623197e2",
+    "amount": 106.47,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-22T09:24:22.750238",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "59844440-e093-4579-a53e-a57dc4e8991f",
+    "customer_id": "181eece7-db96-468d-b7bd-84cd71d16a54",
+    "amount": 324.54,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-27T03:24:22.750265",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "4576555e-67e1-4d67-b342-d77c7f6ed7a5",
+    "customer_id": "3ee3e4a6-fa6f-4c10-82a3-57b3a20da1b9",
+    "amount": 108.77,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-14T06:24:22.750277",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "17f347cc-4a41-496a-b1a4-4c050fd47307",
+    "customer_id": "c9abb9d3-2586-428c-8e62-010a693901c6",
+    "amount": 475.33,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-08T20:24:22.750288",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "d00e9a90-41aa-421d-a48b-6669c0110a94",
+    "customer_id": "e9acdaf0-8a74-4447-9ffe-c86c38fedac5",
+    "amount": 90.17,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-21T10:24:22.750299",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "810d00ab-d7ff-454a-beed-af2e97d15d2b",
+    "customer_id": "3acb27fd-9f29-4674-bfc8-ffa658e02cac",
+    "amount": 247.74,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-21T12:24:22.750310",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "9aa2db55-2ee7-4575-8655-04d2e988bbec",
+    "customer_id": "d272779e-5e23-4ae6-9b8e-c1e0426ad322",
+    "amount": 469.43,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-11T22:24:22.750321",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "204e46bf-bb01-47b3-9729-102cefc62a3d",
+    "customer_id": "d272779e-5e23-4ae6-9b8e-c1e0426ad322",
+    "amount": 288.37,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-11T12:24:22.750349",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "32cb5199-0e8f-433b-8cf9-1ed5b047e58d",
+    "customer_id": "e7128f5d-a883-4d5f-b102-039dfd836f05",
+    "amount": 448.98,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-23T09:24:22.750361",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "2c60ea6c-9e5d-42f4-8d86-861bd88f612e",
+    "customer_id": "19d5e379-c50b-4afa-9f6d-18e6381251ac",
+    "amount": 97.67,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-13T17:24:22.750372",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "857a8c17-60c4-4bbb-8192-ecb4a27ffecc",
+    "customer_id": "6f0b912c-8016-4d33-8971-090176f44162",
+    "amount": 478.51,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-27T02:24:22.750382",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "a8d69208-c065-4526-aadd-40e86d4dc486",
+    "customer_id": "fe5fd7ff-1462-481e-8843-fc28b9588d7b",
+    "amount": 240.85,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-08T14:24:22.750393",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "3b5253c2-1f17-4e28-b948-db07189ade5e",
+    "customer_id": "181eece7-db96-468d-b7bd-84cd71d16a54",
+    "amount": 219.71,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-13T10:24:22.750404",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "d44a11c2-fd6b-42eb-8dc2-4b4b999fb12d",
+    "customer_id": "15c119a8-b022-4d0e-83fa-1f84404383be",
+    "amount": 129.75,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-09T11:24:22.750414",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "da8cfc4d-24e1-4604-8ed7-f28f39332935",
+    "customer_id": "ea66a933-c0a4-4d88-b34f-2f75c4176da5",
+    "amount": 193.98,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-24T15:24:22.750425",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "c16c6b59-b011-46c3-9647-6804a8d6d01e",
+    "customer_id": "c50e7645-8f87-4cb9-81b4-c686ec98bedd",
+    "amount": 221.24,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-03T21:24:22.750435",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "667a66d9-2c95-4a21-91c1-bfbc0f5bac42",
+    "customer_id": "4855ada0-4337-4c15-ab97-73982f9db675",
+    "amount": 98.9,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-08T19:24:22.750446",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "80929d3a-9cc9-4765-ab52-de3c54fdf7f2",
+    "customer_id": "f5fbd8d5-8d29-49b3-90c8-d0b9154c4c41",
+    "amount": 295.99,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-13T16:24:22.750457",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "8b173ab6-efcf-4fa9-b868-fde82a5cd8a2",
+    "customer_id": "7b360668-0130-49b9-8452-af0927702b63",
+    "amount": 257.74,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-24T16:24:22.750468",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "ac8e594c-db49-4e1d-b699-8dc29e346380",
+    "customer_id": "28c69d37-ec99-461f-9ac6-6f406139878e",
+    "amount": 11.16,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-06T15:24:22.750478",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "955dcda2-8962-4c33-8d90-d8845090a7bb",
+    "customer_id": "80c5ac45-6aaf-412c-a3cc-cc80b92460a0",
+    "amount": 425.47,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-02T15:24:22.750501",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e3140d8c-02db-49f3-ab81-6556a0ad70b4",
+    "customer_id": "148753fb-9bb3-4789-9e27-a201cf5a8774",
+    "amount": 160.17,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-10-31T00:24:22.750513",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "e91da8cd-9801-46f2-96b4-9c2b106ca52c",
+    "customer_id": "d272779e-5e23-4ae6-9b8e-c1e0426ad322",
+    "amount": 413.78,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-21T05:24:22.750526",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "7db747f6-26d9-4006-aaba-a3eac49b3629",
+    "customer_id": "aba18b35-d7fd-429c-8ffc-532d09f0a498",
+    "amount": 401.71,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-16T14:24:22.750537",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "a79fa98e-df86-4cb3-a9a4-5931bd46198b",
+    "customer_id": "10d80f70-b983-412c-a7b2-20c6e72c55c4",
+    "amount": 425.64,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-10T22:24:22.750548",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "ad745627-ef7b-4ae8-9151-61a41610bd89",
+    "customer_id": "3acb27fd-9f29-4674-bfc8-ffa658e02cac",
+    "amount": 424.74,
+    "merchant": "Posto Shell",
+    "timestamp": "2025-11-16T14:24:22.750558",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "a045eef5-a08b-49be-89d7-7f574d533254",
+    "customer_id": "c50e7645-8f87-4cb9-81b4-c686ec98bedd",
+    "amount": 35.51,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-11-22T02:24:22.750568",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "53e5ca23-2e13-42b0-8301-5d2091fafa54",
+    "customer_id": "6f0b912c-8016-4d33-8971-090176f44162",
+    "amount": 390.31,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-25T20:24:22.750584",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "fd53bbc6-c348-4d2d-a78b-3e51c70e64ab",
+    "customer_id": "3ee3e4a6-fa6f-4c10-82a3-57b3a20da1b9",
+    "amount": 241.53,
+    "merchant": "Supermercado ABC",
+    "timestamp": "2025-11-23T18:24:22.750595",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "eacd1d00-9c15-4abd-b4cc-60436e21438d",
+    "customer_id": "2d44492a-75c8-42a0-a5d3-74d6fe38105a",
+    "amount": 261.69,
+    "merchant": "Restaurante XYZ",
+    "timestamp": "2025-11-08T22:24:22.750606",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "d9e2c4f9-34e4-4726-8079-8cf4ac98bfb9",
+    "customer_id": "fe5fd7ff-1462-481e-8843-fc28b9588d7b",
+    "amount": 401.26,
+    "merchant": "Farmacia Popular",
+    "timestamp": "2025-10-30T23:24:22.750617",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "23993a1d-871e-4717-9c97-314111757a23",
+    "customer_id": "945c5db0-cb7d-40c6-bbd7-573c898b90aa",
+    "amount": 94.86,
+    "merchant": "Loja Online",
+    "timestamp": "2025-11-17T04:24:22.750627",
+    "is_fraud": false
+  },
+  {
+    "transaction_id": "1bb7247b-1533-46c5-8149-9da04d3fa65b",
+    "customer_id": "9a47e9d6-913a-431f-ad70-11385b6bb605",
+    "amount": 178.78,
+    "merchant": "Shopping Center",
+    "timestamp": "2025-11-21T08:24:22.750643",
+    "is_fraud": false
+  }
+]
