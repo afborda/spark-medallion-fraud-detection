@@ -24,6 +24,7 @@ Este projeto implementa um **pipeline de dados** para detecção de fraudes em t
 
 ## 🏗️ Arquitetura
 
+### Arquitetura Atual (Batch)
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                     ARQUITETURA MEDALLION                       │
@@ -40,8 +41,41 @@ Este projeto implementa um **pipeline de dados** para detecção de fraudes em t
 │   transactions──► transactions──► transactions──► fraud_       │
 │   .json          /               /               detection/    │
 │                                                  (partitioned) │
-│                                                                 │
 └─────────────────────────────────────────────────────────────────┘
+```
+
+### Arquitetura Objetivo (Streaming + Lakehouse)
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        LAKEHOUSE ARCHITECTURE                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────┐    ┌─────────┐    ┌─────────────────┐    ┌─────────────┐ │
+│  │ ShadowTraffic│───►│  Kafka  │───►│ Spark Streaming │───►│ MinIO Lake  │ │
+│  │  (Generator) │    │ Topics  │    │   ETL Jobs      │    │ Bronze/     │ │
+│  └──────────────┘    │customers│    │                 │    │ Silver/Gold │ │
+│                      │ orders  │    └────────┬────────┘    └──────┬──────┘ │
+│                      └─────────┘             │                    │        │
+│                                              │                    ▼        │
+│                                              │            ┌──────────────┐ │
+│                                              └───────────►│  PostgreSQL  │ │
+│                                                           │Data Warehouse│ │
+│                                                           └───────┬──────┘ │
+│                                                                   │        │
+│                                                     ┌─────────────┴─────┐  │
+│                                                     │                   │  │
+│                                                ┌────▼────┐      ┌───────▼─┐│
+│                                                │Metabase │      │Streamlit││
+│                                                │Dashboard│      │  Apps   ││
+│                                                └────┬────┘      └────┬────┘│
+│                                                     │                │     │
+│                                                     └───────┬────────┘     │
+│                                                             │              │
+│                                                       ┌─────▼─────┐        │
+│                                                       │  Traefik  │        │
+│                                                       │Rev. Proxy │        │
+│                                                       └───────────┘        │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Camadas
@@ -191,24 +225,47 @@ python spark/jobs/fraud_detection.py
   - ✅ Níveis de risco: Alto/Médio/Baixo
   - ✅ Particionamento por risk_level
 
+### 🔄 Em Desenvolvimento
+
+- [ ] **PostgreSQL Integration** - Salvar Gold no Data Warehouse
+- [ ] **MinIO Data Lake** - Storage S3-compatible
+- [ ] **Escalar para 50GB** - Volume de produção
+
 ### 📋 Planejado
 
+- [ ] **ShadowTraffic** - Geração de dados em streaming
 - [ ] **Kafka Streaming** - Processamento em tempo real
-- [ ] **Dashboard** - Visualização de métricas
-- [ ] **Alertas** - Notificações de fraude
-- [ ] **ML Models** - Detecção por machine learning
+- [ ] **Spark Structured Streaming** - ETL em tempo real
+- [ ] **Metabase** - Dashboards de BI
+- [ ] **Streamlit** - Apps interativos
+- [ ] **Traefik** - Reverse proxy com domínios
 
 ---
 
-## 🔧 Serviços Docker
+## 🖥️ Infraestrutura
 
-| Serviço | Porta | Descrição |
-|---------|-------|-----------|
-| PostgreSQL | 5432 | Banco de dados |
-| MinIO Console | 9003 | Object storage UI |
-| MinIO API | 9002 | Object storage API |
-| Kafka | 9092 | Message broker |
-| Spark UI | 8081 | Interface Spark |
+### VPS OVH
+| Recurso | Especificação |
+|---------|---------------|
+| **Modelo** | VPS-3 |
+| **vCores** | 8 |
+| **RAM** | 24 GB |
+| **Disco** | 200 GB |
+| **Objetivo** | Processar ~50 GB de dados |
+
+### Serviços Docker
+
+| Serviço | Porta | Descrição | Status |
+|---------|-------|-----------|--------|
+| PostgreSQL | 5432 | Data Warehouse | ✅ Rodando |
+| MinIO Console | 9003 | Object storage UI | ✅ Rodando |
+| MinIO API | 9002 | Object storage API | ✅ Rodando |
+| Kafka | 9092 | Message broker | ✅ Rodando |
+| Zookeeper | 2181 | Kafka coordination | ✅ Rodando |
+| Spark UI | 8081 | Interface Spark | ✅ Rodando |
+| Metabase | - | BI Dashboards | 📋 Planejado |
+| Streamlit | - | Data Apps | 📋 Planejado |
+| Traefik | 80/443 | Reverse Proxy | 📋 Planejado |
 
 ---
 
