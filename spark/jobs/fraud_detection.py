@@ -7,12 +7,13 @@ Aplica regras para identificar transações suspeitas
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, when, hour, to_timestamp
 from datetime import date
+import os
 
 
-# caminhos
-
-SILVER_PATH = "data/silver"
-FRAUD_PATH = "data/gold/fraud_detection"
+# Detecta se está rodando em Docker (caminho absoluto) ou local (caminho relativo)
+BASE_DIR = os.environ.get("DATA_DIR", "/data" if os.path.exists("/data") else "data")
+SILVER_PATH = f"{BASE_DIR}/silver"
+FRAUD_PATH = f"{BASE_DIR}/gold/fraud_detection"
 PROCESS_DATE = date.today().isoformat()
 
 print("=" * 50)
@@ -28,6 +29,7 @@ print("=" * 50)
 print ("🚀 Iniciando Spark Session...")
 spark = SparkSession.builder \
 	.appName("Fraud Detection - Business Rules") \
+	.config("spark.sql.files.maxPartitionBytes", "128m") \
 	.getOrCreate()
 
 	

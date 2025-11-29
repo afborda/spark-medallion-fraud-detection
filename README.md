@@ -184,21 +184,86 @@ python spark/jobs/fraud_detection.py
 
 ## 📊 Resultados
 
-### Dados Processados
+### Evolução dos Testes
+
+| Teste | Transações | Dados Raw | Tempo Total | Throughput | Cluster |
+|-------|------------|-----------|-------------|------------|---------|
+| Inicial | 500 | ~1 MB | ~10s | 50/s | Local |
+| Escala 1 | 50,000 | 11 MB | ~30s | 1,700/s | Local |
+| Escala 2 | 1,000,000 | 216 MB | ~2.5min | 6,700/s | 5 Workers |
+| **Escala 3** | **5,000,000** | **1.1 GB** | **~3min** | **28,000/s** | **5 Workers** |
+
+### Configuração Atual do Cluster
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    SPARK CLUSTER (Docker)                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│                    ┌─────────────────┐                          │
+│                    │  SPARK MASTER   │                          │
+│                    │  Port: 7077     │                          │
+│                    │  UI: 8081       │                          │
+│                    └────────┬────────┘                          │
+│                             │                                   │
+│     ┌───────────┬───────────┼───────────┬───────────┐          │
+│     │           │           │           │           │          │
+│ ┌───▼───┐ ┌─────▼───┐ ┌─────▼───┐ ┌─────▼───┐ ┌─────▼───┐      │
+│ │Worker1│ │ Worker2 │ │ Worker3 │ │ Worker4 │ │ Worker5 │      │
+│ │2 cores│ │ 2 cores │ │ 2 cores │ │ 2 cores │ │ 2 cores │      │
+│ │ 3GB   │ │  3GB    │ │  3GB    │ │  3GB    │ │  3GB    │      │
+│ └───────┘ └─────────┘ └─────────┘ └─────────┘ └─────────┘      │
+│                                                                 │
+│              Total: 10 cores | 15 GB RAM                        │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Performance por Camada (5M transações - Último Teste)
+
+| Camada | Tempo | Registros | Tamanho |
+|--------|-------|-----------|---------|
+| 🔶 Bronze | 44s | 5,050,000 | 417 MB |
+| ⚪ Silver | 58s | 5,050,000 | 428 MB |
+| 🥇 Gold | 38s | Agregações | 430 MB |
+| 🚨 Fraud Detection | 38s | 5,000,000 | (incluso) |
+| **TOTAL** | **~3min** | - | **1.3 GB** |
+
+### Compressão Parquet (5M transações)
+
+| Camada | Formato | Tamanho | Economia |
+|--------|---------|---------|----------|
+| Raw | JSON | 1.1 GB | - |
+| Bronze | Parquet | 417 MB | **62%** |
+| Silver | Parquet | 428 MB | **61%** |
+| Gold | Parquet | 430 MB | **61%** |
+
+### Escalabilidade Comprovada
+
+| Métrica | Local (50K) | Cluster (1M) | Cluster (5M) | Melhoria Total |
+|---------|-------------|--------------|--------------|----------------|
+| Transações | 50,000 | 1,000,000 | **5,000,000** | **100× mais** |
+| Dados | 11 MB | 216 MB | **1.1 GB** | **100× mais** |
+| Tempo | ~30s | ~150s | **~180s** | **6× mais** |
+| **Throughput** | 1,700/s | 6,700/s | **28,000/s** | **16× mais rápido** |
+
+> **Conclusão:** Com 100× mais dados, o tempo aumentou apenas 6×. O throughput subiu de 1,700 para **28,000 transações/segundo** - uma melhoria de **16×**!
+
+### Estatísticas de Fraude (5M transações)
+
+| Nível de Risco | Quantidade | % do Total | Critério |
+|----------------|------------|------------|----------|
+| 🔴 Alto Risco | ~41,000 | 0.8% | Valor > R$1000 **E** horário 2h-5h |
+| 🟠 Risco Médio | ~1,000,000 | 20% | Valor > R$1000 **OU** horário 2h-5h |
+| 🟢 Baixo Risco | ~3,960,000 | 79% | Nenhuma regra acionada |
+| **TOTAL** | **5,000,000** | 100% | - |
+
+### Dados Atuais
 
 | Entidade | Registros |
 |----------|-----------|
-| Clientes | 100 |
-| Transações | 500 |
-
-### Estatísticas de Fraude (Gold Layer)
-
-| Métrica | Valor |
-|---------|-------|
-| Total de transações | 500 |
-| Fraudes detectadas | 19 |
-| Valor total fraudado | R$ 62.260,93 |
-| Taxa de fraude | 3.8% |
+| Clientes | 50,000 |
+| Transações | 5,000,000 |
+| Fraudes (is_fraud) | 250,307 (5.0%) |
 
 ### Detecção por Regras de Negócio
 
@@ -215,7 +280,7 @@ python spark/jobs/fraud_detection.py
 ### ✅ Concluído
 
 - [x] **Infraestrutura Docker** - PostgreSQL, MinIO, Kafka, Spark
-- [x] **Geração de Dados** - Script para dados sintéticos
+- [x] **Geração de Dados** - Script para dados sintéticos com argparse
 - [x] **Bronze Layer** - Ingestão JSON → Parquet
 - [x] **Silver Layer** - Limpeza e validação
 - [x] **Gold Layer** - Agregações (customer_summary, fraud_summary)
@@ -224,12 +289,15 @@ python spark/jobs/fraud_detection.py
   - ✅ Horários suspeitos 2h-5h (suspicious_hour)
   - ✅ Níveis de risco: Alto/Médio/Baixo
   - ✅ Particionamento por risk_level
+- [x] **PostgreSQL Integration** - Gold Layer no Data Warehouse
+- [x] **MinIO Data Lake** - Bronze Layer no storage S3-compatible
+- [x] **Cluster Spark Distribuído** - 5 Workers (10 cores, 15GB RAM)
+- [x] **Escala 1M transações** - Pipeline completo em ~2min 30s
 
 ### 🔄 Em Desenvolvimento
 
-- [ ] **PostgreSQL Integration** - Salvar Gold no Data Warehouse
-- [ ] **MinIO Data Lake** - Storage S3-compatible
-- [ ] **Escalar para 50GB** - Volume de produção
+- [ ] **MinIO Full Integration** - Todo o pipeline no MinIO
+- [ ] **Escalar para 10M+** - Testar limites do cluster
 
 ### 📋 Planejado
 
@@ -255,17 +323,44 @@ python spark/jobs/fraud_detection.py
 
 ### Serviços Docker
 
-| Serviço | Porta | Descrição | Status |
-|---------|-------|-----------|--------|
-| PostgreSQL | 5432 | Data Warehouse | ✅ Rodando |
-| MinIO Console | 9003 | Object storage UI | ✅ Rodando |
-| MinIO API | 9002 | Object storage API | ✅ Rodando |
-| Kafka | 9092 | Message broker | ✅ Rodando |
-| Zookeeper | 2181 | Kafka coordination | ✅ Rodando |
-| Spark UI | 8081 | Interface Spark | ✅ Rodando |
-| Metabase | - | BI Dashboards | 📋 Planejado |
-| Streamlit | - | Data Apps | 📋 Planejado |
-| Traefik | 80/443 | Reverse Proxy | 📋 Planejado |
+| Serviço | Container | Porta | Status |
+|---------|-----------|-------|--------|
+| Spark Master | fraud_spark_master | 7077, 8081 | ✅ Rodando |
+| Spark Worker 1-5 | fraud_spark_worker_* | - | ✅ 5 Workers |
+| PostgreSQL | fraud_postgres | 5432 | ✅ Rodando |
+| MinIO Console | fraud_minio | 9003 | ✅ Rodando |
+| MinIO API | fraud_minio | 9002 | ✅ Rodando |
+| Kafka | fraud_kafka | 9092 | ✅ Rodando |
+| Zookeeper | fraud_zookeeper | 2181 | ✅ Rodando |
+| Metabase | - | - | 📋 Planejado |
+| Streamlit | - | - | 📋 Planejado |
+| Traefik | - | 80/443 | 📋 Planejado |
+
+### Executar no Cluster Distribuído
+
+```bash
+# Gerar dados (local)
+python scripts/generate_data.py --customers 10000 --transactions 1000000
+
+# Executar pipeline no cluster Docker
+docker exec fraud_spark_master /opt/spark/bin/spark-submit \
+  --master spark://spark-master:7077 \
+  --executor-memory 2g \
+  --total-executor-cores 8 \
+  /jobs/bronze_layer.py
+
+docker exec fraud_spark_master /opt/spark/bin/spark-submit \
+  --master spark://spark-master:7077 \
+  /jobs/silver_layer.py
+
+docker exec fraud_spark_master /opt/spark/bin/spark-submit \
+  --master spark://spark-master:7077 \
+  /jobs/gold_layer.py
+
+docker exec fraud_spark_master /opt/spark/bin/spark-submit \
+  --master spark://spark-master:7077 \
+  /jobs/fraud_detection.py
+```
 
 ---
 

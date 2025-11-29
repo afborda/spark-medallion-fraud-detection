@@ -6,12 +6,14 @@ Dados prontos para análise e dashboards
 
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, sum , count, avg, round as spark_round
-from datetime import date 
+from datetime import date
+import os
 
 
-#CAMINHOS
-SILVER_PATH = "data/silver"
-GOLD_PATH = "data/gold"
+# Detecta se está rodando em Docker (caminho absoluto) ou local (caminho relativo)
+BASE_DIR = os.environ.get("DATA_DIR", "/data" if os.path.exists("/data") else "data")
+SILVER_PATH = f"{BASE_DIR}/silver"
+GOLD_PATH = f"{BASE_DIR}/gold"
 PROCESS_DATE = date.today().isoformat()		
 
 
@@ -28,6 +30,7 @@ print("=" * 50)
 print ("🚀 Iniciando Spark Session...")
 spark = SparkSession.builder \
 	.appName("Gold Layer - Aggregations and Metrics") \
+	.config("spark.sql.files.maxPartitionBytes", "128m") \
 	.getOrCreate()
 print(f"✅ Spark Session iniciada. Versão: {spark.version}")	
 
@@ -71,7 +74,7 @@ def create_fraud_summary():
 	#3 Filtrar só fraudes e calcular
 	fraud_df = df.filter(col("is_fraud") == True)
 	total_fraude = fraud_df.count()
-	valor_fraudado = fraud_df.agg(spark_round(sum("amount"), 2).alias("valor_fraudado")).collect()[0][0]
+	valor_fraudado = fraud_df.agg(spark_round(sum("amount"), 2).alias("valor_fraudado")).first()[0]
 
 	#4 Calcula porcentagem
 	percentual_fraude = round((total_fraude/total_transacoes)*100,2)

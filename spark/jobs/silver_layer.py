@@ -6,9 +6,12 @@ Transforma dados brutos (Bronze) em dados confiáveis (Silver)
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, trim, lower, current_timestamp, to_date, regexp_replace
 from datetime import date
+import os
 
-BRONZE_PATH = "data/bronze"
-SILVER_PATH = "data/silver"
+# Detecta se está rodando em Docker (caminho absoluto) ou local (caminho relativo)
+BASE_DIR = os.environ.get("DATA_DIR", "/data" if os.path.exists("/data") else "data")
+BRONZE_PATH = f"{BASE_DIR}/bronze"
+SILVER_PATH = f"{BASE_DIR}/silver"
 PROCESS_DATE = date.today().isoformat()
 
 
@@ -24,6 +27,7 @@ print ("🚀 Iniciando Spark Session...")
 
 spark = SparkSession.builder \
 	.appName("Silver Layer - Data Cleaning and Validation") \
+	.config("spark.sql.files.maxPartitionBytes", "128m") \
 	.getOrCreate()
 print(f"✅ Spark Session iniciada. Versão: {spark.version}")
 

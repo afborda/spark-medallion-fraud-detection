@@ -5,6 +5,7 @@ Gerador de dados sintéticos para detecção de fraudes
 import json
 import random
 import uuid
+import argparse
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -93,15 +94,29 @@ def save_to_json(data, filename):
 	print(f"✅ Dados salvos em {filepath} ({len(data)} registros)")
 
 
-# Teste: gerar 3 clientes e mostrar
 if __name__ == "__main__":
+ # Parser de argumentos
+    parser = argparse.ArgumentParser(description='Gerador de dados sintéticos')
+    parser.add_argument('--customers', '-c', type=int, default=NUM_CUSTOMERS,
+                        help=f'Número de clientes (default: {NUM_CUSTOMERS})')
+    parser.add_argument('--transactions', '-t', type=int, default=NUM_TRANSACTIONS,
+                        help=f'Número de transações (default: {NUM_TRANSACTIONS})')
+    parser.add_argument('--fraud-rate', '-f', type=float, default=FRAUD_PROBABILITY,
+                        help=f'Taxa de fraude (default: {FRAUD_PROBABILITY})')
+    args = parser.parse_args()
+    
+    print("\n=== Configuração ===")
+    print(f"Clientes: {args.customers}")
+    print(f"Transações: {args.transactions}")
+    print(f"Taxa de fraude: {args.fraud_rate * 100}%")
+    
     # 1. Gerar clientes
     print("\n[1/3] Gerando clientes...")
-    customers = generate_customers(NUM_CUSTOMERS)
+    customers = generate_customers(args.customers)
     
     # 2. Gerar transações
     print("[2/3] Gerando transações...")
-    transactions = generate_transactions(customers, NUM_TRANSACTIONS, FRAUD_PROBABILITY)
+    transactions = generate_transactions(customers, args.transactions, args.fraud_rate)
     
     # 3. Salvar arquivos
     print("[3/3] Salvando arquivos...")

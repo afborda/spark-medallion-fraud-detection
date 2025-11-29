@@ -5,9 +5,12 @@ Bronze Layer - Converte JSON para Parquet
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import current_timestamp, lit
 from datetime import datetime
+import os
 
-RAW_DIR = "data/raw"
-BRONZE_DIR = "data/bronze"
+# Detecta se está rodando em Docker (caminho absoluto) ou local (caminho relativo)
+BASE_DIR = os.environ.get("DATA_DIR", "/data" if os.path.exists("/data") else "data")
+RAW_DIR = f"{BASE_DIR}/raw"
+BRONZE_DIR = f"{BASE_DIR}/bronze"
 PROCESS_DATE = datetime.now().strftime("%Y-%m-%d")
 
 print("=" * 50)
@@ -22,6 +25,7 @@ print("=" * 50)
 print("\n🚀 Inicializando Spark...")
 spark = SparkSession.builder \
 	.appName("Bronze Layer Ingestion") \
+	.config("spark.sql.files.maxPartitionBytes", "128m") \
 	.getOrCreate()
 
 print(f"✅ Spark inicializado. {spark.version} \n")
