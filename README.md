@@ -38,7 +38,8 @@ Este projeto implementa um **pipeline de dados** para detecção de fraudes em t
 │   .json          /               /               summary/      │
 │                                                                 │
 │   transactions──► transactions──► transactions──► fraud_       │
-│   .json          /               /               summary/      │
+│   .json          /               /               detection/    │
+│                                                  (partitioned) │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -82,7 +83,8 @@ spark-medallion-fraud-detection/
 │   └── jobs/
 │       ├── bronze_layer.py    # Ingestão: JSON → Parquet
 │       ├── silver_layer.py    # Limpeza e validação
-│       └── gold_layer.py      # Agregações e métricas
+│       ├── gold_layer.py      # Agregações e métricas
+│       └── fraud_detection.py # Regras de detecção de fraude
 │
 └── 📂 data/
     ├── raw/                   # Dados JSON originais
@@ -139,6 +141,9 @@ python spark/jobs/silver_layer.py
 
 # Gold Layer - Agregações
 python spark/jobs/gold_layer.py
+
+# Fraud Detection - Regras de Negócio
+python spark/jobs/fraud_detection.py
 ```
 
 ---
@@ -152,7 +157,7 @@ python spark/jobs/gold_layer.py
 | Clientes | 100 |
 | Transações | 500 |
 
-### Estatísticas de Fraude
+### Estatísticas de Fraude (Gold Layer)
 
 | Métrica | Valor |
 |---------|-------|
@@ -160,6 +165,14 @@ python spark/jobs/gold_layer.py
 | Fraudes detectadas | 19 |
 | Valor total fraudado | R$ 62.260,93 |
 | Taxa de fraude | 3.8% |
+
+### Detecção por Regras de Negócio
+
+| Nível de Risco | Quantidade | Critério |
+|----------------|------------|----------|
+| 🔴 Alto Risco | 4 | Valor > R$1000 **E** horário 2h-5h |
+| 🟠 Risco Médio | 83 | Valor > R$1000 **OU** horário 2h-5h |
+| 🟢 Baixo Risco | 413 | Nenhuma regra acionada |
 
 ---
 
@@ -172,14 +185,11 @@ python spark/jobs/gold_layer.py
 - [x] **Bronze Layer** - Ingestão JSON → Parquet
 - [x] **Silver Layer** - Limpeza e validação
 - [x] **Gold Layer** - Agregações (customer_summary, fraud_summary)
-
-### 🔄 Em Desenvolvimento
-
-- [ ] **Regras de Fraude** - Detecção baseada em regras de negócio
-  - Transações > R$1000
-  - Múltiplas transações em < 1 hora
-  - Horários suspeitos (2h-5h)
-  - Cliente novo + valor alto
+- [x] **Fraud Detection** - Regras de negócio para detecção
+  - ✅ Transações > R$1000 (high_value)
+  - ✅ Horários suspeitos 2h-5h (suspicious_hour)
+  - ✅ Níveis de risco: Alto/Médio/Baixo
+  - ✅ Particionamento por risk_level
 
 ### 📋 Planejado
 
@@ -209,6 +219,8 @@ python spark/jobs/gold_layer.py
 - **Parquet** - Formato colunar otimizado para analytics
 - **Data Quality** - Limpeza, validação e padronização
 - **Agregações** - groupBy, sum, count, avg
+- **Lógica Condicional** - when/otherwise para regras de negócio
+- **Particionamento** - partitionBy para otimização de queries
 
 ---
 
