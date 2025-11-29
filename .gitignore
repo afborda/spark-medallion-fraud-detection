@@ -1,48 +1,52 @@
-# Arquivo de progresso (local apenas)
-# LEARNING_PROGRESS.md  # Agora vamos versionar para acompanhar evolução
-
-# Python
-venv/
-__pycache__/
-*.py[cod]
-*.egg-info/
-.eggs/
-.venv/
-
-# Spark
-*.jar
-spark-warehouse/
-metastore_db/
-derby.log
-
-# Dados (NÃO versionar - muito grandes!)
+# ============================================
+# DADOS - Não versionar (regeneráveis)
+# ============================================
 data/raw/
 data/bronze/
 data/silver/
 data/gold/
 data/row/
 
-# JARs baixados
-jars/
+# ============================================
+# JARs - Não versionar (baixáveis)
+# ============================================
+jars/*.jar
+jars/venv/
 
+# ============================================
+# Python
+# ============================================
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.env
+
+# ============================================
+# Spark
+# ============================================
+spark-warehouse/
+metastore_db/
+derby.log
+*.crc
+
+# ============================================
 # IDE
+# ============================================
 .idea/
 .vscode/
 *.swp
 *.swo
 
+# ============================================
 # OS
+# ============================================
 .DS_Store
 Thumbs.db
 
+# ============================================
 # Logs
+# ============================================
 *.log
 logs/
-
-# Checkpoints Spark
-checkpoints/
-
-# Temp files
-*.tmp
-*.temp
-.cache/
