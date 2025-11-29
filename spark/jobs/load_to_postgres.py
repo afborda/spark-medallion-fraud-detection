@@ -1,0 +1,100 @@
+"""
+Load to PostgreSQL - Carregar Gold Layer para Data Warehouse
+Salva os dados processados no PostgreSQL para consumo do Metabase
+"""
+
+
+from pyspark.sql import SparkSession
+from datetime import date
+
+# Configurações do PostgreSQL
+PG_HOST = "localhost"
+PG_PORT = "5432"
+PG_DB = "fraud_db"
+PG_USER = "fraud_user"
+PG_PASSWORD = "fraud_password@@!!_2"
+
+
+#URL JDBC
+PG_JDBC_URL = f"jdbc:postgresql://{PG_HOST}:{PG_PORT}/{PG_DB}"
+
+#Caminho gold layer
+GOLD_PATH = "data/gold"
+
+print("=" * 50)
+print("🐘 LOAD TO POSTGRESQL")
+print("=" * 50)
+print(f"📂 Origem: {GOLD_PATH}")
+print(f"🎯 Destino: {PG_USER}@{PG_HOST}:{PG_PORT}")
+print(f"📅 Data: {date.today().isoformat()}")
+print("=" * 50)
+
+
+# Inicializar Spark Session
+print("🚀 Iniciando Spark Session...")
+
+spark = SparkSession.builder \
+	.appName("LoadToPostgres") \
+	.config("spark.jars", "jars/postgresql-42.7.4.jar") \
+	.getOrCreate()
+print(f"✅ Spark inicializado: {spark.version}")
+
+def write_to_postgres(df, table_name):
+	"""Escreve um DataFrame no PostgreSQL
+	
+	Args:
+		df: DataFrame do Spark a ser salvo
+		table_name: Nome da tabela no PostgreSQL
+	
+	"""
+	print(f"🔄 Carregando dados para a tabela {table_name}...")
+
+	properties = {
+		"user": PG_USER,
+		"password": PG_PASSWORD,
+		"driver": "org.postgresql.Driver"
+	}
+
+	# Escrever no PostgreSQL
+	df.write.jdbc(
+		url=PG_JDBC_URL,	
+		table=table_name,
+		mode="overwrite",  # Substitui a tabela se já existir
+		properties=properties
+	)
+
+	print(f"✅ Tabela {table_name} salva com sucesso!")
+
+	return df.count()
+	
+
+# ============================================
+# CÓDIGO PRINCIPAL
+# ============================================
+
+# 1 Carregar dados do Gold Layer
+print("🔄 Carregando dados do Gold Layer...")
+df_fraud = spark.read.parquet(f"{GOLD_PATH}/fraud_detection")
+print(f"✅ Dados carregados: {df_fraud.count()} registros")
+
+# 2 Carregar customer summary da gold layer
+print("\n📖 Lendo customer_summary da Gold Layer...")
+df_customers = spark.read.parquet(f"{GOLD_PATH}/customer_summary")
+print(f"✅ Dados carregados: {df_customers.count()} registros")
+
+# 3 Escrever tabelas no PostgreSQL
+print("\n💾 Escrevendo tabelas no PostgreSQL...")
+fraud_count = write_to_postgres(df_fraud, "fraud_detections")
+customer_count = write_to_postgres(df_customers, "customer_summary")
+
+# 4 Resumo
+print("\n" + "=" * 50)
+print("✅ CARGA CONCLUÍDA!")
+print("=" * 50)
+print(f"   🔴 fraud_detection: {fraud_count} registros")
+print(f"   👤 customer_summary: {customer_count} registros")
+print(f"   🎯 Banco: {PG_DB}")
+
+# Encerrar Spark
+spark.stop()
+print("\n🏁 Spark encerrado.")
