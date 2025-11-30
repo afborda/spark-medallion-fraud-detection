@@ -270,7 +270,83 @@ python spark/jobs/fraud_detection.py
 
 ## 📈 Progresso do Projeto
 
-### ✅ Concluído
+### 📊 Relatório de Status (Novembro 2025)
+
+#### ✅ O QUE ESTÁ FEITO
+
+| Item | Status | Observações |
+|------|--------|-------------|
+| **Infraestrutura Docker** | ✅ | PostgreSQL, MinIO, Kafka, Zookeeper, Spark (1 Master + 5 Workers) |
+| **Bronze Layer** | ✅ | `bronze_layer.py`, `medallion_bronze.py`, `streaming_bronze.py` |
+| **Silver Layer** | ✅ | `silver_layer.py`, `medallion_silver.py`, `streaming_silver.py` |
+| **Gold Layer** | ✅ | `gold_layer.py`, `medallion_gold.py`, `streaming_gold.py` |
+| **Fraud Detection básico** | ✅ | `fraud_detection.py` com regras simples + flags avançadas |
+| **Integração MinIO** | ✅ | Jobs `*_to_minio.py` e medallion |
+| **Integração PostgreSQL** | ✅ | `load_to_postgres.py`, `kafka_to_postgres_batch.py`, `streaming_to_postgres.py` |
+| **Geração de Dados** | ✅ | `generate_data.py`, `generate_10m_transactions.py`, ShadowTraffic |
+| **Kafka Producer** | ✅ | `kafka_producer.py` |
+| **Streaming Pipeline** | ✅ | Bronze→Silver→Gold streaming |
+| **Batch Pipeline** | ✅ | Bronze→Silver→Gold batch |
+| **Documentação Regras** | ✅ | `docs/REGRAS_FRAUDE.md` (14 regras documentadas) |
+| **Escala 10M transações** | ✅ | Testado com sucesso (~3.5min, 47.6k tx/s) |
+
+#### ❌ O QUE ESTÁ FALTANDO
+
+##### 🔴 CRÍTICO (Alto Impacto)
+
+| Item | Planejado | Atual | Ação Necessária |
+|------|-----------|-------|-----------------|
+| **8 Regras de Fraude Completas** | 8 regras complexas | 2 regras + 8 flags | Implementar regras faltantes |
+| **Dashboard Metabase** | Configurado e rodando | ❌ Não existe | Adicionar ao docker-compose |
+| **Dashboard Streamlit** | `streamlit/dashboard.py` | ❌ Não existe | Criar pasta e arquivo |
+| **Escala 50GB** | Objetivo principal | 2.2GB testado | Gerar e processar 50GB |
+
+##### 🟠 IMPORTANTE (Médio Impacto)
+
+| Item | Planejado | Atual | Ação Necessária |
+|------|-----------|-------|-----------------|
+| **Entidade Cards** | Tabela de cartões | ❌ Não existe | Criar schema e dados |
+| **Entidade Devices** | Tabela de dispositivos | ❌ Não existe | Criar schema e dados |
+| **Chargebacks** | Processamento de disputas | ❌ Não existe | Criar pipeline |
+| **Blocklist** | Lista de bloqueio | ❌ Não existe | Criar tabela e lógica |
+| **Audit Log** | Log de compliance | ❌ Não existe | Implementar logging |
+| **Traefik** | Reverse proxy + SSL | ❌ Não existe | Adicionar ao docker-compose |
+
+##### 🟡 DESEJÁVEL (Baixo Impacto)
+
+| Item | Planejado | Atual | Ação Necessária |
+|------|-----------|-------|-----------------|
+| **Notebooks** | `notebooks/exploration.ipynb` | ❌ Não existe | Criar análise exploratória |
+| **Dicionário de Dados** | `docs/data_dictionary.md` | ❌ Não existe | Documentar campos |
+| **Arquitetura Doc** | `docs/architecture.md` | ❌ Não existe | Criar diagrama |
+
+#### 🎯 FASES DO PROJETO
+
+| Fase | Descrição | Status | % |
+|------|-----------|--------|---|
+| **FASE 1** | Ambiente Docker + Dados | ✅ Completo | 100% |
+| **FASE 2** | Pipeline Bronze/Silver/Gold | ✅ Completo | 100% |
+| **FASE 3** | Regras de Fraude (8 regras) | ⚠️ Parcial | 40% |
+| **FASE 4** | Operacional (Audit/Blocklist/Chargeback) | ❌ Não iniciado | 0% |
+| **FASE 5** | Visualização (Metabase/Streamlit) | ❌ Não iniciado | 0% |
+| **FASE 6** | Escala 50GB + Documentação | ⚠️ Parcial | 30% |
+
+#### 📋 REGRAS DE FRAUDE: Planejado vs. Implementado
+
+| # | Regra Planejada | Status |
+|---|-----------------|--------|
+| 1 | **Clonagem** (mesma conta, cidades diferentes, <30min) | ❌ |
+| 2 | **Teste de Cartão** (3+ tx < R$10 em 5min) | ❌ |
+| 3 | **Gasto Anormal** (valor > 50% média mensal) | ⚠️ Parcial |
+| 4 | **Account Takeover** (device desconhecido + >R$500) | ❌ |
+| 5 | **Anomalia Geográfica** (distância > 3x raio habitual) | ⚠️ Parcial |
+| 6 | **Horário Atípico** (fora do horário usual) | ⚠️ Parcial |
+| 7 | **Categoria Suspeita** (alto risco + primeira compra) | ❌ |
+| 8 | **Incompatibilidade de Idade** (perfil vs compra) | ❌ |
+
+---
+
+### ✅ Concluído (Detalhado)
 
 - [x] **Infraestrutura Docker** - PostgreSQL, MinIO, Kafka, Spark
 - [x] **Geração de Dados** - Script para dados sintéticos com argparse
@@ -282,24 +358,25 @@ python spark/jobs/fraud_detection.py
   - ✅ Horários suspeitos 2h-5h (suspicious_hour)
   - ✅ Níveis de risco: Alto/Médio/Baixo
   - ✅ Particionamento por risk_level
+  - ✅ 8 Flags de comportamento (cross_state, night, high_value, velocity, gps_mismatch, etc.)
 - [x] **PostgreSQL Integration** - Gold Layer no Data Warehouse (5M registros)
 - [x] **MinIO Data Lake** - Bronze Layer no storage S3-compatible (414 MB)
 - [x] **Cluster Spark Distribuído** - 5 Workers (10 cores, 15GB RAM)
 - [x] **Escala 10M transações** - Pipeline completo em ~3.5min (47.6k tx/s) 🚀
+- [x] **Documentação de Regras** - 14 regras documentadas em `docs/REGRAS_FRAUDE.md`
 
 ### 🔄 Em Desenvolvimento
 
-- [ ] **MinIO Full Integration** - Silver e Gold Layers no MinIO
-- [ ] **Escalar para 50M+** - Testar limites do cluster com volumes maiores
+- [ ] **8 Regras de Fraude Completas** - Implementar regras avançadas
+- [ ] **Escalar para 50GB** - Testar limites do cluster com volumes maiores
 
 ### 📋 Planejado
 
-- [ ] **ShadowTraffic** - Geração de dados em streaming
-- [ ] **Kafka Streaming** - Processamento em tempo real
-- [ ] **Spark Structured Streaming** - ETL em tempo real
 - [ ] **Metabase** - Dashboards de BI
 - [ ] **Streamlit** - Apps interativos
 - [ ] **Traefik** - Reverse proxy com domínios
+- [ ] **Cards/Devices** - Entidades adicionais
+- [ ] **Chargebacks/Blocklist/Audit** - Pipeline operacional
 
 ---
 

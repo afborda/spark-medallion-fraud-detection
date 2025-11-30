@@ -509,6 +509,103 @@ fraud-detection-pipeline/
 
 ## ✅ Checklist de Entrega
 
+### 📊 RELATÓRIO DE STATUS (Novembro 2025)
+
+#### ✅ O QUE ESTÁ IMPLEMENTADO
+
+| Item | Status | Observações |
+|------|--------|-------------|
+| **Infraestrutura Docker** | ✅ | PostgreSQL, MinIO, Kafka, Zookeeper, Spark (1 Master + 5 Workers) |
+| **Bronze Layer** | ✅ | `bronze_layer.py`, `medallion_bronze.py`, `streaming_bronze.py` |
+| **Silver Layer** | ✅ | `silver_layer.py`, `medallion_silver.py`, `streaming_silver.py` |
+| **Gold Layer** | ✅ | `gold_layer.py`, `medallion_gold.py`, `streaming_gold.py` |
+| **Fraud Detection básico** | ✅ | `fraud_detection.py` com regras simples + flags avançadas |
+| **Integração MinIO** | ✅ | Jobs `*_to_minio.py` e medallion |
+| **Integração PostgreSQL** | ✅ | `load_to_postgres.py`, `kafka_to_postgres_batch.py`, `streaming_to_postgres.py` |
+| **Geração de Dados** | ✅ | `generate_data.py`, `generate_10m_transactions.py`, ShadowTraffic |
+| **Kafka Producer** | ✅ | `kafka_producer.py` |
+| **Streaming Pipeline** | ✅ | Bronze→Silver→Gold streaming |
+| **Batch Pipeline** | ✅ | Bronze→Silver→Gold batch |
+| **Documentação Regras** | ✅ | `docs/REGRAS_FRAUDE.md` (14 regras documentadas) |
+| **Escala 10M transações** | ✅ | Testado com sucesso (~3.5min, 47.6k tx/s) |
+
+#### ❌ O QUE ESTÁ FALTANDO
+
+##### 🔴 CRÍTICO (Alto Impacto)
+
+| Item | Planejado | Atual | Ação Necessária |
+|------|-----------|-------|-----------------|
+| **8 Regras de Fraude Completas** | 8 regras complexas | 2 regras + 8 flags | Implementar regras faltantes |
+| **Dashboard Metabase** | Configurado e rodando | ❌ Não existe | Adicionar ao docker-compose |
+| **Dashboard Streamlit** | `streamlit/dashboard.py` | ❌ Não existe | Criar pasta e arquivo |
+| **Escala 50GB** | Objetivo principal | 2.2GB testado | Gerar e processar 50GB |
+
+##### 🟠 IMPORTANTE (Médio Impacto)
+
+| Item | Planejado | Atual | Ação Necessária |
+|------|-----------|-------|-----------------|
+| **Entidade Cards** | Tabela de cartões | ❌ Não existe | Criar schema e dados |
+| **Entidade Devices** | Tabela de dispositivos | ❌ Não existe | Criar schema e dados |
+| **Chargebacks** | Processamento de disputas | ❌ Não existe | Criar pipeline |
+| **Blocklist** | Lista de bloqueio | ❌ Não existe | Criar tabela e lógica |
+| **Audit Log** | Log de compliance | ❌ Não existe | Implementar logging |
+| **Traefik** | Reverse proxy + SSL | ❌ Não existe | Adicionar ao docker-compose |
+
+##### 🟡 DESEJÁVEL (Baixo Impacto)
+
+| Item | Planejado | Atual | Ação Necessária |
+|------|-----------|-------|-----------------|
+| **Notebooks** | `notebooks/exploration.ipynb` | ❌ Não existe | Criar análise exploratória |
+| **Dicionário de Dados** | `docs/data_dictionary.md` | ❌ Não existe | Documentar campos |
+| **Arquitetura Doc** | `docs/architecture.md` | ❌ Não existe | Criar diagrama |
+
+#### 📋 REGRAS DE FRAUDE: Planejado vs. Implementado
+
+| # | Regra Planejada | Status | Implementação Atual |
+|---|-----------------|--------|---------------------|
+| 1 | **Clonagem** (mesma conta, cidades diferentes, <30min) | ❌ | Não implementada |
+| 2 | **Teste de Cartão** (3+ tx < R$10 em 5min) | ❌ | Não implementada |
+| 3 | **Gasto Anormal** (valor > 50% média mensal) | ⚠️ Parcial | `is_high_value` (5x média 30d) |
+| 4 | **Account Takeover** (device desconhecido + >R$500) | ❌ | Não implementada |
+| 5 | **Anomalia Geográfica** (distância > 3x raio habitual) | ⚠️ Parcial | `is_gps_mismatch` |
+| 6 | **Horário Atípico** (fora do horário usual) | ⚠️ Parcial | `is_night_transaction` (2-5h fixo) |
+| 7 | **Categoria Suspeita** (alto risco + primeira compra) | ❌ | Não implementada |
+| 8 | **Incompatibilidade de Idade** (perfil vs compra) | ❌ | Não implementada |
+
+**Resumo:** 0 completas, 3 parciais, 5 não implementadas
+
+#### 🎯 FASES DO PROJETO: Status Atual
+
+| Fase | Descrição | Status | % |
+|------|-----------|--------|---|
+| **FASE 1** | Ambiente Docker + Dados | ✅ Completo | 100% |
+| **FASE 2** | Pipeline Bronze/Silver/Gold | ✅ Completo | 100% |
+| **FASE 3** | Regras de Fraude (8 regras) | ⚠️ Parcial | 40% |
+| **FASE 4** | Operacional (Audit/Blocklist/Chargeback) | ❌ Não iniciado | 0% |
+| **FASE 5** | Visualização (Metabase/Streamlit) | ❌ Não iniciado | 0% |
+| **FASE 6** | Escala 50GB + Documentação | ⚠️ Parcial | 30% |
+
+#### 🚀 PRÓXIMOS PASSOS RECOMENDADOS
+
+##### Prioridade 1 (Esta semana)
+1. ⬜ Implementar as **8 regras de fraude completas**
+2. ⬜ Adicionar **Metabase** ao docker-compose
+3. ⬜ Criar **Streamlit dashboard** básico
+
+##### Prioridade 2 (Próxima semana)
+4. ⬜ Criar entidades **Cards** e **Devices**
+5. ⬜ Implementar **Chargebacks** pipeline
+6. ⬜ Criar **Blocklist** e **Audit Log**
+
+##### Prioridade 3 (Semana 3)
+7. ⬜ Escalar para **50GB de dados**
+8. ⬜ Adicionar **Traefik** para acesso externo
+9. ⬜ Completar **documentação** (README, architecture, data dictionary)
+
+---
+
+### CHECKLIST ORIGINAL
+
 ### FASE 1: Ambiente
 
 - [ ] VPS configurada e acessível
