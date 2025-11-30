@@ -184,14 +184,15 @@ python spark/jobs/fraud_detection.py
 
 ## 📊 Resultados
 
-### Evolução dos Testes
+### Evolução dos Testes de Performance
 
 | Teste | Transações | Dados Raw | Tempo Total | Throughput | Cluster |
 |-------|------------|-----------|-------------|------------|---------|
 | Inicial | 500 | ~1 MB | ~10s | 50/s | Local |
 | Escala 1 | 50,000 | 11 MB | ~30s | 1,700/s | Local |
 | Escala 2 | 1,000,000 | 216 MB | ~2.5min | 6,700/s | 5 Workers |
-| **Escala 3** | **5,000,000** | **1.1 GB** | **~3min** | **28,000/s** | **5 Workers** |
+| Escala 3 | 5,000,000 | 1.1 GB | ~3min | 28,000/s | 5 Workers |
+| **Escala 4** | **10,000,000** | **2.2 GB** | **~3.5min** | **47,600/s** | **5 Workers** |
 
 ### Configuração Atual do Cluster
 
@@ -218,60 +219,52 @@ python spark/jobs/fraud_detection.py
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Performance por Camada (5M transações - Último Teste)
+### Performance por Camada (10M transações - Último Teste) 🚀
 
 | Camada | Tempo | Registros | Tamanho |
 |--------|-------|-----------|---------|
-| 🔶 Bronze | 44s | 5,050,000 | 417 MB |
-| ⚪ Silver | 58s | 5,050,000 | 428 MB |
-| 🥇 Gold | 38s | Agregações | 430 MB |
-| 🚨 Fraud Detection | 38s | 5,000,000 | (incluso) |
-| **TOTAL** | **~3min** | - | **1.3 GB** |
+| 🔶 Bronze | 50s | 10,100,000 | 838 MB |
+| ⚪ Silver | 74s | 10,100,000 | 861 MB |
+| 🥇 Gold | 40s | Agregações | 866 MB |
+| 🚨 Fraud Detection | 45s | 10,000,000 | (incluso) |
+| **TOTAL** | **~210s** | - | **2.6 GB** |
 
-### Compressão Parquet (5M transações)
+### Compressão Parquet (10M transações)
 
 | Camada | Formato | Tamanho | Economia |
 |--------|---------|---------|----------|
-| Raw | JSON | 1.1 GB | - |
-| Bronze | Parquet | 417 MB | **62%** |
-| Silver | Parquet | 428 MB | **61%** |
-| Gold | Parquet | 430 MB | **61%** |
+| Raw | JSON | 2.2 GB | - |
+| Bronze | Parquet | 838 MB | **62%** |
+| Silver | Parquet | 861 MB | **61%** |
+| Gold | Parquet | 866 MB | **61%** |
 
-### Escalabilidade Comprovada
+### 📈 Escalabilidade Comprovada
 
-| Métrica | Local (50K) | Cluster (1M) | Cluster (5M) | Melhoria Total |
-|---------|-------------|--------------|--------------|----------------|
-| Transações | 50,000 | 1,000,000 | **5,000,000** | **100× mais** |
-| Dados | 11 MB | 216 MB | **1.1 GB** | **100× mais** |
-| Tempo | ~30s | ~150s | **~180s** | **6× mais** |
-| **Throughput** | 1,700/s | 6,700/s | **28,000/s** | **16× mais rápido** |
+| Métrica | Local (50K) | Cluster (1M) | Cluster (5M) | Cluster (10M) | Melhoria |
+|---------|-------------|--------------|--------------|---------------|----------|
+| Transações | 50,000 | 1,000,000 | 5,000,000 | **10,000,000** | **200×** |
+| Dados | 11 MB | 216 MB | 1.1 GB | **2.2 GB** | **200×** |
+| Tempo | ~30s | ~150s | ~180s | **~210s** | **7×** |
+| **Throughput** | 1,700/s | 6,700/s | 28,000/s | **47,600/s** | **28×** |
 
-> **Conclusão:** Com 100× mais dados, o tempo aumentou apenas 6×. O throughput subiu de 1,700 para **28,000 transações/segundo** - uma melhoria de **16×**!
+> **Conclusão:** Com 200× mais dados (50K → 10M), o tempo aumentou apenas 7× (30s → 210s). O throughput subiu de 1,700 para **47,600 transações/segundo** - uma melhoria de **28×**!
 
-### Estatísticas de Fraude (5M transações)
+### Estatísticas de Fraude (10M transações)
 
 | Nível de Risco | Quantidade | % do Total | Critério |
 |----------------|------------|------------|----------|
-| 🔴 Alto Risco | ~41,000 | 0.8% | Valor > R$1000 **E** horário 2h-5h |
-| 🟠 Risco Médio | ~1,000,000 | 20% | Valor > R$1000 **OU** horário 2h-5h |
-| 🟢 Baixo Risco | ~3,960,000 | 79% | Nenhuma regra acionada |
-| **TOTAL** | **5,000,000** | 100% | - |
+| 🔴 Alto Risco | ~80,000 | 0.8% | Valor > R$1000 **E** horário 2h-5h |
+| 🟠 Risco Médio | ~2,000,000 | 20% | Valor > R$1000 **OU** horário 2h-5h |
+| 🟢 Baixo Risco | ~7,920,000 | 79% | Nenhuma regra acionada |
+| **TOTAL** | **10,000,000** | 100% | - |
 
 ### Dados Atuais
 
 | Entidade | Registros |
 |----------|-----------|
-| Clientes | 50,000 |
-| Transações | 5,000,000 |
-| Fraudes (is_fraud) | 250,307 (5.0%) |
-
-### Detecção por Regras de Negócio
-
-| Nível de Risco | Quantidade | Critério |
-|----------------|------------|----------|
-| 🔴 Alto Risco | 4 | Valor > R$1000 **E** horário 2h-5h |
-| 🟠 Risco Médio | 83 | Valor > R$1000 **OU** horário 2h-5h |
-| 🟢 Baixo Risco | 413 | Nenhuma regra acionada |
+| Clientes | 100,000 |
+| Transações | 10,000,000 |
+| Fraudes (is_fraud) | ~500,000 (5.0%) |
 
 ---
 
@@ -289,15 +282,15 @@ python spark/jobs/fraud_detection.py
   - ✅ Horários suspeitos 2h-5h (suspicious_hour)
   - ✅ Níveis de risco: Alto/Médio/Baixo
   - ✅ Particionamento por risk_level
-- [x] **PostgreSQL Integration** - Gold Layer no Data Warehouse
-- [x] **MinIO Data Lake** - Bronze Layer no storage S3-compatible
+- [x] **PostgreSQL Integration** - Gold Layer no Data Warehouse (5M registros)
+- [x] **MinIO Data Lake** - Bronze Layer no storage S3-compatible (414 MB)
 - [x] **Cluster Spark Distribuído** - 5 Workers (10 cores, 15GB RAM)
-- [x] **Escala 1M transações** - Pipeline completo em ~2min 30s
+- [x] **Escala 10M transações** - Pipeline completo em ~3.5min (47.6k tx/s) 🚀
 
 ### 🔄 Em Desenvolvimento
 
-- [ ] **MinIO Full Integration** - Todo o pipeline no MinIO
-- [ ] **Escalar para 10M+** - Testar limites do cluster
+- [ ] **MinIO Full Integration** - Silver e Gold Layers no MinIO
+- [ ] **Escalar para 50M+** - Testar limites do cluster com volumes maiores
 
 ### 📋 Planejado
 

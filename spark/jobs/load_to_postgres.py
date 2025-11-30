@@ -6,9 +6,14 @@ Salva os dados processados no PostgreSQL para consumo do Metabase
 
 from pyspark.sql import SparkSession
 from datetime import date
+import os
+
+# Detecta se está rodando em Docker (caminho absoluto) ou local (caminho relativo)
+BASE_DIR = os.environ.get("DATA_DIR", "/data" if os.path.exists("/data") else "data")
 
 # Configurações do PostgreSQL
-PG_HOST = "localhost"
+# Em Docker, usar o nome do container; Local, usar localhost
+PG_HOST = "fraud_postgres" if os.path.exists("/data") else "localhost"
 PG_PORT = "5432"
 PG_DB = "fraud_db"
 PG_USER = "fraud_user"
@@ -19,7 +24,7 @@ PG_PASSWORD = "fraud_password@@!!_2"
 PG_JDBC_URL = f"jdbc:postgresql://{PG_HOST}:{PG_PORT}/{PG_DB}"
 
 #Caminho gold layer
-GOLD_PATH = "data/gold"
+GOLD_PATH = f"{BASE_DIR}/gold"
 
 print("=" * 50)
 print("🐘 LOAD TO POSTGRESQL")
@@ -35,7 +40,8 @@ print("🚀 Iniciando Spark Session...")
 
 spark = SparkSession.builder \
 	.appName("LoadToPostgres") \
-	.config("spark.jars", "jars/postgresql-42.7.4.jar") \
+	.config("spark.jars", "/jars/postgresql-42.7.4.jar" if os.path.exists("/data") else "jars/postgresql-42.7.4.jar") \
+	.config("spark.sql.files.maxPartitionBytes", "128m") \
 	.getOrCreate()
 print(f"✅ Spark inicializado: {spark.version}")
 

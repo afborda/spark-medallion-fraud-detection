@@ -17,8 +17,8 @@
 
 ## 📍 STATUS ATUAL
 
-**Último checkpoint completado:** 11.7 - Scale Data (Cluster Distribuído) ✅
-**Próximo checkpoint:** 11.8 - MinIO Integration
+**Último checkpoint completado:** 11.8 - MinIO Integration ✅
+**Próximo checkpoint:** 11.9 - Escalar para 50M+ transações
 **Data da última sessão:** 2025-11-29
 
 ---
@@ -196,30 +196,61 @@
 - [x] spark/jobs/load_to_postgres.py criado
 - [x] JDBC driver baixado (postgresql-42.7.4.jar)
 - [x] Conexão Spark → PostgreSQL funcionando
-- [x] Tabelas criadas: fraud_transactions, fraud_summary
+- [x] Tabelas criadas e carregadas:
+  - fraud_detections: **5,000,000 registros** (fraud_detection Gold Layer)
+  - customer_summary: **50,000 registros** (customer_summary Gold Layer)
+- [x] Tempo de carga: ~2 min para 5M registros
+
+**Conexão PostgreSQL:**
+```
+Host: localhost (ou fraud_postgres no Docker)
+Port: 5432
+Database: fraud_db
+User: fraud_user
+Password: fraud_password@@!!_2
+```
 
 ### Checkpoint 11.6: MinIO como Data Lake ✅
 - [x] spark/jobs/bronze_to_minio.py criado
-- [x] JARs Hadoop-AWS configurados
+- [x] JARs Hadoop-AWS configurados (hadoop-aws, aws-java-sdk-bundle)
+- [x] Bucket "fraud-data" criado via MinIO Client (mc)
 - [x] Escrita s3a://fraud-data/bronze/ funcionando
-- [x] Dados visíveis no MinIO Console
+- [x] Dados visíveis no MinIO Console (http://localhost:9003)
+
+**MinIO Storage (5M transações):**
+| Path | Arquivos | Tamanho |
+|------|----------|---------|
+| s3a://fraud-data/bronze/customers | 3 parquet | 3 MB |
+| s3a://fraud-data/bronze/transactions | 9 parquet | 411 MB |
+| **Total** | **12 arquivos** | **414 MB** |
+
+**Conexão MinIO:**
+```
+Endpoint: http://localhost:9002 (API) / http://localhost:9003 (Console)
+Access Key: minioadmin
+Secret Key: minioadmin123@@!!_2
+Bucket: fraud-data
+```
 
 ### Checkpoint 11.7: Scale Data (Cluster Distribuído) ✅
 - [x] Cluster Spark: 1 Master + 5 Workers
 - [x] Cada Worker: 2 cores, 3GB RAM (total: 10 cores, 15GB)
+- [x] Imagem Docker: apache/spark:4.0.0-preview2-scala2.13-java21-python3-r-ubuntu
 - [x] Configuração 128MB partitions em todos os jobs
 - [x] Caminhos dinâmicos (/data vs data) para Docker/Local
 - [x] argparse no generate_data.py (--customers, --transactions, --fraud-rate)
-- [x] Teste com 1M de transações: ~2min 30s no cluster
-- [x] Escalabilidade sub-linear comprovada (20× dados = 5× tempo)
+- [x] ✅ Teste 1M: ~2min 30s (6.7k tx/s)
+- [x] ✅ Teste 5M: ~3min (28k tx/s)
+- [x] ✅ **Teste 10M: ~3.5min (47.6k tx/s)** 🚀
 
 **Conceitos aprendidos:**
-- spark.sql.files.maxPartitionBytes - tamanho das partições
+- spark.sql.files.maxPartitionBytes - tamanho das partições (128m otimizado)
 - SPARK_WORKER_CORES e SPARK_WORKER_MEMORY - configuração de workers
 - Diferença entre spark-submit local vs cluster (--master spark://...)
 - Permissões Docker (chmod 777 para volume mounts)
-- Escalabilidade horizontal vs vertical
-- Compressão Parquet (~75% menor que JSON)
+- Escalabilidade horizontal: 28× melhoria com 10 cores vs 1
+- Compressão Parquet (~61% menor que JSON para Big Data)
+- Throughput escala melhor com dados maiores (overhead fixo diluído)
 
 ---
 
@@ -263,10 +294,10 @@
 |--------|------------|-------------|------------|------------|--------|
 | ✅ Teste 1 | 50K | 11 MB | ~30s | 1.7k/s | Concluído (Local) |
 | ✅ Teste 2 | 1M | 216 MB | ~2.5min | 6.7k/s | Concluído (Cluster) |
-| ✅ **Teste 3** | **5M** | **1.1 GB** | **~3min** | **28k/s** | **Concluído!** |
-| 📋 Teste 4 | 10M | ~2.2 GB | ~6min | ~28k/s | Próximo |
-| 📋 Teste 5 | 50M | ~11 GB | ~30min | ~28k/s | Planejado |
-| 📋 Final | 230M | ~50 GB | ~2-3h | ~28k/s | Objetivo |
+| ✅ Teste 3 | 5M | 1.1 GB | ~3min | 28k/s | Concluído (Cluster) |
+| ✅ **Teste 4** | **10M** | **2.2 GB** | **~3.5min** | **47.6k/s** | **Concluído!** |
+| 📋 Teste 5 | 50M | ~11 GB | ~15min | ~55k/s | Planejado |
+| 📋 Final | 230M | ~50 GB | ~1h | ~60k/s | Objetivo |
 
 ### ✅ Teste 3: 5M transações (Cluster 5 Workers)
 | Métrica | Valor |
@@ -281,12 +312,43 @@
 | **Tempo total** | **~3 min** |
 | **Throughput** | **~28k transações/segundo** |
 
+### ✅ Teste 4: 10M transações (Cluster 5 Workers) 🚀
+| Métrica | Valor |
+|---------|-------|
+| Transações | **10,000,000** |
+| Clientes | 100,000 |
+| Dados Raw | **2.2 GB** |
+| Dados Bronze | 838 MB |
+| Dados Silver | 861 MB |
+| Dados Gold | 866 MB |
+| Fraudes | ~500,000 (5.0%) |
+| **Tempo total** | **~3.5 min (210s)** |
+| **Throughput** | **~47,600 transações/segundo** |
+
+**Breakdown dos tempos (10M):**
+| Etapa | Tempo | Descrição |
+|-------|-------|-----------|
+| Bronze Layer | 50s | JSON → Parquet |
+| Silver Layer | 74s | Limpeza e validação |
+| Gold Layer | 40s | Agregações |
+| Fraud Detection | 45s | Regras + Particionamento |
+| **Total Pipeline** | **~210s** | **47.6k tx/s** |
+
 ### 🚀 Evolução do Throughput
 | Configuração | Transações | Tempo | Throughput | Melhoria |
 |--------------|------------|-------|------------|----------|
 | Local (1 core) | 50K | ~30s | 1,700/s | baseline |
 | Cluster (10 cores) - 1M | 1M | 150s | 6,700/s | **4×** |
-| Cluster (10 cores) - 5M | 5M | 180s | **28,000/s** | **16×** |
+| Cluster (10 cores) - 5M | 5M | 180s | 28,000/s | **16×** |
+| Cluster (10 cores) - 10M | 10M | 210s | **47,600/s** | **28×** |
+
+### 💾 Compressão Parquet vs JSON Raw
+| Teste | Raw (JSON) | Parquet | Compressão |
+|-------|------------|---------|------------|
+| 50K | 11 MB | 3 MB | 73% |
+| 1M | 216 MB | 56 MB | 74% |
+| 5M | 1.1 GB | 430 MB | 61% |
+| 10M | 2.2 GB | 866 MB | 61% |
 
 ---
 
@@ -294,19 +356,72 @@
 
 ### Fase 1: Completar Infraestrutura de Dados
 
-#### Checkpoint 11.8: MinIO como Storage Principal
-**Objetivo:** Migrar todo o pipeline para usar MinIO
-**Mudança:** Todos os jobs leem/escrevem em s3a://fraud-data/
+### Checkpoint 11.8: MinIO como Storage Principal ✅
+**Objetivo:** Migrar todo o pipeline para usar MinIO como storage principal
+**Status:** ✅ CONCLUÍDO
 
-#### Checkpoint 11.9: Escalar para 10M+ transações
-**Objetivo:** Testar limites do cluster
+**O que foi feito:**
+- [x] bronze_to_minio.py - Bronze Layer → s3a://fraud-data/bronze/ ✅
+- [x] silver_to_minio.py - Silver Layer → s3a://fraud-data/silver/ ✅
+- [x] gold_to_minio.py - Gold Layer → s3a://fraud-data/gold/ ✅
+- [x] Script unificado run_spark_job.sh para executar qualquer job
+- [x] Documentação de erros em docs/ERROS_CONHECIDOS.md
+
+**MinIO Storage Final (10M transações):**
+| Path | Dados |
+|------|-------|
+| s3a://fraud-data/bronze/customers | 100K clientes |
+| s3a://fraud-data/bronze/transactions | 10M transações |
+| s3a://fraud-data/silver/customers | 100K clientes |
+| s3a://fraud-data/silver/transactions | 10M transações |
+| s3a://fraud-data/gold/customer_summary | 100K resumos |
+| s3a://fraud-data/gold/fraud_summary | 1 resumo geral |
+| s3a://fraud-data/gold/fraud_detection | 10M (particionado) |
+| **Total** | **83 arquivos, 2.5 GB** |
+
+**🚨 ERROS IMPORTANTES RESOLVIDOS:**
+
+1. **`hostname cannot be null` / `URISyntaxException`**
+   - **Causa 1:** Spark 4.x usa AWS SDK v2 que tem BUG com endpoints HTTP
+   - **Causa 2:** Hostname `fraud_minio` tem underscore (inválido RFC 952)
+   - **Solução:** Usar Spark 3.5.3 + hostname `minio` (service name)
+   - **Documentação completa:** `docs/ERROS_CONHECIDOS.md`
+
+2. **JARs corretos para MinIO:**
+   ```
+   jars/
+   ├── hadoop-aws-3.3.4.jar          # Conector S3A (SDK v1)
+   ├── aws-java-sdk-bundle-1.12.262.jar  # AWS SDK v1 (NÃO v2!)
+   └── postgresql-42.7.4.jar         # JDBC PostgreSQL
+   ```
+
+3. **Por que scripts .sh são necessários no cluster:**
+   - `spark-submit` cria a JVM ANTES de ler o código Python
+   - Configurações `spark.jars` no Python são ignoradas
+   - JARs devem ser passados via `--jars` na linha de comando
+   - Solução: `run_spark_job.sh` script unificado
+
+**Como executar jobs no cluster:**
+```bash
+./run_spark_job.sh bronze_to_minio   # RAW → MinIO Bronze
+./run_spark_job.sh silver_to_minio   # Silver → MinIO Silver
+./run_spark_job.sh gold_to_minio     # Gold → MinIO Gold
+./run_spark_job.sh bronze_layer      # RAW → Bronze local
+./run_spark_job.sh silver_layer      # Bronze → Silver local
+./run_spark_job.sh gold_layer        # Silver → Gold local
+```
+
+#### Checkpoint 11.9: Escalar para 50M+ transações
+**Objetivo:** Testar limites do cluster com volumes maiores
 
 | Etapa | Volume | Transações | Status |
 |-------|--------|------------|--------|
 | ✅ Teste 1 | 11 MB | 50k | Concluído |
 | ✅ Teste 2 | 216 MB | 1M | Concluído |
-| Teste 3 | ~2 GB | 10M | Pendente |
-| Teste 4 | ~20 GB | 100M | Pendente |
+| ✅ Teste 3 | 1.1 GB | 5M | Concluído |
+| ✅ Teste 4 | 2.2 GB | 10M | **Concluído** |
+| 📋 Teste 5 | ~11 GB | 50M | Próximo |
+| 📋 Teste 6 | ~50 GB | 230M | Objetivo Final |
 
 ### Fase 2: Streaming Real
 
@@ -388,30 +503,51 @@ docker compose ps  # verificar containers
 ```
 1_projeto_bank_Fraud_detection_data_pipeline/
 ├── LEARNING_PROGRESS.md    ← Este arquivo (contexto para IA)
-├── docker-compose.yml      ← Infraestrutura (6 serviços)
+├── PROJECT_PLAN.md         ← Plano completo do projeto
+├── docker-compose.yml      ← Infraestrutura (Spark 3.5.3 + MinIO + PostgreSQL)
+├── run_spark_job.sh        ← 🆕 Script unificado para executar jobs no cluster
 ├── venv/                   ← Virtual environment Python
+│
+├── docs/
+│   └── ERROS_CONHECIDOS.md ← 🆕 Documentação de erros e soluções
+│
+├── jars/                   ← JARs necessários
+│   ├── hadoop-aws-3.3.4.jar           ← S3A connector (SDK v1)
+│   ├── aws-java-sdk-bundle-1.12.262.jar ← AWS SDK v1
+│   └── postgresql-42.7.4.jar          ← JDBC PostgreSQL
+│
 ├── scripts/
 │   └── generate_data.py    ← Gerador de dados sintéticos
+│
 ├── spark/
 │   └── jobs/
-│       ├── bronze_layer.py ← JSON → Parquet ✅
-│       ├── silver_layer.py ← Limpeza de dados ✅
-│       ├── gold_layer.py   ← Agregações ✅
-│       └── fraud_detection.py ← Regras de fraude ✅
+│       ├── bronze_layer.py     ← JSON → Parquet local ✅
+│       ├── silver_layer.py     ← Limpeza local ✅
+│       ├── gold_layer.py       ← Agregações local ✅
+│       ├── fraud_detection.py  ← Regras de fraude ✅
+│       ├── bronze_to_minio.py  ← 🆕 RAW → MinIO Bronze ✅
+│       ├── silver_to_minio.py  ← 🆕 Silver → MinIO Silver ✅
+│       ├── gold_to_minio.py    ← 🆕 Gold → MinIO Gold ✅
+│       └── load_to_postgres.py ← Gold → PostgreSQL ✅
+│
 └── data/
     ├── raw/                ← JSON Lines (origem)
-    │   ├── customers.json
-    │   └── transactions.json
-    ├── bronze/             ← Parquet bruto ✅
-    │   ├── customers/
-    │   └── transactions/
-    ├── silver/             ← Parquet limpo ✅
-    │   ├── customers/
-    │   └── transactions/
-    └── gold/               ← Parquet agregado ✅
-        ├── customer_summary/
-        ├── fraud_summary/
-        └── fraud_detection/  ← Particionado por risk_level ✅
+    ├── bronze/             ← Parquet local ✅
+    ├── silver/             ← Parquet local ✅
+    └── gold/               ← Parquet local ✅
+
+MinIO (Data Lake):
+s3a://fraud-data/
+├── bronze/
+│   ├── customers/      ← 100K clientes
+│   └── transactions/   ← 10M transações
+├── silver/
+│   ├── customers/      ← 100K clientes
+│   └── transactions/   ← 10M transações
+└── gold/
+    ├── customer_summary/   ← 100K resumos
+    ├── fraud_summary/      ← 1 resumo geral
+    └── fraud_detection/    ← 10M (particionado por risk_level)
 ```
 
 ---
@@ -457,6 +593,10 @@ Me avisa quando terminar!
 | pip não funciona | PEP 668 (externally-managed) | Criar venv |
 | PySpark 3.5.3 erro | SPARK_HOME aponta p/ 4.0.1 | Instalar PySpark 4.0.1 |
 | JSON corrupt record | Formato array [...] | Mudar para JSON Lines |
+| **hostname cannot be null** | **Spark 4.x + AWS SDK v2 bug** | **Usar Spark 3.5.3** |
+| **hostname cannot be null** | **Underscore em hostname** | **Usar `minio` não `fraud_minio`** |
+| **403 Forbidden MinIO** | **Credenciais erradas** | **Verificar MINIO_ROOT_PASSWORD** |
+| **ClassNotFoundException S3A** | **JARs não no classpath** | **--jars no spark-submit** |
 
 ---
 
@@ -475,4 +615,4 @@ Primeiro passo da próxima sessão:
 
 ---
 
-*Última atualização: 2025-11-29 15:00*
+*Última atualização: 2025-11-29 (MinIO Integration completado - Bronze/Silver/Gold)*

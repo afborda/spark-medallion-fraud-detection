@@ -6,38 +6,81 @@ Lê dados RAW (JSON) e salva como Parquet no MinIO
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import current_timestamp, lit
 from datetime import date
+import os
+
+# Detecta ambiente (Docker vs Local)
+IS_DOCKER = os.path.exists("/data")
+BASE_DIR = "/data" if IS_DOCKER else "data"
 
 # Configurações do MinIO
-MINIO_ENDPOINT = "http://localhost:9002"
+# Em Docker, usar nome do serviço (sem underscore para compatibilidade com AWS SDK)
+# NOTA: 'fraud_minio' (container_name) tem underscore que causa erro no AWS SDK
+MINIO_ENDPOINT = "http://minio:9000" if IS_DOCKER else "http://localhost:9002"
 MINIO_ACCESS_KEY = "minioadmin"
 MINIO_SECRET_KEY = "minioadmin123@@!!_2"
 
+# Caminhos
+RAW_PATH = f"{BASE_DIR}/raw"
+BRONZE_BUCKET = "s3a://fraud-data/bronze"
 
-# Caminho Bronze Layer no MinIO
-RAW_PATH = "data/raw"
-BRONZE_BUCKET = "s3a://bronze"
+# JARs path
+JARS_PATH = "/jars" if IS_DOCKER else "jars"
 
 print("=" * 50)
 print("🪣 BRONZE LAYER → MINIO")
 print("=" * 50)
 print(f"📂 Origem: {RAW_PATH}")
 print(f"🪣 Destino: {BRONZE_BUCKET}")
+print(f"🔗 MinIO: {MINIO_ENDPOINT}")
 print(f"📅 Data: {date.today().isoformat()}")
 print("=" * 50)
 
 
-# Inicializar Spark com configurações do S3/MinIO
+# ============================================================
+# INICIALIZAR SPARK COM SUPORTE S3A
+# ============================================================
+#
+# IMPORTANTE: Por que essas configurações?
+#
+# 1. spark.jars - Carrega os JARs necessários no driver
+# 2. spark.driver.extraClassPath - Adiciona JARs ao classpath do driver
+# 3. spark.executor.extraClassPath - Adiciona JARs ao classpath dos workers
+#    (SEM ISSO, os workers não conseguem escrever no S3A!)
+#
+# 4. hadoop-aws-3.3.4 usa AWS SDK v1 que funciona com MinIO HTTP
+#    Spark 3.5.x + Hadoop 3.3.x = AWS SDK v1 (compatível)
+#    Spark 4.0.x + Hadoop 3.4.x = AWS SDK v2 (BUG com MinIO HTTP!)
+#
+# 5. fs.s3a.path.style.access=true - MinIO usa path-style (bucket no path)
+#    AWS S3 usa virtual-hosted-style (bucket no subdomínio)
+#
+# Veja docs/ERROS_CONHECIDOS.md para mais detalhes sobre os erros.
+# ============================================================
+
 print("🚀 Iniciando Spark Session...")
+
+# JARs necessários para S3A
+HADOOP_AWS_JAR = f"{JARS_PATH}/hadoop-aws-3.3.4.jar"
+AWS_SDK_JAR = f"{JARS_PATH}/aws-java-sdk-bundle-1.12.262.jar"
+JARS = f"{HADOOP_AWS_JAR},{AWS_SDK_JAR}"
+CLASSPATH = f"{HADOOP_AWS_JAR}:{AWS_SDK_JAR}"
+
 spark = SparkSession.builder \
-	.appName("Bronze Layer to MinIO") \
-	.config("spark.jars", "jars/hadoop-aws-3.4.1.jar,jars/bundle-2.29.51.jar,jars/wildfly-openssl-1.0.7.Final.jar") \
-	.config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
-	.config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
-	.config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
-	.config("spark.hadoop.fs.s3a.path.style.access", "true") \
-	.config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
-	.getOrCreate()
+    .appName("Bronze Layer to MinIO") \
+    .config("spark.jars", JARS) \
+    .config("spark.driver.extraClassPath", CLASSPATH) \
+    .config("spark.executor.extraClassPath", CLASSPATH) \
+    .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
+    .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
+    .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
+    .config("spark.hadoop.fs.s3a.path.style.access", "true") \
+    .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
+    .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false") \
+    .config("spark.sql.files.maxPartitionBytes", "128m") \
+    .getOrCreate()
+
 print(f"✅ Spark inicializado: {spark.version}")
+print(f"✅ S3A configurado para: {MINIO_ENDPOINT}")
 
 
 def process_to_bronze (spark, source_path,  dest_path, table_name):

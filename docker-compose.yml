@@ -39,9 +39,12 @@ services:
   
   # ============================================
   # SPARK CLUSTER - 1 Master + 5 Workers (3GB cada)
+  # IMPORTANTE: Spark 3.5.x usa Hadoop 3.3.x + AWS SDK v1
+  # que é compatível com MinIO via HTTP (path-style access)
+  # Spark 4.x usa AWS SDK v2 que tem bug com endpoints HTTP customizados
   # ============================================
   spark-master:
-    image: apache/spark:4.0.0-preview2-scala2.13-java21-python3-r-ubuntu
+    image: apache/spark:3.5.3
     container_name: fraud_spark_master
     command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
     environment:
@@ -57,7 +60,7 @@ services:
       - ./jars:/jars
 
   spark-worker-1:
-    image: apache/spark:4.0.0-preview2-scala2.13-java21-python3-r-ubuntu
+    image: apache/spark:3.5.3
     container_name: fraud_spark_worker_1
     depends_on:
       - spark-master
@@ -70,7 +73,7 @@ services:
       - ./jars:/jars
 
   spark-worker-2:
-    image: apache/spark:4.0.0-preview2-scala2.13-java21-python3-r-ubuntu
+    image: apache/spark:3.5.3
     container_name: fraud_spark_worker_2
     depends_on:
       - spark-master
@@ -83,7 +86,7 @@ services:
       - ./jars:/jars
 
   spark-worker-3:
-    image: apache/spark:4.0.0-preview2-scala2.13-java21-python3-r-ubuntu
+    image: apache/spark:3.5.3
     container_name: fraud_spark_worker_3
     depends_on:
       - spark-master
@@ -96,7 +99,7 @@ services:
       - ./jars:/jars
 
   spark-worker-4:
-    image: apache/spark:4.0.0-preview2-scala2.13-java21-python3-r-ubuntu
+    image: apache/spark:3.5.3
     container_name: fraud_spark_worker_4
     depends_on:
       - spark-master
@@ -109,7 +112,7 @@ services:
       - ./jars:/jars
 
   spark-worker-5:
-    image: apache/spark:4.0.0-preview2-scala2.13-java21-python3-r-ubuntu
+    image: apache/spark:3.5.3
     container_name: fraud_spark_worker_5
     depends_on:
       - spark-master
