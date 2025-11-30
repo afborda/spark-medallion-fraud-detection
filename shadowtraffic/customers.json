@@ -1,0 +1,109 @@
+{
+  "generators": [
+    {
+      "topic": "customers",
+      "value": {
+        "customer_id": {
+          "_gen": "uuid"
+        },
+        "first_name": {
+          "_gen": "oneOf",
+          "choices": [
+            "João", "Maria", "José", "Ana", "Pedro", "Paula", "Carlos", "Carla",
+            "Lucas", "Julia", "Gabriel", "Beatriz", "Rafael", "Larissa", "Bruno",
+            "Fernanda", "Diego", "Camila", "Thiago", "Amanda", "Felipe", "Letícia"
+          ]
+        },
+        "last_name": {
+          "_gen": "oneOf",
+          "choices": [
+            "Silva", "Santos", "Oliveira", "Souza", "Rodrigues", "Ferreira",
+            "Alves", "Pereira", "Lima", "Gomes", "Costa", "Ribeiro", "Martins"
+          ]
+        },
+        "age": {
+          "_gen": "uniformDistribution",
+          "bounds": [18, 70]
+        },
+        "profession": {
+          "_gen": "oneOf",
+          "choices": [
+            "Engenheiro", "Médico", "Advogado", "Professor", "Analista de TI",
+            "Contador", "Vendedor", "Administrador", "Enfermeiro", "Arquiteto",
+            "Designer", "Empresário", "Motorista", "Estudante", "Aposentado"
+          ]
+        },
+        "monthly_income": {
+          "_gen": "normalDistribution",
+          "mean": 5000,
+          "sd": 3000,
+          "decimals": 2,
+          "min": 1500,
+          "max": 50000
+        },
+        "credit_score": {
+          "_gen": "uniformDistribution",
+          "bounds": [300, 900]
+        },
+        "home_state": {
+          "_gen": "oneOf",
+          "choices": ["SP", "RJ", "MG", "BA", "RS", "PR", "SC", "PE", "CE", "GO", "DF", "PA", "AM"]
+        },
+        "home_city": {
+          "_gen": "oneOf",
+          "choices": [
+            "São Paulo", "Rio de Janeiro", "Belo Horizonte", "Salvador", "Porto Alegre", 
+            "Curitiba", "Fortaleza", "Recife", "Brasília", "Goiânia", "Manaus", "Belém"
+          ]
+        },
+        "home_latitude": {
+          "_gen": "normalDistribution",
+          "mean": -22.0,
+          "sd": 5.0,
+          "decimals": 6
+        },
+        "home_longitude": {
+          "_gen": "normalDistribution",
+          "mean": -47.0,
+          "sd": 5.0,
+          "decimals": 6
+        },
+        "phone_model": {
+          "_gen": "oneOf",
+          "choices": [
+            "iPhone 15 Pro", "iPhone 14", "iPhone 13", "Samsung Galaxy S24", 
+            "Samsung Galaxy S23", "Xiaomi 14", "Motorola Edge 40", "Google Pixel 8"
+          ]
+        },
+        "usual_purchase_hour_start": {
+          "_gen": "uniformDistribution",
+          "bounds": [8, 12]
+        },
+        "usual_purchase_hour_end": {
+          "_gen": "uniformDistribution",
+          "bounds": [18, 23]
+        },
+        "account_created_days_ago": {
+          "_gen": "uniformDistribution",
+          "bounds": [30, 1800]
+        },
+        "created_at": {
+          "_gen": "now"
+        }
+      },
+      "throttle": {
+        "ms": 50
+      }
+    }
+  ],
+  "connections": {
+    "kafka": {
+      "kind": "kafka",
+      "producerConfigs": {
+        "bootstrap.servers": "fraud_kafka:9092",
+        "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+        "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+      }
+    }
+  }
+}

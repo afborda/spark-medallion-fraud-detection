@@ -1,0 +1,188 @@
+{
+  "generators": [
+    {
+      "topic": "transactions",
+      "value": {
+        "transaction_id": {
+          "_gen": "uuid"
+        },
+        "customer_id": {
+          "_gen": "uuid"
+        },
+        "amount": {
+          "_gen": "normalDistribution",
+          "mean": 500,
+          "sd": 400,
+          "decimals": 2
+        },
+        "merchant": {
+          "_gen": "oneOf",
+          "choices": [
+            "Mercado Livre", "Amazon Brasil", "Magazine Luiza", "Casas Bahia",
+            "Americanas", "Shopee", "iFood", "Rappi", "Uber Eats",
+            "Uber", "99", "Netflix", "Spotify", "Disney+", "HBO Max",
+            "Posto Shell", "Posto BR", "Farmácia Drogasil", "Carrefour", 
+            "Pão de Açúcar", "McDonald's", "Burger King", "Starbucks",
+            "Latam Airlines", "Gol Linhas Aéreas", "Azul", "Booking.com", "Decolar",
+            "Hotel Ibis", "Airbnb", "Apple Store", "Renner", "C&A", "Zara"
+          ]
+        },
+        "category": {
+          "_gen": "oneOf",
+          "choices": [
+            "e-commerce", "food_delivery", "transport", "streaming",
+            "gas_station", "pharmacy", "supermarket", "restaurant",
+            "airline_ticket", "hotel", "travel", "electronics", "clothing"
+          ]
+        },
+        "transaction_hour": {
+          "_gen": "uniformDistribution",
+          "bounds": [0, 23]
+        },
+        "day_of_week": {
+          "_gen": "oneOf",
+          "choices": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        },
+        "customer_home_state": {
+          "_gen": "oneOf",
+          "choices": ["SP", "RJ", "MG", "BA", "RS", "PR", "SC", "PE", "CE", "GO", "DF", "PA", "AM"]
+        },
+        "purchase_state": {
+          "_gen": "oneOf",
+          "choices": ["SP", "RJ", "MG", "BA", "RS", "PR", "SC", "PE", "CE", "GO", "DF", "PA", "AM", "AC", "RO"]
+        },
+        "purchase_city": {
+          "_gen": "oneOf",
+          "choices": [
+            "São Paulo", "Rio de Janeiro", "Belo Horizonte", "Salvador", "Brasília",
+            "Curitiba", "Porto Alegre", "Recife", "Fortaleza", "Goiânia",
+            "Manaus", "Belém", "Florianópolis", "Campo Grande", "Cuiabá"
+          ]
+        },
+        "purchase_latitude": {
+          "_gen": "normalDistribution",
+          "mean": -22.0,
+          "sd": 8.0,
+          "decimals": 6
+        },
+        "purchase_longitude": {
+          "_gen": "normalDistribution",
+          "mean": -47.0,
+          "sd": 8.0,
+          "decimals": 6
+        },
+        "device_latitude": {
+          "_gen": "normalDistribution",
+          "mean": -22.0,
+          "sd": 3.0,
+          "decimals": 6
+        },
+        "device_longitude": {
+          "_gen": "normalDistribution",
+          "mean": -47.0,
+          "sd": 3.0,
+          "decimals": 6
+        },
+        "device_id": {
+          "_gen": "uuid"
+        },
+        "ip_address": {
+          "_gen": "string",
+          "expr": "#{Internet.ipV4Address}"
+        },
+        "payment_method": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 40, "value": "credit_card" },
+            { "weight": 25, "value": "debit_card" },
+            { "weight": 20, "value": "pix" },
+            { "weight": 10, "value": "boleto" },
+            { "weight": 5, "value": "apple_pay" }
+          ]
+        },
+        "card_brand": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 35, "value": "Visa" },
+            { "weight": 30, "value": "Mastercard" },
+            { "weight": 15, "value": "Elo" },
+            { "weight": 10, "value": "Amex" },
+            { "weight": 10, "value": "Hipercard" }
+          ]
+        },
+        "installments": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 50, "value": 1 },
+            { "weight": 15, "value": 2 },
+            { "weight": 15, "value": 3 },
+            { "weight": 8, "value": 6 },
+            { "weight": 7, "value": 10 },
+            { "weight": 5, "value": 12 }
+          ]
+        },
+        "had_travel_purchase_last_12m": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 70, "value": false },
+            { "weight": 30, "value": true }
+          ]
+        },
+        "is_first_purchase_in_state": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 85, "value": false },
+            { "weight": 15, "value": true }
+          ]
+        },
+        "transactions_last_24h": {
+          "_gen": "uniformDistribution",
+          "bounds": [1, 10]
+        },
+        "avg_transaction_amount_30d": {
+          "_gen": "normalDistribution",
+          "mean": 350,
+          "sd": 200,
+          "decimals": 2
+        },
+        "is_international": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 95, "value": false },
+            { "weight": 5, "value": true }
+          ]
+        },
+        "is_online": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 60, "value": true },
+            { "weight": 40, "value": false }
+          ]
+        },
+        "is_fraud": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 98, "value": false },
+            { "weight": 2, "value": true }
+          ]
+        },
+        "timestamp": {
+          "_gen": "now"
+        }
+      },
+      "throttle": {
+        "ms": 100
+      }
+    }
+  ],
+  "connections": {
+    "kafka": {
+      "kind": "kafka",
+      "producerConfigs": {
+        "bootstrap.servers": "fraud_kafka:9092",
+        "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+        "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+      }
+    }
+  }
+}
