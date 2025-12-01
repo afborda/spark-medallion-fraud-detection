@@ -292,6 +292,52 @@ Bucket: fraud-data
 - Compressão Parquet (~61% menor que JSON para Big Data)
 - Throughput escala melhor com dados maiores (overhead fixo diluído)
 
+### Checkpoint 11.10: Regras de Fraude Avançadas ✅ 🎉
+**Objetivo:** Implementar sistema completo de detecção de fraudes com Window Functions
+**Status:** ✅ CONCLUÍDO - 10/12 regras implementadas
+
+#### Regras Implementadas no Silver Layer:
+
+| # | Flag | Descrição | Lógica |
+|---|------|-----------|--------|
+| 1 | `is_cloning_suspect` | **Clonagem de Cartão** | Window: tempo < 60min + dist > 555km + estados diferentes |
+| 2 | `is_impossible_velocity` | **Velocidade Impossível** | Velocidade entre tx > 900 km/h (avião) |
+| 3 | `is_high_value` | **Gasto Anormal** | Valor > 5x média 30d do cliente |
+| 5 | `is_gps_mismatch` | **GPS Mismatch** | Distância device/compra > 20° (~2222km) |
+| 6 | `is_night_transaction` | **Horário Noturno** | Entre 2h-5h da manhã |
+| 7 | `is_risky_category` | **Categoria de Risco** | Eletrônicos ou passagens aéreas |
+| 9 | `is_online_high_value` | **Online Alto Valor** | is_online + amount > R$ 1.000 |
+| 10 | `is_many_installments` | **Muitas Parcelas** | 10+ parcelas + valor > R$ 500 |
+| 11 | `is_cross_state` | **Cross-State** | Estado diferente + sem histórico viagem 12m |
+| 12 | `is_high_velocity` | **Alta Velocidade** | > 15 transações em 24h |
+
+#### Sistema de Pontuação no Gold Layer:
+
+| Fator | Pontos | Descrição |
+|-------|--------|----------|
+| Clonagem | **25** | Flag mais grave - quase certeza de fraude |
+| Velocidade Impossível | **40** | Fisicamente impossível - fraude certa |
+| Fatores individuais | 2-5 | Cross-state, noturno, alto valor, etc |
+| Combinações 2 fatores | 8-15 | Ex: GPS + alto valor |
+| Combinações 3+ fatores | 20-40 | Ex: GPS + alto valor + noite |
+
+#### Classificação de Risco:
+
+| Nível | Score | % Esperado |
+|-------|-------|------------|
+| ✅ NORMAL | < 10 | ~90% |
+| 🟢 BAIXO | 10-17 | ~0.5% |
+| 🟠 MÉDIO | 18-29 | ~2.3% |
+| 🟡 ALTO | 30-49 | ~2.1% |
+| 🔴 CRÍTICO | 50+ | ~4.9% |
+
+**Conceitos aprendidos:**
+- `Window Functions` - partitionBy().orderBy() para análise temporal
+- `lag()` - acessar valores de linhas anteriores (transação anterior do cliente)
+- `sqrt(pow(x2-x1,2) + pow(y2-y1,2)) * 111` - cálculo de distância em km
+- Sistema de scoring por combinações - fraude real requer múltiplos fatores
+- Calibração de thresholds - evitar falsos positivos excessivos
+
 ---
 
 ## 🎯 ARQUITETURA OBJETIVO
