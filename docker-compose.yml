@@ -152,6 +152,27 @@ services:
       - ./data:/data
       - ./jars:/jars
 
+  # ============================================
+  # METABASE - Business Intelligence Dashboard
+  # Conecta ao PostgreSQL para visualização dos dados
+  # ============================================
+  metabase:
+    image: metabase/metabase:latest
+    container_name: fraud_metabase
+    depends_on:
+      - postgres
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: metabase_db
+      MB_DB_PORT: 5432
+      MB_DB_USER: fraud_user
+      MB_DB_PASS: fraud_password@@!!_2
+      MB_DB_HOST: postgres
+    ports:
+      - "3000:3000"
+    volumes:
+      - metabase_data:/metabase-data
+
 # ============================================
 # NAMED VOLUMES - Gerenciados pelo Docker
 # ============================================
@@ -159,3 +180,4 @@ volumes:
   zookeeper_data:
   zookeeper_log:
   kafka_data:
+  metabase_data:
