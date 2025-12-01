@@ -2,9 +2,10 @@
 
 > Pipeline de detecção de fraudes bancárias usando arquitetura Medallion com Apache Spark
 
-[![Spark](https://img.shields.io/badge/Apache%20Spark-4.0.1-E25A1C?logo=apachespark&logoColor=white)](https://spark.apache.org/)
+[![Spark](https://img.shields.io/badge/Apache%20Spark-3.5.3-E25A1C?logo=apachespark&logoColor=white)](https://spark.apache.org/)
 [![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)](https://python.org/)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](https://docker.com/)
+[![Metabase](https://img.shields.io/badge/Metabase-Dashboard-509EE3?logo=metabase&logoColor=white)](https://metabase.com/)
 [![Status](https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow)](https://github.com/afborda/spark-medallion-fraud-detection)
 
 ---
@@ -93,11 +94,12 @@ Este projeto implementa um **pipeline de dados** para detecção de fraudes em t
 
 | Tecnologia | Versão | Propósito |
 |------------|--------|-----------|
-| **Apache Spark** | 4.0.1 | Processamento distribuído |
-| **PySpark** | 4.0.1 | Interface Python para Spark |
+| **Apache Spark** | 3.5.3 | Processamento distribuído |
+| **PySpark** | 3.5.3 | Interface Python para Spark |
 | **PostgreSQL** | 16 | Banco de dados relacional |
 | **Apache Kafka** | 7.5.0 | Streaming de eventos |
 | **MinIO** | latest | Object storage (S3-compatible) |
+| **Metabase** | latest | Dashboard de BI |
 | **Docker** | Compose | Containerização |
 
 ---
@@ -284,6 +286,36 @@ spark-submit --master spark://spark-master:7077 --jars $JARS /spark/jobs/product
 | Fraudes Injetadas | 1,500,000 (5.0%) |
 | Alertas Gerados | 2,088,839 |
 | Fraudes Detectadas | 842,997 (40.36% precisão) |
+
+---
+
+## 📊 Dashboard Metabase
+
+Dashboard de Business Intelligence para análise de fraudes em tempo real, conectado diretamente ao PostgreSQL.
+
+### Visão Geral
+![Dashboard Metabase - Visão Geral](assets/Captura%20de%20Tela%202025-12-01%20às%2019.29.18.png)
+
+### Análise Detalhada
+![Dashboard Metabase - Análise](assets/Captura%20de%20Tela%202025-12-01%20às%2019.29.27.png)
+
+### Métricas Disponíveis
+
+| Métrica | Descrição |
+|---------|-----------|
+| **KPIs Principais** | Total transações, alertas, taxa de fraude |
+| **Distribuição de Risco** | Pizza/barras por nível de risco |
+| **Top Clientes Suspeitos** | Ranking por quantidade de alertas |
+| **Fraudes por Categoria** | Análise por tipo de merchant |
+| **Fraudes por Estado** | Mapa de calor geográfico |
+| **Precisão por Nível** | Taxa de acerto das regras |
+
+### Acesso
+
+```
+URL: http://localhost:3000
+Banco: PostgreSQL (fraud_db)
+```
 
 ---
 
