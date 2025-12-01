@@ -62,12 +62,36 @@ df_scored = df_silver.withColumn("fraud_score",
      when(col("is_gps_mismatch"), 5).otherwise(0) +
      when(col("is_first_purchase_in_state"), 2).otherwise(0) +
      when(col("is_international"), 4).otherwise(0) +
+     # REGRA 7: Categoria de alto risco (eletrônicos, passagens)
+     when(col("is_risky_category"), 4).otherwise(0) +
+     # REGRA 9: Online de alto valor
+     when(col("is_online_high_value"), 5).otherwise(0) +
+     # REGRA 10: Muitas parcelas (diluição de fraude)
+     when(col("is_many_installments"), 4).otherwise(0) +
+     # REGRA 1: Suspeita de clonagem (PESO ALTO - é muito grave!)
+     # Se detectamos que o mesmo cartão foi usado em 2 lugares distantes
+     # em menos de 1 hora, isso é QUASE CERTEZA de fraude!
+     when(col("is_cloning_suspect"), 25).otherwise(0) +
+     # REGRA 2: Velocidade Impossível (PESO MÁXIMO!)
+     # Se a velocidade necessária entre duas compras é > 900 km/h (avião),
+     # é FISICAMENTE IMPOSSÍVEL - indica cartão clonado ou fraude!
+     when(col("is_impossible_velocity"), 40).otherwise(0) +
      
      # === COMBINAÇÕES DE 2 FATORES (peso moderado) ===
      when((col("is_gps_mismatch")) & (col("is_high_value")), 10).otherwise(0) +
      when((col("is_gps_mismatch")) & (col("is_night_transaction")), 8).otherwise(0) +
      when((col("is_high_velocity")) & (col("is_high_value")), 8).otherwise(0) +
      when((col("is_cross_state")) & (col("had_travel_purchase_last_12m") == False), 12).otherwise(0) +
+     # REGRA 7 combo: Categoria de risco + Valor alto
+     when((col("is_risky_category")) & (col("is_high_value")), 12).otherwise(0) +
+     # REGRA 7 combo: Categoria de risco + Noite
+     when((col("is_risky_category")) & (col("is_night_transaction")), 8).otherwise(0) +
+     # REGRA 9 combo: Online + Noite = muito suspeito
+     when((col("is_online_high_value")) & (col("is_night_transaction")), 10).otherwise(0) +
+     # REGRA 9 combo: Online alto valor + Categoria risco = altíssimo
+     when((col("is_online_high_value")) & (col("is_risky_category")), 15).otherwise(0) +
+     # REGRA 10 combo: Muitas parcelas + Categoria risco = fraude parcelada
+     when((col("is_many_installments")) & (col("is_risky_category")), 12).otherwise(0) +
      
      # === COMBINAÇÕES DE 3+ FATORES (peso alto - FRAUDE REAL) ===
      # GPS errado + Valor alto + Noite = muito suspeito
@@ -80,7 +104,16 @@ df_scored = df_silver.withColumn("fraud_score",
      when((col("is_high_velocity")) & (col("is_gps_mismatch")) & (col("is_high_value")), 35).otherwise(0) +
      
      # Noite + Alta velocidade + Cross-state sem histórico = fraude
-     when((col("is_night_transaction")) & (col("is_high_velocity")) & (col("is_cross_state")) & (col("had_travel_purchase_last_12m") == False), 40).otherwise(0))
+     when((col("is_night_transaction")) & (col("is_high_velocity")) & (col("is_cross_state")) & (col("had_travel_purchase_last_12m") == False), 40).otherwise(0) +
+     
+     # REGRA 7 combo triplo: Categoria risco + Valor alto + Noite = muito suspeito
+     when((col("is_risky_category")) & (col("is_high_value")) & (col("is_night_transaction")), 20).otherwise(0) +
+     
+     # REGRA 9 combo triplo: Online + Eletrônicos + Noite = padrão clássico de fraude
+     when((col("is_online_high_value")) & (col("is_risky_category")) & (col("is_night_transaction")), 25).otherwise(0) +
+     
+     # REGRA 10 combo triplo: Muitas parcelas + Eletrônicos + Online = fraude parcelada
+     when((col("is_many_installments")) & (col("is_risky_category")) & (col("is_online_high_value")), 30).otherwise(0))
 )
 
 # Classificação de Risco - AJUSTADO para 2.5-5% em CRÍTICO+ALTO

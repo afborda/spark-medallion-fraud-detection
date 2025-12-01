@@ -17,9 +17,49 @@
 
 ## 📍 STATUS ATUAL
 
-**Último checkpoint completado:** 11.8 - MinIO Integration ✅
-**Próximo checkpoint:** 11.9 - Escalar para 50M+ transações
-**Data da última sessão:** 2025-11-29
+**Último checkpoint completado:** 11.9 - Escala 30M transações ✅
+**Próximo checkpoint:** 12 - Streaming Real com Kafka
+**Data da última sessão:** 2025-12-01
+
+---
+
+## 🎯 RESULTADO FINAL: 30M Transações
+
+### Pipeline Executado com Sucesso!
+
+| Métrica | Valor |
+|---------|-------|
+| **Transações Processadas** | 30,000,000 |
+| **Dados Raw (JSON)** | 19.2 GB |
+| **Clientes** | 50,000 |
+| **Fraudes Injetadas** | 1,500,000 (5%) |
+| **Tempo Total** | ~15 min |
+| **Throughput** | ~110,000 tx/s |
+
+### Distribuição de Risco
+
+| Nível | Total | % | Valor Médio | Score Médio |
+|-------|-------|---|-------------|-------------|
+| ✅ NORMAL | 27,077,000 | 90.26% | R$ 334 | 0.6 |
+| 🔴 CRÍTICO | 1,468,416 | 4.89% | R$ 1,493 | 71.0 |
+| 🟠 MÉDIO | 696,770 | 2.32% | R$ 2,304 | 21.5 |
+| 🟡 ALTO | 620,423 | 2.07% | R$ 556 | 40.5 |
+| 🟢 BAIXO | 137,391 | 0.46% | R$ 1,423 | 15.0 |
+
+### PostgreSQL
+
+| Tabela | Registros |
+|--------|-----------|
+| **transactions** | 30,000,000 |
+| **fraud_alerts** | 2,088,839 |
+
+### Precisão da Detecção
+
+| Métrica | Valor |
+|---------|-------|
+| Total de Alertas | 2,088,839 |
+| Fraudes Reais Detectadas | 842,997 |
+| **Precisão** | **40.36%** |
 
 ---
 
@@ -295,8 +335,9 @@ Bucket: fraud-data
 | ✅ Teste 1 | 50K | 11 MB | ~30s | 1.7k/s | Concluído (Local) |
 | ✅ Teste 2 | 1M | 216 MB | ~2.5min | 6.7k/s | Concluído (Cluster) |
 | ✅ Teste 3 | 5M | 1.1 GB | ~3min | 28k/s | Concluído (Cluster) |
-| ✅ **Teste 4** | **10M** | **2.2 GB** | **~3.5min** | **47.6k/s** | **Concluído!** |
-| 📋 Teste 5 | 50M | ~11 GB | ~15min | ~55k/s | Planejado |
+| ✅ Teste 4 | 10M | 2.2 GB | ~3.5min | 47.6k/s | Concluído (Cluster) |
+| ✅ **Teste 5** | **30M** | **19.2 GB** | **~15min** | **110k/s** | **Concluído!** 🎉 |
+| 📋 Teste 6 | 50M | ~32 GB | ~25min | ~55k/s | Planejado |
 | 📋 Final | 230M | ~50 GB | ~1h | ~60k/s | Objetivo |
 
 ### ✅ Teste 3: 5M transações (Cluster 5 Workers)
@@ -325,6 +366,33 @@ Bucket: fraud-data
 | **Tempo total** | **~3.5 min (210s)** |
 | **Throughput** | **~47,600 transações/segundo** |
 
+### ✅ Teste 5: 30M transações (Cluster 5 Workers) 🎉 NOVO!
+| Métrica | Valor |
+|---------|-------|
+| Transações | **30,000,000** |
+| Clientes | 50,000 |
+| Dados Raw | **19.2 GB** |
+| Fraudes Injetadas | 1,500,000 (5.0%) |
+| **Tempo total** | **~15 min** |
+| **Throughput** | **~110,000 transações/segundo** |
+
+**Breakdown dos tempos (30M):**
+| Etapa | Tempo | Throughput |
+|-------|-------|------------|
+| Bronze Layer | 4.5min | 110,830/s |
+| Silver Layer | 5min | 100,000/s |
+| Gold Layer | 5min | 100,000/s |
+| **Total Pipeline** | **~15min** | **~110k tx/s** |
+
+**Resultados de Detecção:**
+| Nível | Quantidade | % |
+|-------|------------|---|
+| NORMAL | 27,077,000 | 90.26% |
+| CRÍTICO | 1,468,416 | 4.89% |
+| MÉDIO | 696,770 | 2.32% |
+| ALTO | 620,423 | 2.07% |
+| BAIXO | 137,391 | 0.46% |
+
 **Breakdown dos tempos (10M):**
 | Etapa | Tempo | Descrição |
 |-------|-------|-----------|
@@ -340,7 +408,8 @@ Bucket: fraud-data
 | Local (1 core) | 50K | ~30s | 1,700/s | baseline |
 | Cluster (10 cores) - 1M | 1M | 150s | 6,700/s | **4×** |
 | Cluster (10 cores) - 5M | 5M | 180s | 28,000/s | **16×** |
-| Cluster (10 cores) - 10M | 10M | 210s | **47,600/s** | **28×** |
+| Cluster (10 cores) - 10M | 10M | 210s | 47,600/s | **28×** |
+| Cluster (10 cores) - 30M | 30M | 900s | **110,000/s** | **65×** |
 
 ### 💾 Compressão Parquet vs JSON Raw
 | Teste | Raw (JSON) | Parquet | Compressão |

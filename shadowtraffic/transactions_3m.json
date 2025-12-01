@@ -1,0 +1,351 @@
+{
+  "generators": [
+    {
+      "topic": "transactions",
+      "value": {
+        "transaction_id": {
+          "_gen": "uuid"
+        },
+        "customer_id": {
+          "_gen": "string",
+          "expr": "CLIENTE_#{number.number_between '1','10000'}"
+        },
+        "customer_age": {
+          "_gen": "uniformDistribution",
+          "bounds": [18, 85],
+          "decimals": 0
+        },
+        "card_number_hash": {
+          "_gen": "string",
+          "expr": "CARD_#{number.number_between '1','50000'}"
+        },
+        "amount": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            {
+              "weight": 60,
+              "value": {
+                "_gen": "normalDistribution",
+                "mean": 150,
+                "sd": 100,
+                "decimals": 2
+              }
+            },
+            {
+              "weight": 25,
+              "value": {
+                "_gen": "normalDistribution",
+                "mean": 500,
+                "sd": 300,
+                "decimals": 2
+              }
+            },
+            {
+              "weight": 10,
+              "value": {
+                "_gen": "normalDistribution",
+                "mean": 1500,
+                "sd": 800,
+                "decimals": 2
+              }
+            },
+            {
+              "weight": 3,
+              "value": {
+                "_gen": "uniformDistribution",
+                "bounds": [3000, 8000],
+                "decimals": 2
+              }
+            },
+            {
+              "weight": 2,
+              "value": {
+                "_gen": "uniformDistribution",
+                "bounds": [8000, 25000],
+                "decimals": 2
+              }
+            }
+          ]
+        },
+        "merchant": {
+          "_gen": "oneOf",
+          "choices": [
+            "Mercado Livre", "Amazon Brasil", "Magazine Luiza", "Casas Bahia",
+            "Americanas", "Shopee", "iFood", "Rappi", "Uber Eats",
+            "Uber", "99", "Netflix", "Spotify", "Disney+", "HBO Max",
+            "Posto Shell", "Posto BR", "Farmácia Drogasil", "Carrefour", 
+            "Pão de Açúcar", "McDonald's", "Burger King", "Starbucks",
+            "Latam Airlines", "Gol Linhas Aéreas", "Azul", "Booking.com", "Decolar",
+            "Hotel Ibis", "Airbnb", "Apple Store", "Renner", "C&A", "Zara",
+            "Samsung Store", "Dell", "Kabum", "Pichau", "TeraByte Shop",
+            "Vivara", "H.Stern", "Pandora", "Swarovski"
+          ]
+        },
+        "category": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 18, "value": "e-commerce" },
+            { "weight": 14, "value": "food_delivery" },
+            { "weight": 11, "value": "transport" },
+            { "weight": 9, "value": "streaming" },
+            { "weight": 9, "value": "gas_station" },
+            { "weight": 7, "value": "pharmacy" },
+            { "weight": 7, "value": "supermarket" },
+            { "weight": 6, "value": "restaurant" },
+            { "weight": 5, "value": "airline_ticket" },
+            { "weight": 4, "value": "hotel" },
+            { "weight": 3, "value": "travel" },
+            { "weight": 4, "value": "electronics" },
+            { "weight": 2, "value": "jewelry" },
+            { "weight": 1, "value": "clothing" }
+          ]
+        },
+        "transaction_hour": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 2, "value": 0 },
+            { "weight": 1, "value": 1 },
+            { "weight": 3, "value": 2 },
+            { "weight": 4, "value": 3 },
+            { "weight": 3, "value": 4 },
+            { "weight": 2, "value": 5 },
+            { "weight": 3, "value": 6 },
+            { "weight": 5, "value": 7 },
+            { "weight": 6, "value": 8 },
+            { "weight": 8, "value": 9 },
+            { "weight": 9, "value": 10 },
+            { "weight": 10, "value": 11 },
+            { "weight": 10, "value": 12 },
+            { "weight": 9, "value": 13 },
+            { "weight": 8, "value": 14 },
+            { "weight": 7, "value": 15 },
+            { "weight": 6, "value": 16 },
+            { "weight": 5, "value": 17 },
+            { "weight": 5, "value": 18 },
+            { "weight": 6, "value": 19 },
+            { "weight": 7, "value": 20 },
+            { "weight": 6, "value": 21 },
+            { "weight": 4, "value": 22 },
+            { "weight": 3, "value": 23 }
+          ]
+        },
+        "day_of_week": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 12, "value": "Monday" },
+            { "weight": 13, "value": "Tuesday" },
+            { "weight": 14, "value": "Wednesday" },
+            { "weight": 15, "value": "Thursday" },
+            { "weight": 18, "value": "Friday" },
+            { "weight": 16, "value": "Saturday" },
+            { "weight": 12, "value": "Sunday" }
+          ]
+        },
+        "customer_home_state": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 25, "value": "SP" },
+            { "weight": 15, "value": "RJ" },
+            { "weight": 12, "value": "MG" },
+            { "weight": 8, "value": "BA" },
+            { "weight": 7, "value": "RS" },
+            { "weight": 7, "value": "PR" },
+            { "weight": 5, "value": "SC" },
+            { "weight": 5, "value": "PE" },
+            { "weight": 5, "value": "CE" },
+            { "weight": 4, "value": "GO" },
+            { "weight": 3, "value": "DF" },
+            { "weight": 2, "value": "PA" },
+            { "weight": 2, "value": "AM" }
+          ]
+        },
+        "purchase_state": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 22, "value": "SP" },
+            { "weight": 13, "value": "RJ" },
+            { "weight": 11, "value": "MG" },
+            { "weight": 7, "value": "BA" },
+            { "weight": 6, "value": "RS" },
+            { "weight": 6, "value": "PR" },
+            { "weight": 5, "value": "SC" },
+            { "weight": 5, "value": "PE" },
+            { "weight": 5, "value": "CE" },
+            { "weight": 4, "value": "GO" },
+            { "weight": 3, "value": "DF" },
+            { "weight": 3, "value": "PA" },
+            { "weight": 3, "value": "AM" },
+            { "weight": 2, "value": "MT" },
+            { "weight": 2, "value": "MS" },
+            { "weight": 1, "value": "AC" },
+            { "weight": 1, "value": "RO" },
+            { "weight": 1, "value": "RR" }
+          ]
+        },
+        "purchase_city": {
+          "_gen": "oneOf",
+          "choices": [
+            "São Paulo", "Rio de Janeiro", "Belo Horizonte", "Salvador", "Brasília",
+            "Curitiba", "Porto Alegre", "Recife", "Fortaleza", "Goiânia",
+            "Manaus", "Belém", "Florianópolis", "Campo Grande", "Cuiabá",
+            "Natal", "Maceió", "João Pessoa", "Teresina", "São Luís",
+            "Aracaju", "Vitória", "Campinas", "Guarulhos", "Osasco",
+            "Santo André", "São Bernardo", "Ribeirão Preto", "Sorocaba", "Santos"
+          ]
+        },
+        "purchase_latitude": {
+          "_gen": "normalDistribution",
+          "mean": -20.0,
+          "sd": 7.0,
+          "decimals": 6
+        },
+        "purchase_longitude": {
+          "_gen": "normalDistribution",
+          "mean": -47.0,
+          "sd": 7.0,
+          "decimals": 6
+        },
+        "device_latitude": {
+          "_gen": "normalDistribution",
+          "mean": -20.0,
+          "sd": 8.0,
+          "decimals": 6
+        },
+        "device_longitude": {
+          "_gen": "normalDistribution",
+          "mean": -47.0,
+          "sd": 8.0,
+          "decimals": 6
+        },
+        "device_id": {
+          "_gen": "uuid"
+        },
+        "ip_address": {
+          "_gen": "string",
+          "expr": "#{Internet.ipV4Address}"
+        },
+        "ip_country": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 92, "value": "Brazil" },
+            { "weight": 2, "value": "USA" },
+            { "weight": 1, "value": "Portugal" },
+            { "weight": 1, "value": "Argentina" },
+            { "weight": 1, "value": "Russia" },
+            { "weight": 1, "value": "China" },
+            { "weight": 1, "value": "Nigeria" },
+            { "weight": 1, "value": "Other" }
+          ]
+        },
+        "payment_method": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 40, "value": "credit_card" },
+            { "weight": 25, "value": "debit_card" },
+            { "weight": 20, "value": "pix" },
+            { "weight": 10, "value": "boleto" },
+            { "weight": 5, "value": "apple_pay" }
+          ]
+        },
+        "card_brand": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 35, "value": "Visa" },
+            { "weight": 30, "value": "Mastercard" },
+            { "weight": 15, "value": "Elo" },
+            { "weight": 10, "value": "Amex" },
+            { "weight": 10, "value": "Hipercard" }
+          ]
+        },
+        "installments": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 45, "value": 1 },
+            { "weight": 14, "value": 2 },
+            { "weight": 14, "value": 3 },
+            { "weight": 8, "value": 4 },
+            { "weight": 6, "value": 5 },
+            { "weight": 5, "value": 6 },
+            { "weight": 3, "value": 8 },
+            { "weight": 2, "value": 10 },
+            { "weight": 2, "value": 12 },
+            { "weight": 1, "value": 18 }
+          ]
+        },
+        "had_travel_purchase_last_12m": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 70, "value": false },
+            { "weight": 30, "value": true }
+          ]
+        },
+        "is_first_purchase_in_state": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 85, "value": false },
+            { "weight": 15, "value": true }
+          ]
+        },
+        "transactions_last_24h": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 40, "value": 1 },
+            { "weight": 25, "value": 2 },
+            { "weight": 15, "value": 3 },
+            { "weight": 10, "value": 4 },
+            { "weight": 5, "value": 5 },
+            { "weight": 3, "value": 8 },
+            { "weight": 2, "value": 15 }
+          ]
+        },
+        "avg_transaction_amount_30d": {
+          "_gen": "normalDistribution",
+          "mean": 350,
+          "sd": 200,
+          "decimals": 2
+        },
+        "is_international": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 95, "value": false },
+            { "weight": 5, "value": true }
+          ]
+        },
+        "is_online": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 60, "value": true },
+            { "weight": 40, "value": false }
+          ]
+        },
+        "is_fraud": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            { "weight": 97, "value": false },
+            { "weight": 3, "value": true }
+          ]
+        },
+        "timestamp": {
+          "_gen": "now"
+        }
+      },
+      "localConfigs": {
+        "maxEvents": 3000000
+      }
+    }
+  ],
+  "connections": {
+    "kafka": {
+      "kind": "kafka",
+      "producerConfigs": {
+        "bootstrap.servers": "fraud_kafka:9092",
+        "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+        "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+        "batch.size": "65536",
+        "linger.ms": "5",
+        "buffer.memory": "67108864",
+        "compression.type": "lz4"
+      }
+    }
+  }
+}

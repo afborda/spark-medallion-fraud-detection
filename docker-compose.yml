@@ -8,6 +8,8 @@ services:
       POSTGRES_DB: fraud_db
     ports:
       - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data  # ✅ Dados persistem!
   minio:
     image: quay.io/minio/minio:latest
     container_name: fraud_minio
@@ -18,12 +20,18 @@ services:
     ports:
       - "9002:9000"
       - "9003:9001"
+    volumes:
+      - ./minio_data:/data  # ✅ Dados persistem entre restarts!
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     container_name: fraud_zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper/data
+      - zookeeper_log:/var/lib/zookeeper/log
+  
   kafka:
     image: confluentinc/cp-kafka:7.5.0
     container_name: fraud_kafka
@@ -34,8 +42,12 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_LOG_RETENTION_HOURS: 168  # Manter logs por 7 dias
+      KAFKA_LOG_RETENTION_BYTES: 10737418240  # 10GB max
     ports:
       - "9092:9092"
+    volumes:
+      - kafka_data:/var/lib/kafka/data
   
   # ============================================
   # SPARK CLUSTER - 1 Master + 5 Workers (3GB cada)
@@ -54,6 +66,7 @@ services:
     ports:
       - "8081:8080"
       - "7077:7077"
+      - "4040:4040"
     volumes:
       - ./data:/data
       - ./spark/jobs:/jobs
@@ -68,6 +81,9 @@ services:
     environment:
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 3g
+      SPARK_WORKER_WEBUI_PORT: 8081
+    ports:
+      - "8082:8081"
     volumes:
       - ./data:/data
       - ./jars:/jars
@@ -81,6 +97,9 @@ services:
     environment:
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 3g
+      SPARK_WORKER_WEBUI_PORT: 8081
+    ports:
+      - "8083:8081"
     volumes:
       - ./data:/data
       - ./jars:/jars
@@ -94,6 +113,9 @@ services:
     environment:
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 3g
+      SPARK_WORKER_WEBUI_PORT: 8081
+    ports:
+      - "8084:8081"
     volumes:
       - ./data:/data
       - ./jars:/jars
@@ -107,6 +129,9 @@ services:
     environment:
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 3g
+      SPARK_WORKER_WEBUI_PORT: 8081
+    ports:
+      - "8085:8081"
     volumes:
       - ./data:/data
       - ./jars:/jars
@@ -120,7 +145,17 @@ services:
     environment:
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 3g
+      SPARK_WORKER_WEBUI_PORT: 8081
+    ports:
+      - "8086:8081"
     volumes:
       - ./data:/data
       - ./jars:/jars
-    
+
+# ============================================
+# NAMED VOLUMES - Gerenciados pelo Docker
+# ============================================
+volumes:
+  zookeeper_data:
+  zookeeper_log:
+  kafka_data:

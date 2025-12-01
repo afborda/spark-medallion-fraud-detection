@@ -50,3 +50,11 @@ Thumbs.db
 # ============================================
 *.log
 logs/
+
+# ============================================
+# Docker Persistent Volumes - NÃO VERSIONAR!
+# ============================================
+minio_data/
+postgres_data/
+kafka_data/
+zookeeper_data/

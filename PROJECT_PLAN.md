@@ -509,7 +509,30 @@ fraud-detection-pipeline/
 
 ## ✅ Checklist de Entrega
 
-### 📊 RELATÓRIO DE STATUS (Novembro 2025)
+### 📊 RELATÓRIO DE STATUS (Dezembro 2025)
+
+#### 🎉 MARCO ALCANÇADO: 30M Transações Processadas!
+
+| Métrica | Valor |
+|---------|-------|
+| **Transações Processadas** | 30,000,000 |
+| **Dados Raw (JSON)** | 19.2 GB |
+| **Clientes** | 50,000 |
+| **Fraudes Injetadas** | 1,500,000 (5%) |
+| **Alertas Gerados** | 2,088,839 |
+| **Tempo Total Pipeline** | ~15 min |
+| **Throughput Médio** | ~110,000 tx/s |
+
+**Distribuição de Risco (PostgreSQL):**
+| Nível | Total | % | Valor Médio | Score Médio |
+|-------|-------|---|-------------|-------------|
+| NORMAL | 27,077,000 | 90.26% | R$ 334 | 0.6 |
+| CRÍTICO | 1,468,416 | 4.89% | R$ 1,493 | 71.0 |
+| MÉDIO | 696,770 | 2.32% | R$ 2,304 | 21.5 |
+| ALTO | 620,423 | 2.07% | R$ 556 | 40.5 |
+| BAIXO | 137,391 | 0.46% | R$ 1,423 | 15.0 |
+
+**Precisão da Detecção:** 40.36% (842,997 fraudes reais em 2,088,839 alertas)
 
 #### ✅ O QUE ESTÁ IMPLEMENTADO
 
@@ -528,17 +551,18 @@ fraud-detection-pipeline/
 | **Batch Pipeline** | ✅ | Bronze→Silver→Gold batch |
 | **Documentação Regras** | ✅ | `docs/REGRAS_FRAUDE.md` (14 regras documentadas) |
 | **Escala 10M transações** | ✅ | Testado com sucesso (~3.5min, 47.6k tx/s) |
+| **Escala 30M transações** | ✅ | **NOVO!** (~15min, 110k tx/s, 19.2GB) |
 
 #### ❌ O QUE ESTÁ FALTANDO
 
 ##### 🔴 CRÍTICO (Alto Impacto)
 
 | Item | Planejado | Atual | Ação Necessária |
-|------|-----------|-------|-----------------|
+|------|-----------|-------|------------------|
 | **8 Regras de Fraude Completas** | 8 regras complexas | 2 regras + 8 flags | Implementar regras faltantes |
 | **Dashboard Metabase** | Configurado e rodando | ❌ Não existe | Adicionar ao docker-compose |
 | **Dashboard Streamlit** | `streamlit/dashboard.py` | ❌ Não existe | Criar pasta e arquivo |
-| **Escala 50GB** | Objetivo principal | 2.2GB testado | Gerar e processar 50GB |
+| **Escala 50GB** | Objetivo principal | **19.2GB testado (30M)** | Escalar para 50GB final |
 
 ##### 🟠 IMPORTANTE (Médio Impacto)
 
@@ -583,7 +607,7 @@ fraud-detection-pipeline/
 | **FASE 3** | Regras de Fraude (8 regras) | ⚠️ Parcial | 40% |
 | **FASE 4** | Operacional (Audit/Blocklist/Chargeback) | ❌ Não iniciado | 0% |
 | **FASE 5** | Visualização (Metabase/Streamlit) | ❌ Não iniciado | 0% |
-| **FASE 6** | Escala 50GB + Documentação | ⚠️ Parcial | 30% |
+| **FASE 6** | Escala 50GB + Documentação | ⚠️ **38% (19.2GB de 50GB)** | 60% |
 
 #### 🚀 PRÓXIMOS PASSOS RECOMENDADOS
 

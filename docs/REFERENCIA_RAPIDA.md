@@ -230,16 +230,34 @@ docker exec fraud_postgres psql -U fraud_user -d fraud_db -c "SELECT risk_level,
 
 ```
 /home/ubuntu/Estudos/1_projeto_bank_Fraud_detection_data_pipeline/
-├── docker-compose.yml          # Infraestrutura
-├── spark/jobs/                 # Scripts Spark
-│   ├── kafka_to_postgres_batch.py  # ⭐ Principal
-│   ├── batch_silver_gold.py
-│   └── streaming_bronze.py
-├── jars/                       # JARs do Spark
-├── shadowtraffic/              # Gerador de dados
+├── docker-compose.yml              # Infraestrutura
+├── spark/jobs/                     # Scripts Spark (19 scripts organizados)
+│   ├── README.md                   # Índice principal
+│   ├── production/                 # 🚀 USE ESTES em produção!
+│   │   ├── medallion_bronze.py    # Kafka → MinIO bronze/
+│   │   ├── medallion_silver.py    # MinIO bronze/ → silver/ (flags fraude)
+│   │   └── medallion_gold.py      # MinIO silver/ → gold/ + PostgreSQL (scoring)
+│   ├── streaming/                  # 🌊 Processamento tempo real
+│   │   ├── streaming_bronze.py
+│   │   ├── streaming_silver.py
+│   │   ├── streaming_gold.py
+│   │   └── streaming_to_postgres.py
+│   ├── utils/                      # 🔧 Debug e validação
+│   │   ├── check_flags.py
+│   │   └── check_gps.py
+│   ├── experimental/               # 🧪 Testes
+│   │   ├── batch_silver_gold.py
+│   │   └── kafka_to_postgres_batch.py
+│   └── legacy/                     # 📦 Scripts antigos (referência)
+│       ├── bronze_layer.py
+│       ├── silver_layer.py
+│       └── ... (8 scripts)
+├── jars/                           # JARs do Spark
+├── shadowtraffic/                  # Gerador de dados
 │   ├── transactions.json
 │   └── license.env
-└── docs/                       # Documentação
+└── docs/                           # Documentação
     ├── GUIA_COMPLETO_ESTUDO.md
     └── REFERENCIA_RAPIDA.md
 ```
+

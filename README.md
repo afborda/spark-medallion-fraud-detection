@@ -167,18 +167,19 @@ python scripts/generate_data.py
 ### 5. Executar o pipeline
 
 ```bash
-# Bronze Layer - Ingestão
-python spark/jobs/bronze_layer.py
+# Entrar no container Spark
+docker exec -it spark-master bash
 
-# Silver Layer - Limpeza
-python spark/jobs/silver_layer.py
+# Variável com JARs necessários
+JARS="/jars/hadoop-aws-3.3.4.jar,/jars/aws-java-sdk-bundle-1.12.262.jar,/jars/postgresql-42.7.4.jar"
 
-# Gold Layer - Agregações
-python spark/jobs/gold_layer.py
-
-# Fraud Detection - Regras de Negócio
-python spark/jobs/fraud_detection.py
+# Executar pipeline na ordem (PRODUÇÃO)
+spark-submit --master spark://spark-master:7077 --jars $JARS /spark/jobs/production/medallion_bronze.py
+spark-submit --master spark://spark-master:7077 --jars $JARS /spark/jobs/production/medallion_silver.py
+spark-submit --master spark://spark-master:7077 --jars $JARS /spark/jobs/production/medallion_gold.py
 ```
+
+> 📁 **Nota**: Scripts organizados em `spark/jobs/production/`. Ver `spark/jobs/README.md` para detalhes.
 
 ---
 
@@ -192,7 +193,8 @@ python spark/jobs/fraud_detection.py
 | Escala 1 | 50,000 | 11 MB | ~30s | 1,700/s | Local |
 | Escala 2 | 1,000,000 | 216 MB | ~2.5min | 6,700/s | 5 Workers |
 | Escala 3 | 5,000,000 | 1.1 GB | ~3min | 28,000/s | 5 Workers |
-| **Escala 4** | **10,000,000** | **2.2 GB** | **~3.5min** | **47,600/s** | **5 Workers** |
+| Escala 4 | 10,000,000 | 2.2 GB | ~3.5min | 47,600/s | 5 Workers |
+| **Escala 5** | **30,000,000** | **19.2 GB** | **~15min** | **110,000/s** | **5 Workers** |
 
 ### Configuração Atual do Cluster
 
@@ -219,15 +221,29 @@ python spark/jobs/fraud_detection.py
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Performance por Camada (10M transações - Último Teste) 🚀
+### Performance por Camada (30M transações - Último Teste) 🚀
 
-| Camada | Tempo | Registros | Tamanho |
-|--------|-------|-----------|---------|
-| 🔶 Bronze | 50s | 10,100,000 | 838 MB |
-| ⚪ Silver | 74s | 10,100,000 | 861 MB |
-| 🥇 Gold | 40s | Agregações | 866 MB |
-| 🚨 Fraud Detection | 45s | 10,000,000 | (incluso) |
-| **TOTAL** | **~210s** | - | **2.6 GB** |
+| Camada | Tempo | Registros | Throughput |
+|--------|-------|-----------|------------|
+| 🔶 Bronze | 4.5min | 30,000,000 | 110,830/s |
+| ⚪ Silver | 5min | 30,000,000 | 100,000/s |
+| 🥇 Gold | 5min | 30,000,000 | 100,000/s |
+| **TOTAL** | **~15min** | **30M** | **~110k/s** |
+
+### Resultados de Detecção de Fraude (30M transações)
+
+| Nível de Risco | Quantidade | % do Total | Valor Médio | Score Médio |
+|----------------|------------|------------|-------------|-------------|
+| ✅ NORMAL | 27,077,000 | 90.26% | R$ 334 | 0.6 |
+| 🔴 CRÍTICO | 1,468,416 | 4.89% | R$ 1,493 | 71.0 |
+| 🟠 MÉDIO | 696,770 | 2.32% | R$ 2,304 | 21.5 |
+| 🟡 ALTO | 620,423 | 2.07% | R$ 556 | 40.5 |
+| 🟢 BAIXO | 137,391 | 0.46% | R$ 1,423 | 15.0 |
+
+**PostgreSQL:**
+- 30,000,000 transações em `transactions`
+- 2,088,839 alertas em `fraud_alerts`
+- Precisão: 40.36% (842,997 fraudes reais detectadas)
 
 ### Compressão Parquet (10M transações)
 
@@ -240,31 +256,34 @@ python spark/jobs/fraud_detection.py
 
 ### 📈 Escalabilidade Comprovada
 
-| Métrica | Local (50K) | Cluster (1M) | Cluster (5M) | Cluster (10M) | Melhoria |
-|---------|-------------|--------------|--------------|---------------|----------|
-| Transações | 50,000 | 1,000,000 | 5,000,000 | **10,000,000** | **200×** |
-| Dados | 11 MB | 216 MB | 1.1 GB | **2.2 GB** | **200×** |
-| Tempo | ~30s | ~150s | ~180s | **~210s** | **7×** |
-| **Throughput** | 1,700/s | 6,700/s | 28,000/s | **47,600/s** | **28×** |
+| Métrica | Local (50K) | Cluster (1M) | Cluster (5M) | Cluster (10M) | Cluster (30M) | Melhoria |
+|---------|-------------|--------------|--------------|---------------|---------------|----------|
+| Transações | 50,000 | 1,000,000 | 5,000,000 | 10,000,000 | **30,000,000** | **600×** |
+| Dados | 11 MB | 216 MB | 1.1 GB | 2.2 GB | **19.2 GB** | **1,745×** |
+| Tempo | ~30s | ~150s | ~180s | ~210s | **~900s** | **30×** |
+| **Throughput** | 1,700/s | 6,700/s | 28,000/s | 47,600/s | **110,000/s** | **65×** |
 
 > **Conclusão:** Com 200× mais dados (50K → 10M), o tempo aumentou apenas 7× (30s → 210s). O throughput subiu de 1,700 para **47,600 transações/segundo** - uma melhoria de **28×**!
 
-### Estatísticas de Fraude (10M transações)
+### Estatísticas de Fraude (30M transações)
 
-| Nível de Risco | Quantidade | % do Total | Critério |
-|----------------|------------|------------|----------|
-| 🔴 Alto Risco | ~80,000 | 0.8% | Valor > R$1000 **E** horário 2h-5h |
-| 🟠 Risco Médio | ~2,000,000 | 20% | Valor > R$1000 **OU** horário 2h-5h |
-| 🟢 Baixo Risco | ~7,920,000 | 79% | Nenhuma regra acionada |
-| **TOTAL** | **10,000,000** | 100% | - |
+| Nível de Risco | Quantidade | % do Total | Valor Médio | Score Médio |
+|----------------|------------|------------|-------------|-------------|
+| ✅ NORMAL | 27,077,000 | 90.26% | R$ 334 | 0.6 |
+| 🔴 CRÍTICO | 1,468,416 | 4.89% | R$ 1,493 | 71.0 |
+| 🟠 MÉDIO | 696,770 | 2.32% | R$ 2,304 | 21.5 |
+| 🟡 ALTO | 620,423 | 2.07% | R$ 556 | 40.5 |
+| 🟢 BAIXO | 137,391 | 0.46% | R$ 1,423 | 15.0 |
 
 ### Dados Atuais
 
 | Entidade | Registros |
 |----------|-----------|
-| Clientes | 100,000 |
-| Transações | 10,000,000 |
-| Fraudes (is_fraud) | ~500,000 (5.0%) |
+| Clientes | 50,000 |
+| Transações | 30,000,000 |
+| Fraudes Injetadas | 1,500,000 (5.0%) |
+| Alertas Gerados | 2,088,839 |
+| Fraudes Detectadas | 842,997 (40.36% precisão) |
 
 ---
 
@@ -277,17 +296,18 @@ python spark/jobs/fraud_detection.py
 | Item | Status | Observações |
 |------|--------|-------------|
 | **Infraestrutura Docker** | ✅ | PostgreSQL, MinIO, Kafka, Zookeeper, Spark (1 Master + 5 Workers) |
-| **Bronze Layer** | ✅ | `bronze_layer.py`, `medallion_bronze.py`, `streaming_bronze.py` |
-| **Silver Layer** | ✅ | `silver_layer.py`, `medallion_silver.py`, `streaming_silver.py` |
-| **Gold Layer** | ✅ | `gold_layer.py`, `medallion_gold.py`, `streaming_gold.py` |
-| **Fraud Detection básico** | ✅ | `fraud_detection.py` com regras simples + flags avançadas |
-| **Integração MinIO** | ✅ | Jobs `*_to_minio.py` e medallion |
-| **Integração PostgreSQL** | ✅ | `load_to_postgres.py`, `kafka_to_postgres_batch.py`, `streaming_to_postgres.py` |
-| **Geração de Dados** | ✅ | `generate_data.py`, `generate_10m_transactions.py`, ShadowTraffic |
-| **Kafka Producer** | ✅ | `kafka_producer.py` |
-| **Streaming Pipeline** | ✅ | Bronze→Silver→Gold streaming |
-| **Batch Pipeline** | ✅ | Bronze→Silver→Gold batch |
+| **Bronze Layer** | ✅ | `production/medallion_bronze.py` (batch), `streaming/streaming_bronze.py` (realtime) |
+| **Silver Layer** | ✅ | `production/medallion_silver.py` (batch), `streaming/streaming_silver.py` (realtime) |
+| **Gold Layer** | ✅ | `production/medallion_gold.py` (batch), `streaming/streaming_gold.py` (realtime) |
+| **Fraud Detection básico** | ✅ | Regras em `medallion_silver.py` (flags) + `medallion_gold.py` (scoring) |
+| **Integração MinIO** | ✅ | Integrado nos scripts medallion_* |
+| **Integração PostgreSQL** | ✅ | `medallion_gold.py`, `streaming_to_postgres.py`, `experimental/kafka_to_postgres_batch.py` |
+| **Geração de Dados** | ✅ | `scripts/generate_data.py`, `scripts/generate_10m_transactions.py`, ShadowTraffic |
+| **Kafka Producer** | ✅ | `scripts/kafka_producer.py` |
+| **Streaming Pipeline** | ✅ | `streaming/streaming_*.py` |
+| **Batch Pipeline** | ✅ | `production/medallion_*.py` |
 | **Documentação Regras** | ✅ | `docs/REGRAS_FRAUDE.md` (14 regras documentadas) |
+| **Organização Scripts** | ✅ | 19 scripts organizados em 5 pastas (production, streaming, utils, experimental, legacy) |
 | **Escala 10M transações** | ✅ | Testado com sucesso (~3.5min, 47.6k tx/s) |
 
 #### ❌ O QUE ESTÁ FALTANDO
