@@ -53,8 +53,23 @@ logs/
 
 # ============================================
 # Docker Persistent Volumes - NÃO VERSIONAR!
+# Estas pastas são criadas pelo docker-compose.yml
+# quando os containers sobem pela primeira vez.
+# Contêm dados persistentes dos serviços:
 # ============================================
-minio_data/
-postgres_data/
-kafka_data/
-zookeeper_data/
+minio_data/          # MinIO: arquivos do Data Lake (buckets S3)
+postgres_data/       # PostgreSQL: banco de dados fraud_db
+kafka_data/          # Kafka: logs de mensagens/topics
+zookeeper_data/      # Zookeeper: metadados do Kafka
+zookeeper_log/       # Zookeeper: logs de transações
+
+# ============================================
+# Arquivos Pessoais - NÃO VERSIONAR!
+# ============================================
+POSTAGENS/           # Posts pessoais para LinkedIn (não público)
+
+# ============================================
+# Arquivos Temporários
+# ============================================
+*.log
+1_2                  # Arquivo temporário/acidental
