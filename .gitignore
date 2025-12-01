@@ -57,16 +57,22 @@ logs/
 # quando os containers sobem pela primeira vez.
 # Contêm dados persistentes dos serviços:
 # ============================================
-minio_data/          # MinIO: arquivos do Data Lake (buckets S3)
-postgres_data/       # PostgreSQL: banco de dados fraud_db
-kafka_data/          # Kafka: logs de mensagens/topics
-zookeeper_data/      # Zookeeper: metadados do Kafka
-zookeeper_log/       # Zookeeper: logs de transações
+# MinIO: arquivos do Data Lake (buckets S3)
+minio_data/
+# PostgreSQL: banco de dados fraud_db
+postgres_data/
+# Kafka: logs de mensagens/topics
+kafka_data/
+# Zookeeper: metadados do Kafka
+zookeeper_data/
+# Zookeeper: logs de transações
+zookeeper_log/
 
 # ============================================
 # Arquivos Pessoais - NÃO VERSIONAR!
 # ============================================
-POSTAGENS/           # Posts pessoais para LinkedIn (não público)
+# Posts pessoais para LinkedIn (não público)
+POSTAGENS/
 
 # ============================================
 # Arquivos Temporários
