@@ -63,6 +63,47 @@
 
 ---
 
+## 🛡️ EFETIVIDADE DO SISTEMA v1.0 (02/12/2025)
+
+> Baseline para comparação em melhorias futuras
+
+### 📊 Matriz de Confusão
+
+| Classificação | Fraude Real | Legítima | Total |
+|---------------|-------------|----------|-------|
+| 🔴 CRÍTICO | 1,078,018 | 707,813 | 1,785,831 |
+| 🟡 ALTO | 620,983 | 7,754,960 | 8,375,943 |
+| 🟠 MÉDIO | 191,187 | 15,957,999 | 16,149,186 |
+| 🟢 BAIXO | 15 | 22,134,878 | 22,134,893 |
+
+### 🎯 Métricas de Performance
+
+| Métrica | Valor | Significado |
+|---------|-------|-------------|
+| **Recall** | **89.88%** | Capturamos ~90% das fraudes |
+| **Precision** | **16.72%** | 17% dos bloqueios são corretos |
+| **F1-Score** | **28.19%** | Equilíbrio recall/precision |
+| **Acurácia** | **82.14%** | Performance geral |
+
+### 💰 Impacto Financeiro
+
+| Categoria | Valor | Transações |
+|-----------|-------|------------|
+| 🟢 Protegido | **R$ 14.1 Bi** | 1.7M fraudes bloqueadas |
+| 🔴 Perdido | R$ 522 Mi | 191K fraudes escaparam |
+| 🟡 Bloqueio indevido | R$ 8.8 Bi | 8.4M falsos positivos |
+
+### 📈 Precisão por Nível
+
+| Nível | % Fraude Real | Ação Recomendada |
+|-------|---------------|------------------|
+| 🔴 CRÍTICO | **60.37%** | ✅ Bloquear automaticamente |
+| 🟡 ALTO | 7.41% | ⚠️ Revisão manual |
+| 🟠 MÉDIO | 1.18% | ⚠️ Monitorar |
+| 🟢 BAIXO | 0.00% | ✅ Liberar automaticamente |
+
+---
+
 ## 🚀 EVOLUÇÃO DO CLUSTER SPARK
 
 ### Antes (Single Node)
