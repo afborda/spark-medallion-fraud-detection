@@ -1,3 +1,13 @@
+# ============================================
+# REDE EXTERNA DO TRAEFIK
+# ============================================
+networks:
+  traefik-network:
+    external: true
+    name: site_traefik-network
+  default:
+    driver: bridge
+
 services:
   postgres:
     image: postgres:16
@@ -10,10 +20,14 @@ services:
       - "5432:5432"
     volumes:
       - ./docker_volumes/postgres:/var/lib/postgresql/data
+
   minio:
     image: quay.io/minio/minio:latest
     container_name: fraud_minio
     command: server /data --console-address ":9001"
+    networks:
+      - default
+      - traefik-network
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin123@@!!_2
@@ -22,6 +36,20 @@ services:
       - "9003:9001"
     volumes:
       - ./docker_volumes/minio:/data
+    labels:
+      - "traefik.enable=true"
+      # MinIO Console (UI)
+      - "traefik.http.routers.minio-console.rule=Host(`minio.abnerfonseca.com.br`)"
+      - "traefik.http.routers.minio-console.entrypoints=websecure"
+      - "traefik.http.routers.minio-console.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.minio-console.service=minio-console"
+      - "traefik.http.services.minio-console.loadbalancer.server.port=9001"
+      # MinIO API
+      - "traefik.http.routers.minio-api.rule=Host(`s3.abnerfonseca.com.br`)"
+      - "traefik.http.routers.minio-api.entrypoints=websecure"
+      - "traefik.http.routers.minio-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.minio-api.service=minio-api"
+      - "traefik.http.services.minio-api.loadbalancer.server.port=9000"
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     container_name: fraud_zookeeper
@@ -59,6 +87,9 @@ services:
     image: apache/spark:3.5.3
     container_name: fraud_spark_master
     command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
+    networks:
+      - default
+      - traefik-network
     environment:
       SPARK_MASTER_HOST: spark-master
       SPARK_MASTER_PORT: 7077
@@ -71,6 +102,20 @@ services:
       - ./data:/data
       - ./spark/jobs:/jobs
       - ./jars:/jars
+    labels:
+      - "traefik.enable=true"
+      # Spark Master UI
+      - "traefik.http.routers.spark.rule=Host(`spark.abnerfonseca.com.br`)"
+      - "traefik.http.routers.spark.entrypoints=websecure"
+      - "traefik.http.routers.spark.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.spark.service=spark"
+      - "traefik.http.services.spark.loadbalancer.server.port=8080"
+      # Spark Jobs UI (4040)
+      - "traefik.http.routers.spark-jobs.rule=Host(`spark-jobs.abnerfonseca.com.br`)"
+      - "traefik.http.routers.spark-jobs.entrypoints=websecure"
+      - "traefik.http.routers.spark-jobs.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.spark-jobs.service=spark-jobs"
+      - "traefik.http.services.spark-jobs.loadbalancer.server.port=4040"
 
   spark-worker-1:
     image: apache/spark:3.5.3
@@ -161,6 +206,9 @@ services:
     container_name: fraud_metabase
     depends_on:
       - postgres
+    networks:
+      - default
+      - traefik-network
     environment:
       MB_DB_TYPE: postgres
       MB_DB_DBNAME: metabase_db
@@ -172,6 +220,14 @@ services:
       - "3000:3000"
     volumes:
       - ./docker_volumes/metabase:/metabase-data
+    labels:
+      - "traefik.enable=true"
+      # Metabase Dashboard
+      - "traefik.http.routers.metabase.rule=Host(`metabase.abnerfonseca.com.br`)"
+      - "traefik.http.routers.metabase.entrypoints=websecure"
+      - "traefik.http.routers.metabase.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.metabase.service=metabase"
+      - "traefik.http.services.metabase.loadbalancer.server.port=3000"
 
 # ============================================
 # VOLUMES ORGANIZADOS EM docker_volumes/
