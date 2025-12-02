@@ -1,9 +1,26 @@
 # 🚀 REFERÊNCIA RÁPIDA - Comandos do Projeto
 
+> **Última atualização:** 2025-12-02
+> **Pipeline atual:** 51GB de dados brasileiros (51.2M transações)
+
 ## 📁 Diretório do projeto
 ```bash
 cd /home/ubuntu/Estudos/1_projeto_bank_Fraud_detection_data_pipeline
 ```
+
+---
+
+## 📊 MÉTRICAS ATUAIS DO PIPELINE
+
+| Métrica | Valor |
+|---------|-------|
+| **Transações Raw** | 51,281,996 |
+| **Transações Processadas** | 48,445,853 |
+| **Dados Raw** | 51 GB (479 arquivos JSON) |
+| **Clientes** | 100,000 (Faker pt_BR) |
+| **Dispositivos** | 300,102 |
+| **Tempo Total** | ~34 min |
+| **MinIO Total** | 12 GB |
 
 ---
 
@@ -231,12 +248,14 @@ docker exec fraud_postgres psql -U fraud_user -d fraud_db -c "SELECT risk_level,
 ```
 /home/ubuntu/Estudos/1_projeto_bank_Fraud_detection_data_pipeline/
 ├── docker-compose.yml              # Infraestrutura
-├── spark/jobs/                     # Scripts Spark (19 scripts organizados)
+├── run_brazilian_pipeline.sh       # 🆕 Script para pipeline 51GB
+├── spark/jobs/                     # Scripts Spark
 │   ├── README.md                   # Índice principal
 │   ├── production/                 # 🚀 USE ESTES em produção!
-│   │   ├── medallion_bronze.py    # Kafka → MinIO bronze/
-│   │   ├── medallion_silver.py    # MinIO bronze/ → silver/ (flags fraude)
-│   │   └── medallion_gold.py      # MinIO silver/ → gold/ + PostgreSQL (scoring)
+│   │   ├── bronze_brazilian.py    # JSON → MinIO bronze/ (~10min)
+│   │   ├── silver_brazilian.py    # MinIO bronze/ → silver/ (~13min)
+│   │   ├── gold_brazilian.py      # MinIO silver/ → gold/ (~11min)
+│   │   └── load_to_postgres.py    # Gold → PostgreSQL
 │   ├── streaming/                  # 🌊 Processamento tempo real
 │   │   ├── streaming_bronze.py
 │   │   ├── streaming_silver.py
@@ -245,19 +264,46 @@ docker exec fraud_postgres psql -U fraud_user -d fraud_db -c "SELECT risk_level,
 │   ├── utils/                      # 🔧 Debug e validação
 │   │   ├── check_flags.py
 │   │   └── check_gps.py
-│   ├── experimental/               # 🧪 Testes
-│   │   ├── batch_silver_gold.py
-│   │   └── kafka_to_postgres_batch.py
-│   └── legacy/                     # 📦 Scripts antigos (referência)
-│       ├── bronze_layer.py
-│       ├── silver_layer.py
-│       └── ... (8 scripts)
+│   └── experimental/               # 🧪 Testes
+├── scripts/                        # 🆕 Geradores de dados
+│   ├── generate_parallel.py       # Geração paralela (7 workers)
+│   └── generate_brazilian_data.py # Faker pt_BR
 ├── jars/                           # JARs do Spark
-├── shadowtraffic/                  # Gerador de dados
-│   ├── transactions.json
-│   └── license.env
+├── data/raw/                       # 51GB de dados JSON
 └── docs/                           # Documentação
     ├── GUIA_COMPLETO_ESTUDO.md
     └── REFERENCIA_RAPIDA.md
+```
+
+---
+
+## 🇧🇷 PIPELINE BRASILEIRO (51GB)
+
+### Gerar dados (já gerados - 51GB)
+```bash
+python scripts/generate_parallel.py --target-size 51
+```
+
+### Executar pipeline completo
+```bash
+# Bronze (51GB JSON → 5GB Parquet) ~10min
+./run_brazilian_pipeline.sh bronze
+
+# Silver (Limpeza e flags) ~13min  
+./run_brazilian_pipeline.sh silver
+
+# Gold (Agregações e scoring) ~11min
+./run_brazilian_pipeline.sh gold
+
+# PostgreSQL (carregar para dashboards)
+./run_brazilian_pipeline.sh postgres
+
+# Ou tudo de uma vez
+./run_brazilian_pipeline.sh all
+```
+
+### Verificar tamanhos no MinIO
+```bash
+docker exec fraud_minio mc du -r local/fraud-data/medallion/
 ```
 

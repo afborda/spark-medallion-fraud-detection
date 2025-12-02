@@ -511,65 +511,59 @@ fraud-detection-pipeline/
 
 ### 📊 RELATÓRIO DE STATUS (Dezembro 2025)
 
-#### 🎉 MARCO ALCANÇADO: 30M Transações Processadas!
+#### 🎉 MARCO ALCANÇADO: 51GB de Dados Brasileiros Processados! 🇧🇷
+
+### 🌐 DASHBOARD PÚBLICO ONLINE!
+
+🔗 **Acesse agora:** [Dashboard de Fraudes - Metabase](http://54.36.100.35:3000/public/dashboard/cd809bc2-c8cd-442e-afae-30a17ac50a0f)
+
+> 📊 Dashboard com dados reais processados pelo pipeline - 48.4M transações brasileiras!
 
 | Métrica | Valor |
 |---------|-------|
-| **Transações Processadas** | 30,000,000 |
-| **Dados Raw (JSON)** | 19.2 GB |
-| **Clientes** | 50,000 |
-| **Fraudes Injetadas** | 1,500,000 (5%) |
-| **Alertas Gerados** | 2,088,839 |
-| **Tempo Total Pipeline** | ~15 min |
-| **Throughput Médio** | ~110,000 tx/s |
+| **Transações Raw** | 51,281,996 |
+| **Transações Processadas** | 48,445,853 (5.5% limpeza) |
+| **Dados Raw (JSON)** | 51 GB (479 arquivos) |
+| **Clientes** | 100,000 (nomes brasileiros) |
+| **Dispositivos** | 300,102 |
+| **Tempo Total Pipeline** | ~34 min |
+| **Throughput Médio** | ~85,000 tx/s |
 
-**Distribuição de Risco (PostgreSQL):**
-| Nível | Total | % | Valor Médio | Score Médio |
-|-------|-------|---|-------------|-------------|
-| NORMAL | 27,077,000 | 90.26% | R$ 334 | 0.6 |
-| CRÍTICO | 1,468,416 | 4.89% | R$ 1,493 | 71.0 |
-| MÉDIO | 696,770 | 2.32% | R$ 2,304 | 21.5 |
-| ALTO | 620,423 | 2.07% | R$ 556 | 40.5 |
-| BAIXO | 137,391 | 0.46% | R$ 1,423 | 15.0 |
-
-**Precisão da Detecção:** 40.36% (842,997 fraudes reais em 2,088,839 alertas)
+**Tamanhos por Camada (MinIO):**
+| Camada | Tamanho | Compressão |
+|--------|---------|-----------|
+| Bronze | 5.0 GB | 90% |
+| Silver | 5.4 GB | 89% |
+| Gold | 2.0 GB | 96% |
+| **Total** | **12 GB** | **76%** |
 
 #### ✅ O QUE ESTÁ IMPLEMENTADO
 
 | Item | Status | Observações |
 |------|--------|-------------|
-| **Infraestrutura Docker** | ✅ | PostgreSQL, MinIO, Kafka, Zookeeper, Spark (1 Master + 5 Workers) |
-| **Bronze Layer** | ✅ | `bronze_layer.py`, `medallion_bronze.py`, `streaming_bronze.py` |
-| **Silver Layer** | ✅ | `silver_layer.py`, `medallion_silver.py`, `streaming_silver.py` |
-| **Gold Layer** | ✅ | `gold_layer.py`, `medallion_gold.py`, `streaming_gold.py` |
-| **Fraud Detection básico** | ✅ | `fraud_detection.py` com regras simples + flags avançadas |
-| **Integração MinIO** | ✅ | Jobs `*_to_minio.py` e medallion |
-| **Integração PostgreSQL** | ✅ | `load_to_postgres.py`, `kafka_to_postgres_batch.py`, `streaming_to_postgres.py` |
-| **Geração de Dados** | ✅ | `generate_data.py`, `generate_10m_transactions.py`, ShadowTraffic |
-| **Kafka Producer** | ✅ | `kafka_producer.py` |
-| **Streaming Pipeline** | ✅ | Bronze→Silver→Gold streaming |
-| **Batch Pipeline** | ✅ | Bronze→Silver→Gold batch |
+| **Infraestrutura Docker** | ✅ | PostgreSQL, MinIO, Kafka, Zookeeper, Spark (1 Master + 5 Workers), Metabase |
+| **Bronze Layer** | ✅ | `production/bronze_brazilian.py` - 51GB JSON → 5GB Parquet |
+| **Silver Layer** | ✅ | `production/silver_brazilian.py` - Limpeza e validação |
+| **Gold Layer** | ✅ | `production/gold_brazilian.py` - Agregações e scoring |
+| **Fraud Detection básico** | ✅ | 10/12 regras com sistema de pontuação |
+| **Integração MinIO** | ✅ | `s3a://fraud-data/medallion/{bronze,silver,gold}` |
+| **Integração PostgreSQL** | ✅ | `load_to_postgres.py` |
+| **Geração de Dados Brasileiros** | ✅ | `generate_parallel.py` com Faker pt_BR |
+| **Metabase** | ✅ | Dashboard PÚBLICO: [Link](http://54.36.100.35:3000/public/dashboard/cd809bc2-c8cd-442e-afae-30a17ac50a0f) |
+| **Streaming Pipeline** | ✅ | `streaming/streaming_*.py` |
+| **Batch Pipeline** | ✅ | `production/*.py` |
 | **Documentação Regras** | ✅ | `docs/REGRAS_FRAUDE.md` (14 regras documentadas) |
-| **Escala 10M transações** | ✅ | Testado com sucesso (~3.5min, 47.6k tx/s) |
-| **Escala 30M transações** | ✅ | **NOVO!** (~15min, 110k tx/s, 19.2GB) |
+| **Escala 51GB** | ✅ | **🎉 NOVO! 51.2M transações brasileiras em ~34min** |
 
-#### ❌ O QUE ESTÁ FALTANDO
-
-##### 🔴 CRÍTICO (Alto Impacto)
-
-| Item | Planejado | Atual | Ação Necessária |
-|------|-----------|-------|------------------|
-| **8 Regras de Fraude Completas** | 8 regras complexas | 2 regras + 8 flags | Implementar regras faltantes |
-| **Dashboard Metabase** | Configurado e rodando | ❌ Não existe | Adicionar ao docker-compose |
-| **Dashboard Streamlit** | `streamlit/dashboard.py` | ❌ Não existe | Criar pasta e arquivo |
-| **Escala 50GB** | Objetivo principal | **19.2GB testado (30M)** | Escalar para 50GB final |
+#### 🟡 O QUE ESTÁ PENDENTE
 
 ##### 🟠 IMPORTANTE (Médio Impacto)
 
 | Item | Planejado | Atual | Ação Necessária |
-|------|-----------|-------|-----------------|
+|------|-----------|-------|------------------|
+| **2 Regras Restantes** | 12 regras | ✅ 10/12 | Implementar Account Takeover e Idade |
+| **Dashboard Streamlit** | `streamlit/dashboard.py` | ❌ Não existe | Criar pasta e arquivo |
 | **Entidade Cards** | Tabela de cartões | ❌ Não existe | Criar schema e dados |
-| **Entidade Devices** | Tabela de dispositivos | ❌ Não existe | Criar schema e dados |
 | **Chargebacks** | Processamento de disputas | ❌ Não existe | Criar pipeline |
 | **Blocklist** | Lista de bloqueio | ❌ Não existe | Criar tabela e lógica |
 | **Audit Log** | Log de compliance | ❌ Não existe | Implementar logging |
@@ -634,25 +628,26 @@ fraud-detection-pipeline/
 | **FASE 2** | Pipeline Bronze/Silver/Gold | ✅ Completo | 100% |
 | **FASE 3** | Regras de Fraude (12 regras) | ✅ **10/12 implementadas** | 83% |
 | **FASE 4** | Operacional (Audit/Blocklist/Chargeback) | ❌ Não iniciado | 0% |
-| **FASE 5** | Visualização (Metabase/Streamlit) | ❌ Não iniciado | 0% |
-| **FASE 6** | Escala 50GB + Documentação | ✅ **38% (19.2GB de 50GB)** | 60% |
+| **FASE 5** | Visualização (Metabase/Streamlit) | ✅ **Metabase ONLINE!** 🌐 | 75% |
+| **FASE 6** | Escala 50GB + Documentação | ✅ **51GB processados!** 🎉 | 100% |
 
 #### 🚀 PRÓXIMOS PASSOS RECOMENDADOS
 
 ##### Prioridade 1 (Esta semana)
 1. ✅ ~~Implementar as **regras de fraude**~~ **FEITO! 10/12 regras**
-2. ⬜ Adicionar **Metabase** ao docker-compose
-3. ⬜ Criar **Streamlit dashboard** básico
+2. ✅ ~~Adicionar **Metabase** ao docker-compose~~ **FEITO! Porta 3000**
+3. ✅ ~~Escalar para **50GB de dados**~~ **SUPERADO! 51GB processados**
+4. ⬜ Criar **Streamlit dashboard** básico
 
 ##### Prioridade 2 (Próxima semana)
-4. ⬜ Criar entidades **Cards** e **Devices** (para regra Account Takeover)
-5. ⬜ Implementar **Chargebacks** pipeline
-6. ⬜ Criar **Blocklist** e **Audit Log**
+5. ⬜ Criar entidades **Cards** (para regra Account Takeover)
+6. ⬜ Implementar **Chargebacks** pipeline
+7. ⬜ Criar **Blocklist** e **Audit Log**
 
 ##### Prioridade 3 (Semana 3)
-7. ⬜ Escalar para **50GB de dados** (faltam ~30GB)
 8. ⬜ Adicionar **Traefik** para acesso externo
 9. ⬜ Completar **documentação** (README, architecture, data dictionary)
+10. ⬜ Post no **LinkedIn** sobre o projeto
 
 ---
 

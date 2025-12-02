@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data  # ✅ Dados persistem!
+      - ./docker_volumes/postgres:/var/lib/postgresql/data
   minio:
     image: quay.io/minio/minio:latest
     container_name: fraud_minio
@@ -21,7 +21,7 @@ services:
       - "9002:9000"
       - "9003:9001"
     volumes:
-      - ./minio_data:/data  # ✅ Dados persistem entre restarts!
+      - ./docker_volumes/minio:/data
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     container_name: fraud_zookeeper
@@ -29,8 +29,8 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     volumes:
-      - zookeeper_data:/var/lib/zookeeper/data
-      - zookeeper_log:/var/lib/zookeeper/log
+      - ./docker_volumes/zookeeper/data:/var/lib/zookeeper/data
+      - ./docker_volumes/zookeeper/logs:/var/lib/zookeeper/log
   
   kafka:
     image: confluentinc/cp-kafka:7.5.0
@@ -47,7 +47,7 @@ services:
     ports:
       - "9092:9092"
     volumes:
-      - kafka_data:/var/lib/kafka/data
+      - ./docker_volumes/kafka:/var/lib/kafka/data
   
   # ============================================
   # SPARK CLUSTER - 1 Master + 5 Workers (3GB cada)
@@ -171,13 +171,8 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - metabase_data:/metabase-data
+      - ./docker_volumes/metabase:/metabase-data
 
 # ============================================
-# NAMED VOLUMES - Gerenciados pelo Docker
+# VOLUMES ORGANIZADOS EM docker_volumes/
 # ============================================
-volumes:
-  zookeeper_data:
-  zookeeper_log:
-  kafka_data:
-  metabase_data:

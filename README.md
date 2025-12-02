@@ -190,13 +190,14 @@ spark-submit --master spark://spark-master:7077 --jars $JARS /spark/jobs/product
 ### Evolução dos Testes de Performance
 
 | Teste | Transações | Dados Raw | Tempo Total | Throughput | Cluster |
-|-------|------------|-----------|-------------|------------|---------|
+|-------|------------|-----------|-------------|------------|---------||
 | Inicial | 500 | ~1 MB | ~10s | 50/s | Local |
 | Escala 1 | 50,000 | 11 MB | ~30s | 1,700/s | Local |
 | Escala 2 | 1,000,000 | 216 MB | ~2.5min | 6,700/s | 5 Workers |
 | Escala 3 | 5,000,000 | 1.1 GB | ~3min | 28,000/s | 5 Workers |
 | Escala 4 | 10,000,000 | 2.2 GB | ~3.5min | 47,600/s | 5 Workers |
-| **Escala 5** | **30,000,000** | **19.2 GB** | **~15min** | **110,000/s** | **5 Workers** |
+| Escala 5 | 30,000,000 | 19.2 GB | ~15min | 110,000/s | 5 Workers |
+| **🇧🇷 Escala 6** | **51,281,996** | **51 GB** | **~34min** | **~85,000/s** | **5 Workers** |
 
 ### Configuração Atual do Cluster
 
@@ -223,69 +224,74 @@ spark-submit --master spark://spark-master:7077 --jars $JARS /spark/jobs/product
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Performance por Camada (30M transações - Último Teste) 🚀
+### Performance por Camada (51GB - Dados Brasileiros 🇧🇷) 🚀
 
-| Camada | Tempo | Registros | Throughput |
-|--------|-------|-----------|------------|
-| 🔶 Bronze | 4.5min | 30,000,000 | 110,830/s |
-| ⚪ Silver | 5min | 30,000,000 | 100,000/s |
-| 🥇 Gold | 5min | 30,000,000 | 100,000/s |
-| **TOTAL** | **~15min** | **30M** | **~110k/s** |
+| Camada | Tempo | Registros | Tamanho | Throughput |
+|--------|-------|-----------|---------|------------|
+| 🔶 Bronze | ~10min | 51,281,996 | 51GB → 5GB | ~85k/s |
+| ⚪ Silver | ~13min | 48,445,853 | 5.4GB | ~62k/s |
+| 🥇 Gold | ~11min | 48,445,853 | 2.0GB | ~73k/s |
+| **TOTAL** | **~34min** | **51.2M → 48.4M** | **51GB → 12GB** | **~85k/s** |
 
-### Resultados de Detecção de Fraude (30M transações)
+> **Nota:** Compressão de 51GB JSON para 5GB Parquet (redução de **90%**!)
 
-| Nível de Risco | Quantidade | % do Total | Valor Médio | Score Médio |
-|----------------|------------|------------|-------------|-------------|
-| ✅ NORMAL | 27,077,000 | 90.26% | R$ 334 | 0.6 |
-| 🔴 CRÍTICO | 1,468,416 | 4.89% | R$ 1,493 | 71.0 |
-| 🟠 MÉDIO | 696,770 | 2.32% | R$ 2,304 | 21.5 |
-| 🟡 ALTO | 620,423 | 2.07% | R$ 556 | 40.5 |
-| 🟢 BAIXO | 137,391 | 0.46% | R$ 1,423 | 15.0 |
+### Resultados de Detecção de Fraude (51GB - Dados Brasileiros 🇧🇷)
 
-**PostgreSQL:**
-- 30,000,000 transações em `transactions`
-- 2,088,839 alertas em `fraud_alerts`
-- Precisão: 40.36% (842,997 fraudes reais detectadas)
+| Nível de Risco | Quantidade | % do Total |
+|----------------|------------|------------|
+| 🟡 ALTO | ~3.5M | ~7% |
+| 🟢 BAIXO | ~3.2M | ~7% |
+| 🔴 CRÍTICO | ~3.0M | ~6% |
+| 🟠 MÉDIO | ~2.9M | ~6% |
 
-### Compressão Parquet (10M transações)
+**Dados Processados:**
+- 📊 51,281,996 transações raw
+- ✅ 48,445,853 transações após limpeza (5.5% removidas)
+- 👥 100,000 clientes brasileiros (Faker pt_BR)
+- 📱 300,102 dispositivos
+- 📁 479 arquivos JSON de transações
+
+### Compressão Parquet (51GB Dados Brasileiros 🇧🇷)
 
 | Camada | Formato | Tamanho | Economia |
 |--------|---------|---------|----------|
-| Raw | JSON | 2.2 GB | - |
-| Bronze | Parquet | 838 MB | **62%** |
-| Silver | Parquet | 861 MB | **61%** |
-| Gold | Parquet | 866 MB | **61%** |
+| Raw | JSON | 51 GB | - |
+| Bronze | Parquet | 5.0 GB | **90%** |
+| Silver | Parquet | 5.4 GB | **89%** |
+| Gold | Parquet | 2.0 GB | **96%** |
+| **Total MinIO** | Parquet | **12 GB** | **76%** |
 
 ### 📈 Escalabilidade Comprovada
 
-| Métrica | Local (50K) | Cluster (1M) | Cluster (5M) | Cluster (10M) | Cluster (30M) | Melhoria |
-|---------|-------------|--------------|--------------|---------------|---------------|----------|
-| Transações | 50,000 | 1,000,000 | 5,000,000 | 10,000,000 | **30,000,000** | **600×** |
-| Dados | 11 MB | 216 MB | 1.1 GB | 2.2 GB | **19.2 GB** | **1,745×** |
-| Tempo | ~30s | ~150s | ~180s | ~210s | **~900s** | **30×** |
-| **Throughput** | 1,700/s | 6,700/s | 28,000/s | 47,600/s | **110,000/s** | **65×** |
+| Métrica | Local (50K) | Cluster (1M) | Cluster (10M) | Cluster (30M) | 🇧🇷 Cluster (51M) | Melhoria |
+|---------|-------------|--------------|---------------|---------------|-------------------|----------|
+| Transações | 50,000 | 1,000,000 | 10,000,000 | 30,000,000 | **51,281,996** | **1,026×** |
+| Dados | 11 MB | 216 MB | 2.2 GB | 19.2 GB | **51 GB** | **4,636×** |
+| Tempo | ~30s | ~150s | ~210s | ~900s | **~2040s** | **68×** |
+| **Throughput** | 1,700/s | 6,700/s | 47,600/s | 110,000/s | **~85,000/s** | **50×** |
 
-> **Conclusão:** Com 200× mais dados (50K → 10M), o tempo aumentou apenas 7× (30s → 210s). O throughput subiu de 1,700 para **47,600 transações/segundo** - uma melhoria de **28×**!
+> **🎉 NOVO MARCO:** 51GB de dados brasileiros processados em ~34 minutos! Compressão Parquet de **90%** (51GB JSON → 5GB Parquet)
 
-### Estatísticas de Fraude (30M transações)
+### Estatísticas de Fraude (51GB Dados Brasileiros 🇧🇷)
 
-| Nível de Risco | Quantidade | % do Total | Valor Médio | Score Médio |
-|----------------|------------|------------|-------------|-------------|
-| ✅ NORMAL | 27,077,000 | 90.26% | R$ 334 | 0.6 |
-| 🔴 CRÍTICO | 1,468,416 | 4.89% | R$ 1,493 | 71.0 |
-| 🟠 MÉDIO | 696,770 | 2.32% | R$ 2,304 | 21.5 |
-| 🟡 ALTO | 620,423 | 2.07% | R$ 556 | 40.5 |
-| 🟢 BAIXO | 137,391 | 0.46% | R$ 1,423 | 15.0 |
+| Nível de Risco | Quantidade | % do Total | Tamanho (Parquet) |
+|----------------|------------|------------|-------------------|
+| 🟡 ALTO | ~3,500,000 | ~7% | 312 MB |
+| 🟢 BAIXO | ~3,200,000 | ~7% | 743 MB |
+| 🔴 CRÍTICO | ~3,000,000 | ~6% | 73 MB |
+| 🟠 MÉDIO | ~2,900,000 | ~6% | 579 MB |
+| **TOTAL FRAUD_DETECTION** | **~12.6M** | **~26%** | **1.7 GB** |
 
-### Dados Atuais
+### Dados Atuais (Dezembro 2025 - Dados Brasileiros 🇧🇷)
 
-| Entidade | Registros |
-|----------|-----------|
-| Clientes | 50,000 |
-| Transações | 30,000,000 |
-| Fraudes Injetadas | 1,500,000 (5.0%) |
-| Alertas Gerados | 2,088,839 |
-| Fraudes Detectadas | 842,997 (40.36% precisão) |
+| Entidade | Registros | Tamanho | Observações |
+|----------|-----------|---------|-------------|
+| 👥 Clientes | 100,000 | 92 MB (JSON) / 13 MB (Parquet) | Nomes brasileiros (Faker pt_BR) |
+| 📱 Devices | 300,102 | 126 MB (JSON) / 31 MB (Parquet) | 3 devices por cliente |
+| 💳 Transações Raw | 51,281,996 | 51 GB (479 arquivos JSON) | ~107k tx/arquivo |
+| ✅ Transações Limpas | 48,445,853 | 5.4 GB (Parquet Silver) | 5.5% removidas na limpeza |
+| 🚨 Alertas de Fraude | ~12,600,000 | 342 MB | ~26% das transações |
+| 📊 Customer Summary | 100,000 | 7.7 MB | Agregações por cliente |
 
 ---
 
@@ -294,10 +300,10 @@ spark-submit --master spark://spark-master:7077 --jars $JARS /spark/jobs/product
 Dashboard de Business Intelligence para análise de fraudes em tempo real, conectado diretamente ao PostgreSQL.
 
 ### Visão Geral
-![Dashboard Metabase - Visão Geral](assets/Captura%20de%20Tela%202025-12-01%20às%2019.29.18.png)
+![Dashboard Metabase - Visão Geral](./assets/Captura%20de%20Tela%202025-12-01%20às%2019.29.18.png)
 
 ### Análise Detalhada
-![Dashboard Metabase - Análise](assets/Captura%20de%20Tela%202025-12-01%20às%2019.29.27.png)
+![Dashboard Metabase - Análise](./assets/Captura%20de%20Tela%202025-12-01%20às%2019.29.27.png)
 
 ### Métricas Disponíveis
 
@@ -321,26 +327,22 @@ Banco: PostgreSQL (fraud_db)
 
 ## 📈 Progresso do Projeto
 
-### 📊 Relatório de Status (Novembro 2025)
+### 📊 Relatório de Status (Dezembro 2025 - 🇧🇷 Dados Brasileiros)
 
 #### ✅ O QUE ESTÁ FEITO
 
 | Item | Status | Observações |
 |------|--------|-------------|
-| **Infraestrutura Docker** | ✅ | PostgreSQL, MinIO, Kafka, Zookeeper, Spark (1 Master + 5 Workers) |
-| **Bronze Layer** | ✅ | `production/medallion_bronze.py` (batch), `streaming/streaming_bronze.py` (realtime) |
-| **Silver Layer** | ✅ | `production/medallion_silver.py` (batch), `streaming/streaming_silver.py` (realtime) |
-| **Gold Layer** | ✅ | `production/medallion_gold.py` (batch), `streaming/streaming_gold.py` (realtime) |
-| **Fraud Detection básico** | ✅ | Regras em `medallion_silver.py` (flags) + `medallion_gold.py` (scoring) |
-| **Integração MinIO** | ✅ | Integrado nos scripts medallion_* |
-| **Integração PostgreSQL** | ✅ | `medallion_gold.py`, `streaming_to_postgres.py`, `experimental/kafka_to_postgres_batch.py` |
-| **Geração de Dados** | ✅ | `scripts/generate_data.py`, `scripts/generate_10m_transactions.py`, ShadowTraffic |
-| **Kafka Producer** | ✅ | `scripts/kafka_producer.py` |
-| **Streaming Pipeline** | ✅ | `streaming/streaming_*.py` |
-| **Batch Pipeline** | ✅ | `production/medallion_*.py` |
-| **Documentação Regras** | ✅ | `docs/REGRAS_FRAUDE.md` (14 regras documentadas) |
-| **Organização Scripts** | ✅ | 19 scripts organizados em 5 pastas (production, streaming, utils, experimental, legacy) |
-| **Escala 10M transações** | ✅ | Testado com sucesso (~3.5min, 47.6k tx/s) |
+| **Infraestrutura Docker** | ✅ | PostgreSQL, MinIO, Kafka, Zookeeper, Spark (1 Master + 5 Workers), Metabase |
+| **Bronze Layer** | ✅ | `production/bronze_brazilian.py` - 51GB JSON → 5GB Parquet (~10min) |
+| **Silver Layer** | ✅ | `production/silver_brazilian.py` - Limpeza e validação (~13min) |
+| **Gold Layer** | ✅ | `production/gold_brazilian.py` - Agregações e scoring (~11min) |
+| **Fraud Detection** | ✅ | 10/12 regras implementadas com sistema de pontuação |
+| **Integração MinIO** | ✅ | `s3a://fraud-data/medallion/{bronze,silver,gold}` - 12GB total |
+| **Integração PostgreSQL** | ✅ | `load_to_postgres.py` - Carregamento em batch |
+| **Geração de Dados Brasileiros** | ✅ | `generate_parallel.py` com Faker pt_BR - 51GB em ~10min |
+| **Metabase** | ✅ | Dashboard de BI na porta 3000 |
+| **Escala 51GB** | ✅ | **🎉 NOVO! 51.2M transações processadas em ~34min** |
 
 #### ❌ O QUE ESTÁ FALTANDO
 
@@ -380,8 +382,8 @@ Banco: PostgreSQL (fraud_db)
 | **FASE 2** | Pipeline Bronze/Silver/Gold | ✅ Completo | 100% |
 | **FASE 3** | Regras de Fraude (12 regras) | ✅ **10/12 implementadas** | 83% |
 | **FASE 4** | Operacional (Audit/Blocklist/Chargeback) | ❌ Não iniciado | 0% |
-| **FASE 5** | Visualização (Metabase/Streamlit) | ❌ Não iniciado | 0% |
-| **FASE 6** | Escala 50GB + Documentação | ⚠️ Parcial (19.2GB) | 60% |
+| **FASE 5** | Visualização (Metabase/Streamlit) | ✅ **Metabase OK** | 50% |
+| **FASE 6** | Escala 50GB + Documentação | ✅ **51GB processados!** | 100% |
 
 #### 📋 REGRAS DE FRAUDE: 10/12 Implementadas ✅
 

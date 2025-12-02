@@ -17,49 +17,49 @@
 
 ## 📍 STATUS ATUAL
 
-**Último checkpoint completado:** 11.9 - Escala 30M transações ✅
+**Último checkpoint completado:** 11.11 - Escala 51GB com Dados Brasileiros 🇧🇷 ✅
 **Próximo checkpoint:** 12 - Streaming Real com Kafka
-**Data da última sessão:** 2025-12-01
+**Data da última sessão:** 2025-12-02
 
 ---
 
-## 🎯 RESULTADO FINAL: 30M Transações
+## 🎉 RESULTADO FINAL: 51GB Dados Brasileiros 🇧🇷
+
+### 🌐 DASHBOARD PÚBLICO ONLINE!
+
+🔗 **Acesse agora:** [Dashboard de Fraudes - Metabase](http://54.36.100.35:3000/public/dashboard/cd809bc2-c8cd-442e-afae-30a17ac50a0f)
+
+> 📊 Dashboard interativo com 48.4M transações brasileiras processadas pelo pipeline!
+
+---
 
 ### Pipeline Executado com Sucesso!
 
 | Métrica | Valor |
 |---------|-------|
-| **Transações Processadas** | 30,000,000 |
-| **Dados Raw (JSON)** | 19.2 GB |
-| **Clientes** | 50,000 |
-| **Fraudes Injetadas** | 1,500,000 (5%) |
-| **Tempo Total** | ~15 min |
-| **Throughput** | ~110,000 tx/s |
+| **Transações Raw** | 51,281,996 |
+| **Transações Processadas** | 48,445,853 (5.5% removidas na limpeza) |
+| **Dados Raw (JSON)** | 51 GB (479 arquivos) |
+| **Clientes** | 100,000 (nomes brasileiros - Faker pt_BR) |
+| **Dispositivos** | 300,102 |
+| **Tempo Total Pipeline** | ~34 min |
+| **Throughput Médio** | ~85,000 tx/s |
 
-### Distribuição de Risco
+### Tamanhos por Camada (MinIO)
 
-| Nível | Total | % | Valor Médio | Score Médio |
-|-------|-------|---|-------------|-------------|
-| ✅ NORMAL | 27,077,000 | 90.26% | R$ 334 | 0.6 |
-| 🔴 CRÍTICO | 1,468,416 | 4.89% | R$ 1,493 | 71.0 |
-| 🟠 MÉDIO | 696,770 | 2.32% | R$ 2,304 | 21.5 |
-| 🟡 ALTO | 620,423 | 2.07% | R$ 556 | 40.5 |
-| 🟢 BAIXO | 137,391 | 0.46% | R$ 1,423 | 15.0 |
+| Camada | Tamanho | Arquivos | Tempo |
+|--------|---------|----------|-------|
+| 🔶 Bronze | 5.0 GB | 524 | ~10 min |
+| ⚪ Silver | 5.4 GB | 505 | ~13 min |
+| 🥇 Gold | 2.0 GB | 311 | ~11 min |
+| **Total** | **12 GB** | **1,340** | **~34 min** |
 
-### PostgreSQL
+### Compressão Parquet
 
-| Tabela | Registros |
-|--------|-----------|
-| **transactions** | 30,000,000 |
-| **fraud_alerts** | 2,088,839 |
-
-### Precisão da Detecção
-
-| Métrica | Valor |
-|---------|-------|
-| Total de Alertas | 2,088,839 |
-| Fraudes Reais Detectadas | 842,997 |
-| **Precisão** | **40.36%** |
+| De | Para | Redução |
+|----|------|---------|
+| 51 GB JSON | 5 GB Parquet (Bronze) | **90%** |
+| 51 GB JSON | 12 GB Total (MinIO) | **76%** |
 
 ---
 
@@ -77,11 +77,11 @@
 ### Depois (Cluster Distribuído)
 | Configuração | Valor |
 |--------------|-------|
-| Imagem | apache/spark:4.0.0-preview2 |
+| Imagem | apache/spark:3.5.3 |
 | Modo | 1 Master + 5 Workers |
 | Cores | **10 (5×2)** |
 | RAM | **15 GB (5×3GB)** |
-| Versão | 4.0.0-preview2 |
+| Versão | 3.5.3 |
 
 ### Configurações Adicionadas
 ```python
@@ -338,6 +338,62 @@ Bucket: fraud-data
 - Sistema de scoring por combinações - fraude real requer múltiplos fatores
 - Calibração de thresholds - evitar falsos positivos excessivos
 
+### Checkpoint 11.11: Escala 51GB com Dados Brasileiros 🇧🇷 ✅ 🎉
+**Objetivo:** Gerar e processar 51GB de dados sintéticos brasileiros
+**Status:** ✅ CONCLUÍDO - 51,281,996 transações processadas!
+**Data:** 2025-12-02
+
+#### Geração de Dados Brasileiros:
+
+| Entidade | Quantidade | Tamanho | Gerador |
+|----------|-----------|---------|---------|
+| 👥 Clientes | 100,000 | 92 MB (JSON) | Faker pt_BR (nomes brasileiros) |
+| 📱 Devices | 300,102 | 126 MB (JSON) | 3 devices por cliente |
+| 💳 Transações | 51,281,996 | 51 GB (479 arquivos) | `generate_parallel.py` (7 workers) |
+| **Total Raw** | - | **51 GB** | ~10 min geração |
+
+#### Pipeline Medallion:
+
+| Camada | Entrada | Saída | Tempo | Registros |
+|--------|---------|-------|-------|-----------|
+| 🔶 Bronze | 51 GB JSON | 5.0 GB Parquet | ~10 min | 51,281,996 |
+| ⚪ Silver | 5.0 GB | 5.4 GB | ~13 min | 48,445,853 (5.5% removidas) |
+| 🥇 Gold | 5.4 GB | 2.0 GB | ~11 min | Agregações |
+| **Total** | **51 GB** | **12 GB** | **~34 min** | - |
+
+#### Detalhes do Gold Layer (MinIO):
+
+| Tabela | Tamanho | Objetos | Descrição |
+|--------|---------|---------|-----------|
+| fraud_detection | 1.7 GB | 245 | Particionado por risk_level |
+| fraud_alerts | 342 MB | 62 | Alertas de fraude |
+| customer_summary | 7.7 MB | 2 | Agregações por cliente |
+| fraud_metrics | 7.5 KB | 2 | Métricas gerais |
+
+#### Distribuição por Nível de Risco (fraud_detection):
+
+| Nível | Tamanho Parquet | Objetos |
+|-------|-----------------|---------|
+| 🟡 ALTO | 312 MB | 61 |
+| 🟢 BAIXO | 743 MB | 61 |
+| 🔴 CRÍTICO | 73 MB | 61 |
+| 🟠 MÉDIO | 579 MB | 61 |
+
+**Scripts Criados:**
+- `scripts/generate_parallel.py` - Geração paralela com multiprocessing (7 workers)
+- `scripts/generate_brazilian_data.py` - Gerador com Faker pt_BR e suporte a --resume
+- `spark/jobs/production/bronze_brazilian.py` - Bronze layer para dados brasileiros
+- `spark/jobs/production/silver_brazilian.py` - Silver layer com limpeza
+- `spark/jobs/production/gold_brazilian.py` - Gold layer com agregações
+- `run_brazilian_pipeline.sh` - Script unificado para execução
+
+**Conceitos aprendidos:**
+- `Faker pt_BR` - Gerar nomes, CPFs, endereços brasileiros
+- `multiprocessing.Pool` - Processamento paralelo em Python
+- Compressão Parquet extrema: 51GB JSON → 5GB Parquet (90% redução!)
+- Pipeline particionado por ano/mês no Silver Layer
+- Metabase configuração e conexão com PostgreSQL
+
 ---
 
 ## 🎯 ARQUITETURA OBJETIVO
@@ -382,9 +438,8 @@ Bucket: fraud-data
 | ✅ Teste 2 | 1M | 216 MB | ~2.5min | 6.7k/s | Concluído (Cluster) |
 | ✅ Teste 3 | 5M | 1.1 GB | ~3min | 28k/s | Concluído (Cluster) |
 | ✅ Teste 4 | 10M | 2.2 GB | ~3.5min | 47.6k/s | Concluído (Cluster) |
-| ✅ **Teste 5** | **30M** | **19.2 GB** | **~15min** | **110k/s** | **Concluído!** 🎉 |
-| 📋 Teste 6 | 50M | ~32 GB | ~25min | ~55k/s | Planejado |
-| 📋 Final | 230M | ~50 GB | ~1h | ~60k/s | Objetivo |
+| ✅ Teste 5 | 30M | 19.2 GB | ~15min | 110k/s | Concluído (Cluster) |
+| ✅ **Teste 6 🇧🇷** | **51.2M** | **51 GB** | **~34min** | **~85k/s** | **🎉 Concluído!** |
 
 ### ✅ Teste 3: 5M transações (Cluster 5 Workers)
 | Métrica | Valor |
@@ -455,7 +510,8 @@ Bucket: fraud-data
 | Cluster (10 cores) - 1M | 1M | 150s | 6,700/s | **4×** |
 | Cluster (10 cores) - 5M | 5M | 180s | 28,000/s | **16×** |
 | Cluster (10 cores) - 10M | 10M | 210s | 47,600/s | **28×** |
-| Cluster (10 cores) - 30M | 30M | 900s | **110,000/s** | **65×** |
+| Cluster (10 cores) - 30M | 30M | 900s | 110,000/s | **65×** |
+| **🇧🇷 Cluster (10 cores) - 51M** | **51.2M** | **2040s** | **~85,000/s** | **50×** |
 
 ### 💾 Compressão Parquet vs JSON Raw
 | Teste | Raw (JSON) | Parquet | Compressão |
@@ -464,6 +520,7 @@ Bucket: fraud-data
 | 1M | 216 MB | 56 MB | 74% |
 | 5M | 1.1 GB | 430 MB | 61% |
 | 10M | 2.2 GB | 866 MB | 61% |
+| **51M 🇧🇷** | **51 GB** | **5 GB** | **90%** |
 
 ---
 
@@ -651,18 +708,25 @@ docker compose ps  # verificar containers
     ├── silver/             ← Parquet local ✅
     └── gold/               ← Parquet local ✅
 
-MinIO (Data Lake):
-s3a://fraud-data/
-├── bronze/
-│   ├── customers/      ← 100K clientes
-│   └── transactions/   ← 10M transações
-├── silver/
-│   ├── customers/      ← 100K clientes
-│   └── transactions/   ← 10M transações
-└── gold/
-    ├── customer_summary/   ← 100K resumos
-    ├── fraud_summary/      ← 1 resumo geral
-    └── fraud_detection/    ← 10M (particionado por risk_level)
+MinIO (Data Lake) - **12 GB Total**:
+s3a://fraud-data/medallion/
+├── bronze/                     ← 5.0 GB
+│   ├── customers/              ← 100K clientes (13 MB)
+│   ├── devices/                ← 300K devices (24 MB)
+│   └── transactions/           ← 51.2M transações (4.9 GB)
+├── silver/                     ← 5.4 GB
+│   ├── customers/              ← 100K clientes (12 MB)
+│   ├── devices/                ← 300K devices (31 MB)
+│   └── transactions/           ← 48.4M tx particionado por ano/mês
+└── gold/                       ← 2.0 GB
+    ├── customer_summary/       ← 100K resumos (7.7 MB)
+    ├── fraud_alerts/           ← Alertas (342 MB)
+    ├── fraud_detection/        ← Particionado por risk_level (1.7 GB)
+    │   ├── risk_level=ALTO/    ← 312 MB
+    │   ├── risk_level=BAIXO/   ← 743 MB
+    │   ├── risk_level=CRÍTICO/ ← 73 MB
+    │   └── risk_level=MÉDIO/   ← 579 MB
+    └── fraud_metrics/          ← Métricas gerais (7.5 KB)
 ```
 
 ---
@@ -712,6 +776,8 @@ Me avisa quando terminar!
 | **hostname cannot be null** | **Underscore em hostname** | **Usar `minio` não `fraud_minio`** |
 | **403 Forbidden MinIO** | **Credenciais erradas** | **Verificar MINIO_ROOT_PASSWORD** |
 | **ClassNotFoundException S3A** | **JARs não no classpath** | **--jars no spark-submit** |
+| **Bronze lendo 0 registros** | **Pattern errado** | **Mudar `transactions_batch_*.json` para `transactions_*.json`** |
+| **Metabase database not exists** | **metabase_db não criado** | **CREATE DATABASE metabase_db** |
 
 ---
 
@@ -719,15 +785,15 @@ Me avisa quando terminar!
 
 Quando o aluno voltar, dizer:
 
-> "Bem-vindo de volta! Vi no LEARNING_PROGRESS.md que completaste o Bronze Layer.
-> Pronto para começar a Silver Layer? Vamos limpar e validar os dados!"
+> "Bem-vindo de volta! Vi no LEARNING_PROGRESS.md que completaste 51GB de dados brasileiros!
+> Pipeline completo funcionando. Próximos passos: Streamlit dashboard ou mais regras de fraude?"
 
 Primeiro passo da próxima sessão:
 1. Verificar se containers estão rodando: `docker compose ps`
-2. Ativar venv: `source venv/bin/activate`
-3. Verificar dados bronze existem: `ls data/bronze/`
-4. Começar explicação da Silver Layer
+2. Verificar Metabase: `http://localhost:3000`
+3. Verificar MinIO: `docker exec fraud_minio mc du local/fraud-data/medallion/`
+4. Escolher próximo objetivo
 
 ---
 
-*Última atualização: 2025-11-29 (MinIO Integration completado - Bronze/Silver/Gold)*
+*Última atualização: 2025-12-02 (Pipeline 51GB brasileiro concluído com sucesso! 🇧🇷)*

@@ -1,6 +1,27 @@
 # 🏦 Bank Fraud Detection - Data Pipeline
 ## Documentação Completa para Estudo e Reprodução
 
+> **Última atualização:** 2025-12-02
+> **Status atual:** 51GB de dados brasileiros processados com sucesso! 🇧🇷
+
+---
+
+## 📊 MÉTRICAS DO PIPELINE ATUAL
+
+| Métrica | Valor |
+|---------|-------|
+| **Transações Raw** | 51,281,996 |
+| **Transações Processadas** | 48,445,853 (5.5% removidas na limpeza) |
+| **Dados Raw (JSON)** | 51 GB (479 arquivos) |
+| **Bronze (Parquet)** | 5.0 GB |
+| **Silver (Parquet)** | 5.4 GB |
+| **Gold (Parquet)** | 2.0 GB |
+| **Total MinIO** | 12 GB |
+| **Clientes** | 100,000 (nomes brasileiros) |
+| **Dispositivos** | 300,102 |
+| **Tempo Total Pipeline** | ~34 min |
+| **Compressão** | 90% (51GB → 5GB) |
+
 ---
 
 # 📚 ÍNDICE
@@ -85,7 +106,8 @@ Padrão de organização de dados em 3 camadas, usado por empresas como Databric
 | **Apache Spark** | Processamento | Engine de Big Data, batch e streaming |
 | **MinIO** | Object Storage | Data Lake compatível com S3 |
 | **PostgreSQL** | Banco Relacional | Armazenamento analítico para dashboards |
-| **ShadowTraffic** | Gerador de Dados | Simula dados realistas de transações |
+| **Metabase** | BI Dashboard | Visualização de dados (porta 3000) |
+| **Faker pt_BR** | Gerador de Dados | Dados brasileiros realistas |
 | **Docker** | Containerização | Ambiente isolado e reproduzível |
 
 ## Versões Importantes
@@ -94,6 +116,8 @@ Spark: 3.5.3 (NÃO usar 4.x - tem bug com MinIO)
 Kafka: 3.5.1
 PostgreSQL: 16
 MinIO: Latest
+Metabase: Latest
+Python: 3.13
 ```
 
 ---
@@ -104,10 +128,11 @@ MinIO: Latest
 
 ### Containers criados:
 1. **fraud_kafka** - Broker de mensagens (porta 9092)
-2. **fraud_spark_master** - Coordenador Spark (porta 8080)
-3. **fraud_spark_worker_1 a 5** - Workers Spark (processamento)
-4. **minio** - Object Storage (porta 9000, console 9001)
+2. **fraud_spark_master** - Coordenador Spark (porta 8081)
+3. **fraud_spark_worker_1 a 5** - Workers Spark (10 cores, 15GB RAM total)
+4. **fraud_minio** - Object Storage (porta 9002 API, 9003 console)
 5. **fraud_postgres** - Banco de dados (porta 5432)
+6. **fraud_metabase** - Dashboard BI (porta 3000)
 
 ### Network
 Todos os containers estão na mesma rede Docker:
