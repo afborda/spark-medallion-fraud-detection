@@ -10,6 +10,21 @@
 
 ---
 
+## 🌐 Demo ao Vivo
+
+> **Acesse a infraestrutura rodando em produção!**
+
+| Serviço | URL | Descrição |
+|---------|-----|-----------|
+| 📊 **Metabase** | [metabase.abnerfonseca.com.br](https://metabase.abnerfonseca.com.br) | Dashboard de BI com análises de fraude |
+| ⚡ **Spark Master** | [spark.abnerfonseca.com.br](https://spark.abnerfonseca.com.br) | Interface do cluster Spark (5 workers) |
+| 🔧 **Spark Jobs** | [spark-jobs.abnerfonseca.com.br](https://spark-jobs.abnerfonseca.com.br) | Monitoramento de jobs em execução |
+| 📦 **MinIO Console** | [minio.abnerfonseca.com.br](https://minio.abnerfonseca.com.br) | Object Storage (Data Lake) |
+
+> 🔒 Todos os serviços estão protegidos com HTTPS via Let's Encrypt
+
+---
+
 ## 📋 Sobre o Projeto
 
 Este projeto implementa um **pipeline de dados** para detecção de fraudes em transações bancárias, utilizando a arquitetura **Medallion** (Bronze → Silver → Gold) com processamento distribuído via Apache Spark.
