@@ -3,21 +3,27 @@ Bronze Layer to MinIO - Ingestão para Data Lake S3
 Lê dados RAW (JSON) e salva como Parquet no MinIO
 """
 
+import sys
+sys.path.insert(0, '/jobs')
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import current_timestamp, lit
 from datetime import date
 import os
+from config import (
+    MINIO_ENDPOINT as CONFIG_MINIO_ENDPOINT, 
+    MINIO_ACCESS_KEY as CONFIG_MINIO_ACCESS_KEY, 
+    MINIO_SECRET_KEY as CONFIG_MINIO_SECRET_KEY
+)
 
 # Detecta ambiente (Docker vs Local)
 IS_DOCKER = os.path.exists("/data")
 BASE_DIR = "/data" if IS_DOCKER else "data"
 
-# Configurações do MinIO
-# Em Docker, usar nome do serviço (sem underscore para compatibilidade com AWS SDK)
-# NOTA: 'fraud_minio' (container_name) tem underscore que causa erro no AWS SDK
-MINIO_ENDPOINT = "http://minio:9000" if IS_DOCKER else "http://localhost:9002"
-MINIO_ACCESS_KEY = "minioadmin"
-MINIO_SECRET_KEY = "minioadmin123@@!!_2"
+# Configurações do MinIO via config.py
+MINIO_ENDPOINT = CONFIG_MINIO_ENDPOINT if IS_DOCKER else "http://localhost:9002"
+MINIO_ACCESS_KEY = CONFIG_MINIO_ACCESS_KEY
+MINIO_SECRET_KEY = CONFIG_MINIO_SECRET_KEY
 
 # Caminhos
 RAW_PATH = f"{BASE_DIR}/raw"

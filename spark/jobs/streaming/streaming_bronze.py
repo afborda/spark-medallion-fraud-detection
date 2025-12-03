@@ -4,12 +4,16 @@ Spark Streaming - Kafka para Bronze Layer (MinIO)
 Este job lê transações do Kafka em tempo real e salva no MinIO.
 """
 
+import sys
+sys.path.insert(0, '/jobs')
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import from_json, col, current_timestamp
 from pyspark.sql.types import (
     StructType, StructField, StringType, DoubleType, 
     BooleanType, LongType, IntegerType
 )
+from config import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, KAFKA_BROKER, KAFKA_TOPIC
 
 # Schema das transações (mesmo que definimos no ShadowTraffic)
 transaction_schema = StructType([
@@ -47,9 +51,9 @@ def main():
     spark = SparkSession.builder \
         .appName("Streaming_Kafka_to_Bronze") \
         .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.3") \
-        .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
-        .config("spark.hadoop.fs.s3a.access.key", "minioadmin") \
-        .config("spark.hadoop.fs.s3a.secret.key", "minioadmin123@@!!_2") \
+        .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
+        .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
+        .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
         .config("spark.hadoop.fs.s3a.path.style.access", "true") \
         .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
         .getOrCreate()
@@ -63,12 +67,12 @@ def main():
     # Ler do Kafka
     df_kafka = spark.readStream \
         .format("kafka") \
-        .option("kafka.bootstrap.servers", "fraud_kafka:9092") \
-        .option("subscribe", "transactions") \
+        .option("kafka.bootstrap.servers", KAFKA_BROKER) \
+        .option("subscribe", KAFKA_TOPIC) \
         .option("startingOffsets", "earliest") \
         .load()
     
-    print("✅ Conectado ao Kafka - Tópico: transactions")
+    print(f"✅ Conectado ao Kafka - Tópico: {KAFKA_TOPIC}")
     
     # Converter o valor (bytes) para JSON e extrair campos
     df_transactions = df_kafka \

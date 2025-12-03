@@ -9,6 +9,9 @@ Tabelas geradas:
 4. fraud_metrics: Métricas agregadas de fraude
 """
 
+import sys
+sys.path.insert(0, '/jobs')
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     col, when, lit, count, sum as spark_sum, avg, max as spark_max, min as spark_min,
@@ -17,6 +20,7 @@ from pyspark.sql.functions import (
 )
 from pyspark.sql.window import Window
 from pyspark.sql.types import *
+from config import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, SILVER_PATH, GOLD_PATH
 
 print("=" * 60)
 print("🥇 GOLD LAYER - Agregações e Detecção de Fraude")
@@ -25,9 +29,9 @@ print("=" * 60)
 
 spark = SparkSession.builder \
     .appName("Gold_Analytics") \
-    .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
-    .config("spark.hadoop.fs.s3a.access.key", "minioadmin") \
-    .config("spark.hadoop.fs.s3a.secret.key", "minioadmin123@@!!_2") \
+    .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
+    .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
+    .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
     .config("spark.hadoop.fs.s3a.path.style.access", "true") \
     .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
     .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false") \
@@ -37,8 +41,8 @@ spark = SparkSession.builder \
 spark.sparkContext.setLogLevel("WARN")
 
 # Diretórios
-SILVER_BASE = "s3a://fraud-data/medallion/silver"
-GOLD_BASE = "s3a://fraud-data/medallion/gold"
+SILVER_BASE = SILVER_PATH
+GOLD_BASE = GOLD_PATH
 
 # ============================================
 # CARREGAR DADOS SILVER

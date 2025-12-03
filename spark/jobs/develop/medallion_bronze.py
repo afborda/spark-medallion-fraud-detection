@@ -7,9 +7,13 @@ DIFERENÇA DO PRODUCTION:
 - Develop: lê do arquivo JSON (batch) - mais rápido para testes!
 """
 
+import sys
+sys.path.insert(0, '/jobs')
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import current_timestamp, col, lit, monotonically_increasing_id, to_json, struct
 import time
+from config import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, BRONZE_PATH
 
 print("=" * 60)
 print("🥉 BRONZE LAYER (DEVELOP) - JSON → MinIO")
@@ -17,7 +21,7 @@ print("=" * 60)
 
 # Configuração
 INPUT_PATH = "/data/raw/transactions.json"  # Arquivo com 30M de transações
-OUTPUT_PATH = "s3a://fraud-data/medallion/bronze/transactions"
+OUTPUT_PATH = f"{BRONZE_PATH}/transactions"
 
 # JARs necessários (sem Kafka!)
 JARS_PATH = "/jars"
@@ -29,9 +33,9 @@ spark = SparkSession.builder \
     .config("spark.jars", f"{HADOOP_AWS},{AWS_SDK}") \
     .config("spark.driver.extraClassPath", f"{HADOOP_AWS}:{AWS_SDK}") \
     .config("spark.executor.extraClassPath", f"{HADOOP_AWS}:{AWS_SDK}") \
-    .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
-    .config("spark.hadoop.fs.s3a.access.key", "minioadmin") \
-    .config("spark.hadoop.fs.s3a.secret.key", "minioadmin123@@!!_2") \
+    .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
+    .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
+    .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
     .config("spark.hadoop.fs.s3a.path.style.access", "true") \
     .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
     .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false") \

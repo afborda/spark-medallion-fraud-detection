@@ -7,6 +7,9 @@ Este job:
 3. Salva no PostgreSQL para o Dashboard
 """
 
+import sys
+sys.path.insert(0, '/jobs')
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     from_json, col, when, abs as spark_abs, sqrt, pow as spark_pow,
@@ -16,6 +19,7 @@ from pyspark.sql.types import (
     StructType, StructField, StringType, DoubleType, 
     BooleanType, LongType, IntegerType
 )
+from config import POSTGRES_URL, POSTGRES_PROPERTIES, KAFKA_BROKER, KAFKA_TOPIC
 
 # Schema das transações do Kafka
 transaction_schema = StructType([
@@ -47,14 +51,6 @@ transaction_schema = StructType([
     StructField("is_fraud", BooleanType(), True),
     StructField("timestamp", LongType(), True)
 ])
-
-# Configurações PostgreSQL
-POSTGRES_URL = "jdbc:postgresql://fraud_postgres:5432/fraud_db"
-POSTGRES_PROPERTIES = {
-    "user": "fraud_user",
-    "password": "fraud_password@@!!_2",
-    "driver": "org.postgresql.Driver"
-}
 
 def process_batch(df, batch_id):
     """Processa cada micro-batch e salva no PostgreSQL"""

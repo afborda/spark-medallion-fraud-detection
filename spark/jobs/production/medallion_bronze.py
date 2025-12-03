@@ -3,8 +3,12 @@
 Ingestão de dados brutos do Kafka para o Data Lake
 """
 
+import sys
+sys.path.insert(0, '/jobs')
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import current_timestamp, col
+from config import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, KAFKA_BROKER, KAFKA_TOPIC
 
 print("=" * 60)
 print("🥉 BRONZE LAYER - Kafka → MinIO")
@@ -27,9 +31,9 @@ spark = SparkSession.builder \
     .config("spark.jars", JARS) \
     .config("spark.driver.extraClassPath", CLASSPATH) \
     .config("spark.executor.extraClassPath", CLASSPATH) \
-    .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
-    .config("spark.hadoop.fs.s3a.access.key", "minioadmin") \
-    .config("spark.hadoop.fs.s3a.secret.key", "minioadmin123@@!!_2") \
+    .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
+    .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
+    .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
     .config("spark.hadoop.fs.s3a.path.style.access", "true") \
     .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
     .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false") \
@@ -42,8 +46,8 @@ print("📡 Lendo dados do Kafka...")
 # Ler TUDO do Kafka
 df_kafka = spark.read \
     .format("kafka") \
-    .option("kafka.bootstrap.servers", "fraud_kafka:9092") \
-    .option("subscribe", "transactions") \
+    .option("kafka.bootstrap.servers", KAFKA_BROKER) \
+    .option("subscribe", KAFKA_TOPIC) \
     .option("startingOffsets", "earliest") \
     .option("endingOffsets", "latest") \
     .load()

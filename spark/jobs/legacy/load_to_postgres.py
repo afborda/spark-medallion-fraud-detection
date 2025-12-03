@@ -3,21 +3,23 @@ Load to PostgreSQL - Carregar Gold Layer para Data Warehouse
 Salva os dados processados no PostgreSQL para consumo do Metabase
 """
 
+import sys
+sys.path.insert(0, '/jobs')
 
 from pyspark.sql import SparkSession
 from datetime import date
 import os
+from config import POSTGRES_HOST, POSTGRES_PORT, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD
 
 # Detecta se está rodando em Docker (caminho absoluto) ou local (caminho relativo)
 BASE_DIR = os.environ.get("DATA_DIR", "/data" if os.path.exists("/data") else "data")
 
-# Configurações do PostgreSQL
-# Em Docker, usar o nome do container; Local, usar localhost
-PG_HOST = "fraud_postgres" if os.path.exists("/data") else "localhost"
-PG_PORT = "5432"
-PG_DB = "fraud_db"
-PG_USER = "fraud_user"
-PG_PASSWORD = "fraud_password@@!!_2"
+# Configurações do PostgreSQL via config.py
+PG_HOST = POSTGRES_HOST
+PG_PORT = POSTGRES_PORT
+PG_DB = POSTGRES_DB
+PG_USER = POSTGRES_USER
+PG_PASSWORD = POSTGRES_PASSWORD
 
 
 #URL JDBC

@@ -3,8 +3,16 @@ Silver to MinIO - Upload Silver Layer para Data Lake
 Copia dados processados (Silver) para storage S3-compatible
 """
 
+import sys
+sys.path.insert(0, '/jobs')
+
 from pyspark.sql import SparkSession
 import os
+from config import (
+    MINIO_ENDPOINT as CONFIG_MINIO_ENDPOINT, 
+    MINIO_ACCESS_KEY as CONFIG_MINIO_ACCESS_KEY, 
+    MINIO_SECRET_KEY as CONFIG_MINIO_SECRET_KEY
+)
 
 # ============================================================
 # CONFIGURAÇÕES
@@ -21,12 +29,10 @@ SILVER_PATH = f"{BASE_DIR}/silver"
 MINIO_BUCKET = "fraud-data"
 MINIO_SILVER_PATH = f"s3a://{MINIO_BUCKET}/silver"
 
-# Credenciais MinIO (em produção, usar variáveis de ambiente!)
-# NOTA: Usar 'minio' (service name) ao invés de 'fraud_minio' (container_name)
-# Hostnames com underscore causam erro no AWS SDK
-MINIO_ENDPOINT = "http://minio:9000" if IS_DOCKER else "http://localhost:9002"
-MINIO_ACCESS_KEY = "minioadmin"
-MINIO_SECRET_KEY = "minioadmin123@@!!_2"
+# Credenciais MinIO via config.py
+MINIO_ENDPOINT = CONFIG_MINIO_ENDPOINT if IS_DOCKER else "http://localhost:9002"
+MINIO_ACCESS_KEY = CONFIG_MINIO_ACCESS_KEY
+MINIO_SECRET_KEY = CONFIG_MINIO_SECRET_KEY
 
 # JARs necessários para S3A (mesma config do bronze_to_minio.py)
 JARS_PATH = "/jars" if IS_DOCKER else "jars"

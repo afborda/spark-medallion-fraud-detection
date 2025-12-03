@@ -5,10 +5,17 @@ Aplicação de regras de negócio e carga para banco analítico
 IDÊNTICO ao production - apenas marcação de ambiente
 """
 
+import sys
+sys.path.insert(0, '/jobs')
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     col, when, current_timestamp, count, avg, sum as spark_sum,
     round as spark_round
+)
+from config import (
+    MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY,
+    SILVER_PATH, GOLD_PATH, POSTGRES_URL, POSTGRES_PROPERTIES
 )
 
 print("=" * 60)
@@ -28,9 +35,9 @@ spark = SparkSession.builder \
     .config("spark.jars", JARS) \
     .config("spark.driver.extraClassPath", CLASSPATH) \
     .config("spark.executor.extraClassPath", CLASSPATH) \
-    .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
-    .config("spark.hadoop.fs.s3a.access.key", "minioadmin") \
-    .config("spark.hadoop.fs.s3a.secret.key", "minioadmin123@@!!_2") \
+    .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
+    .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
+    .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
     .config("spark.hadoop.fs.s3a.path.style.access", "true") \
     .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
     .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false") \
@@ -39,7 +46,7 @@ spark = SparkSession.builder \
 spark.sparkContext.setLogLevel("WARN")
 
 # Ler Silver
-silver_path = "s3a://fraud-data/medallion/silver/transactions"
+silver_path = f"{SILVER_PATH}/transactions"
 print(f"📂 Lendo Silver: {silver_path}")
 
 df_silver = spark.read.parquet(silver_path)
@@ -129,7 +136,7 @@ df_gold = df_scored.withColumn("risk_level",
 ).withColumn("gold_timestamp", current_timestamp())
 
 # Salvar Gold no MinIO
-gold_path = "s3a://fraud-data/medallion/gold/transactions"
+gold_path = f"{GOLD_PATH}/transactions"
 print(f"💾 Salvando Gold em: {gold_path}")
 
 df_gold.write \
@@ -146,12 +153,8 @@ df_gold.groupBy("risk_level").count().orderBy("count", ascending=False).show()
 # ============================================================
 print("🐘 Carregando para PostgreSQL...")
 
-postgres_url = "jdbc:postgresql://fraud_postgres:5432/fraud_db"
-postgres_props = {
-    "user": "fraud_user",
-    "password": "fraud_password@@!!_2",
-    "driver": "org.postgresql.Driver"
-}
+postgres_url = POSTGRES_URL
+postgres_props = POSTGRES_PROPERTIES
 
 # Tabela transactions
 df_transactions = df_gold.select(

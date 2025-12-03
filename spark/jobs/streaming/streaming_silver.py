@@ -4,6 +4,9 @@ Spark Streaming - Bronze para Silver Layer
 Lê dados Bronze, aplica limpeza e cria indicadores de fraude.
 """
 
+import sys
+sys.path.insert(0, '/jobs')
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     col, when, abs as spark_abs, sqrt, pow as spark_pow,
@@ -13,6 +16,7 @@ from pyspark.sql.types import (
     StructType, StructField, StringType, DoubleType, 
     BooleanType, LongType, IntegerType, TimestampType
 )
+from config import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY
 
 # Schema dos dados Bronze
 bronze_schema = StructType([
@@ -50,9 +54,9 @@ def main():
     # Criar SparkSession
     spark = SparkSession.builder \
         .appName("Streaming_Bronze_to_Silver") \
-        .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
-        .config("spark.hadoop.fs.s3a.access.key", "minioadmin") \
-        .config("spark.hadoop.fs.s3a.secret.key", "minioadmin123@@!!_2") \
+        .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
+        .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
+        .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
         .config("spark.hadoop.fs.s3a.path.style.access", "true") \
         .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
         .getOrCreate()

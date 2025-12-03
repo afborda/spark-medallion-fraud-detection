@@ -3,6 +3,9 @@ Batch Job - Kafka para PostgreSQL
 Lê dados do Kafka e carrega no PostgreSQL (modo batch simples)
 """
 
+import sys
+sys.path.insert(0, '/jobs')
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     from_json, col, when, abs as spark_abs, sqrt, pow as spark_pow,
@@ -12,6 +15,7 @@ from pyspark.sql.types import (
     StructType, StructField, StringType, DoubleType, 
     BooleanType, LongType, IntegerType
 )
+from config import POSTGRES_URL, POSTGRES_PROPERTIES
 
 # Schema das transações
 transaction_schema = StructType([
@@ -140,12 +144,8 @@ def main():
     # Salvar no PostgreSQL
     print("💾 Salvando no PostgreSQL...")
     
-    postgres_url = "jdbc:postgresql://fraud_postgres:5432/fraud_db"
-    postgres_props = {
-        "user": "fraud_user",
-        "password": "fraud_password@@!!_2",
-        "driver": "org.postgresql.Driver"
-    }
+    postgres_url = POSTGRES_URL
+    postgres_props = POSTGRES_PROPERTIES
     
     df_to_postgres.write \
         .jdbc(postgres_url, "transactions", mode="append", properties=postgres_props)

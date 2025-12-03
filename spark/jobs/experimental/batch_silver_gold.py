@@ -4,19 +4,23 @@ Spark Batch - Bronze para Silver Layer
 Processa dados Bronze e cria indicadores de fraude.
 """
 
+import sys
+sys.path.insert(0, '/jobs')
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     col, when, abs as spark_abs, sqrt, pow as spark_pow,
     current_timestamp, round as spark_round
 )
+from config import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY
 
 def main():
     # Criar SparkSession
     spark = SparkSession.builder \
         .appName("Batch_Bronze_to_Silver") \
-        .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
-        .config("spark.hadoop.fs.s3a.access.key", "minioadmin") \
-        .config("spark.hadoop.fs.s3a.secret.key", "minioadmin123@@!!_2") \
+        .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
+        .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
+        .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
         .config("spark.hadoop.fs.s3a.path.style.access", "true") \
         .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
         .getOrCreate()
@@ -37,7 +41,7 @@ def main():
     
     # 1. Limpar valores negativos
     df_clean = df_bronze.withColumn(
-        "amount_clean", 
+        "amount_clean",
         when(col("amount") < 0, spark_abs(col("amount"))).otherwise(col("amount"))
     )
     

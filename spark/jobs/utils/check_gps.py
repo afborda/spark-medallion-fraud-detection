@@ -1,15 +1,19 @@
 """Verificar distribuição GPS"""
+import sys
+sys.path.insert(0, '/jobs')
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, percentile_approx, min as spark_min, max as spark_max
+from config import get_spark_s3a_configs
 
-spark = SparkSession.builder \
-    .appName("Check_GPS") \
-    .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
-    .config("spark.hadoop.fs.s3a.access.key", "minioadmin") \
-    .config("spark.hadoop.fs.s3a.secret.key", "minioadmin123@@!!_2") \
-    .config("spark.hadoop.fs.s3a.path.style.access", "true") \
-    .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
-    .getOrCreate()
+# Obter configurações S3A do config.py
+s3a_configs = get_spark_s3a_configs()
+
+spark_builder = SparkSession.builder.appName("Check_GPS")
+for key, value in s3a_configs.items():
+    spark_builder = spark_builder.config(key, value)
+
+spark = spark_builder.getOrCreate()
 
 spark.sparkContext.setLogLevel("ERROR")
 

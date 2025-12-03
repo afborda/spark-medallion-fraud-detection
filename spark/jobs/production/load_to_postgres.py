@@ -3,8 +3,15 @@
 Carrega dados da camada Gold para PostgreSQL para BI/Metabase
 """
 
+import sys
+sys.path.insert(0, '/jobs')
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
+from config import (
+    MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY,
+    POSTGRES_URL, POSTGRES_PROPERTIES, GOLD_PATH
+)
 
 print("=" * 60)
 print("📦 LOAD TO POSTGRES - Gold → PostgreSQL")
@@ -13,9 +20,9 @@ print("=" * 60)
 
 spark = SparkSession.builder \
     .appName("Load_to_Postgres") \
-    .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
-    .config("spark.hadoop.fs.s3a.access.key", "minioadmin") \
-    .config("spark.hadoop.fs.s3a.secret.key", "minioadmin123@@!!_2") \
+    .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
+    .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
+    .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
     .config("spark.hadoop.fs.s3a.path.style.access", "true") \
     .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
     .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false") \
@@ -23,15 +30,7 @@ spark = SparkSession.builder \
 
 spark.sparkContext.setLogLevel("WARN")
 
-# Configuração PostgreSQL
-POSTGRES_URL = "jdbc:postgresql://fraud_postgres:5432/fraud_db"
-POSTGRES_PROPERTIES = {
-    "user": "fraud_user",
-    "password": "fraud_password@@!!_2",
-    "driver": "org.postgresql.Driver"
-}
-
-GOLD_BASE = "s3a://fraud-data/medallion/gold"
+GOLD_BASE = f"{GOLD_PATH}"
 
 # ============================================
 # 1. CARREGAR TRANSACTIONS (fraud_detection)

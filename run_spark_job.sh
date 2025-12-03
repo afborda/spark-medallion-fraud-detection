@@ -24,6 +24,11 @@
 
 set -e  # Para em caso de erro
 
+# Carregar variáveis de ambiente do .env
+if [ -f .env ]; then
+    export $(grep -v '^#' .env | xargs)
+fi
+
 # Cores para output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -85,9 +90,9 @@ docker exec fraud_spark_master /opt/spark/bin/spark-submit \
     --jars "$JARS" \
     --conf "spark.driver.extraClassPath=$CLASSPATH" \
     --conf "spark.executor.extraClassPath=$CLASSPATH" \
-    --conf "spark.hadoop.fs.s3a.endpoint=http://minio:9000" \
-    --conf "spark.hadoop.fs.s3a.access.key=minioadmin" \
-    --conf "spark.hadoop.fs.s3a.secret.key=minioadmin123@@!!_2" \
+    --conf "spark.hadoop.fs.s3a.endpoint=${MINIO_ENDPOINT:-http://minio:9000}" \
+    --conf "spark.hadoop.fs.s3a.access.key=${MINIO_ROOT_USER:-minioadmin}" \
+    --conf "spark.hadoop.fs.s3a.secret.key=${MINIO_ROOT_PASSWORD}" \
     --conf "spark.hadoop.fs.s3a.path.style.access=true" \
     --conf "spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem" \
     --conf "spark.hadoop.fs.s3a.connection.ssl.enabled=false" \

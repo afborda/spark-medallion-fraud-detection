@@ -3,6 +3,9 @@
 Teste de performance para cálculo de distância geográfica
 """
 
+import sys
+sys.path.insert(0, '/jobs')
+
 import math
 import time
 from pyspark.sql import SparkSession
@@ -10,6 +13,7 @@ from pyspark.sql.functions import (
     col, sqrt, pow as spark_pow, sin, cos, asin, radians, lit, udf
 )
 from pyspark.sql.types import DoubleType
+from config import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, BRONZE_PATH
 
 print("=" * 70)
 print("📊 BENCHMARK: Métodos de Cálculo de Distância Geográfica")
@@ -27,9 +31,9 @@ spark = SparkSession.builder \
     .config("spark.jars", JARS) \
     .config("spark.driver.extraClassPath", CLASSPATH) \
     .config("spark.executor.extraClassPath", CLASSPATH) \
-    .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
-    .config("spark.hadoop.fs.s3a.access.key", "minioadmin") \
-    .config("spark.hadoop.fs.s3a.secret.key", "minioadmin123@@!!_2") \
+    .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
+    .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
+    .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
     .config("spark.hadoop.fs.s3a.path.style.access", "true") \
     .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
     .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false") \
@@ -40,7 +44,7 @@ spark.sparkContext.setLogLevel("WARN")
 # ============================================================
 # CARREGAR DADOS
 # ============================================================
-bronze_path = "s3a://fraud-data/medallion/bronze/transactions"
+bronze_path = f"{BRONZE_PATH}/transactions"
 print(f"\n📂 Carregando dados de: {bronze_path}")
 
 df = spark.read.parquet(bronze_path)

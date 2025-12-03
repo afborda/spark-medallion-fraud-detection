@@ -8,10 +8,14 @@ Este job processa os dados brasileiros gerados pelo script generate_brazilian_da
 - transactions_batch_*.json: Transações financeiras
 """
 
+import sys
+sys.path.insert(0, '/jobs')
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import current_timestamp, col, lit, input_file_name
 from pyspark.sql.types import *
 import os
+from config import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, BRONZE_PATH
 
 print("=" * 60)
 print("🥉 BRONZE LAYER - JSON Local → MinIO")
@@ -30,9 +34,9 @@ spark = SparkSession.builder \
     .config("spark.jars", JARS) \
     .config("spark.driver.extraClassPath", CLASSPATH) \
     .config("spark.executor.extraClassPath", CLASSPATH) \
-    .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
-    .config("spark.hadoop.fs.s3a.access.key", "minioadmin") \
-    .config("spark.hadoop.fs.s3a.secret.key", "minioadmin123@@!!_2") \
+    .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
+    .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
+    .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
     .config("spark.hadoop.fs.s3a.path.style.access", "true") \
     .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
     .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false") \
@@ -44,7 +48,7 @@ spark.sparkContext.setLogLevel("WARN")
 
 # Diretórios
 RAW_DIR = "/data/raw"
-BRONZE_BASE = "s3a://fraud-data/medallion/bronze"
+BRONZE_BASE = BRONZE_PATH
 
 # ============================================
 # 1. PROCESSAR CLIENTES

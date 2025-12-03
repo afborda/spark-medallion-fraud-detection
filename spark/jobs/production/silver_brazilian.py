@@ -10,6 +10,9 @@ Transformações aplicadas:
 - Criação de campos derivados
 """
 
+import sys
+sys.path.insert(0, '/jobs')
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     col, when, lit, trim, upper, lower, 
@@ -18,6 +21,7 @@ from pyspark.sql.functions import (
     round as spark_round, abs as spark_abs, concat_ws
 )
 from pyspark.sql.types import *
+from config import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, BRONZE_PATH, SILVER_PATH
 
 print("=" * 60)
 print("🥈 SILVER LAYER - Limpeza e Transformação")
@@ -31,9 +35,9 @@ AWS_SDK = f"{JARS_PATH}/aws-java-sdk-bundle-1.12.262.jar"
 
 spark = SparkSession.builder \
     .appName("Silver_Transform") \
-    .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
-    .config("spark.hadoop.fs.s3a.access.key", "minioadmin") \
-    .config("spark.hadoop.fs.s3a.secret.key", "minioadmin123@@!!_2") \
+    .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
+    .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
+    .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
     .config("spark.hadoop.fs.s3a.path.style.access", "true") \
     .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
     .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false") \
@@ -43,8 +47,8 @@ spark = SparkSession.builder \
 spark.sparkContext.setLogLevel("WARN")
 
 # Diretórios
-BRONZE_BASE = "s3a://fraud-data/medallion/bronze"
-SILVER_BASE = "s3a://fraud-data/medallion/silver"
+BRONZE_BASE = BRONZE_PATH
+SILVER_BASE = SILVER_PATH
 
 # ============================================
 # 1. TRANSFORMAR CLIENTES
