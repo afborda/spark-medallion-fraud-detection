@@ -236,3 +236,23 @@ services:
 # ============================================
 # VOLUMES ORGANIZADOS EM docker_volumes/
 # ============================================
+
+# ============================================
+# SHADOWTRAFFIC - Gerador de Dados Streaming
+# Gera transações em tempo real para Kafka
+# Uso: docker compose --profile streaming up -d
+# ============================================
+  shadowtraffic:
+    image: shadowtraffic/shadowtraffic:latest
+    container_name: fraud_shadowtraffic
+    profiles:
+      - streaming  # Só sobe com --profile streaming
+    depends_on:
+      - kafka
+    env_file:
+      - ./shadowtraffic/license.env
+    volumes:
+      - ./shadowtraffic:/config
+    command: --config /config/transactions.json --watch --sample 0
+    # --watch: Hot reload se mudar o config
+    # --sample 0: Roda infinitamente (sem limite)

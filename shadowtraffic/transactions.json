@@ -179,7 +179,7 @@
     "kafka": {
       "kind": "kafka",
       "producerConfigs": {
-        "bootstrap.servers": "fraud_kafka:9092",
+        "bootstrap.servers": "kafka:9092",
         "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
         "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
       }
