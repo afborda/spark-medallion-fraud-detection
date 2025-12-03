@@ -1,0 +1,463 @@
+# Docker Compose - Versão Production-Ready
+# Inclui: Airflow, Prometheus, Grafana, MLflow, Great Expectations, Vault
+# 
+# Uso: docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d
+#
+# Recursos necessários: ~32GB RAM, 16 vCPUs (recomendado)
+
+version: '3.8'
+
+x-airflow-common:
+  &airflow-common
+  image: apache/airflow:2.8.1-python3.11
+  environment:
+    &airflow-common-env
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-postgres:5432/airflow
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth'
+    AIRFLOW__WEBSERVER__SECRET_KEY: 'fraud-detection-secret-key-change-me'
+    AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
+    # Conexões com outros serviços
+    SPARK_MASTER_URL: spark://spark-master:7077
+    KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    MINIO_ENDPOINT: http://minio:9000
+    POSTGRES_HOST: postgres
+  volumes:
+    - ./airflow/dags:/opt/airflow/dags
+    - ./airflow/logs:/opt/airflow/logs
+    - ./airflow/plugins:/opt/airflow/plugins
+    - ./airflow/config:/opt/airflow/config
+    - ./spark/jobs:/opt/spark/jobs:ro
+    - ./jars:/opt/spark/jars:ro
+  user: "${AIRFLOW_UID:-50000}:0"
+  networks:
+    - fraud-network
+  depends_on:
+    &airflow-common-depends-on
+    airflow-postgres:
+      condition: service_healthy
+
+services:
+  # ============================================
+  # APACHE AIRFLOW - Orquestração de Pipelines
+  # ============================================
+  
+  airflow-postgres:
+    image: postgres:16
+    container_name: fraud_airflow_postgres
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - ./docker_volumes/airflow_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+    networks:
+      - fraud-network
+
+  airflow-webserver:
+    <<: *airflow-common
+    container_name: fraud_airflow_webserver
+    command: webserver
+    ports:
+      - "8085:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    depends_on:
+      <<: *airflow-common-depends-on
+      airflow-init:
+        condition: service_completed_successfully
+    labels:
+      - "com.fraud.service=airflow-webserver"
+      - "com.fraud.layer=orchestration"
+
+  airflow-scheduler:
+    <<: *airflow-common
+    container_name: fraud_airflow_scheduler
+    command: scheduler
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8974/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    depends_on:
+      <<: *airflow-common-depends-on
+      airflow-init:
+        condition: service_completed_successfully
+    labels:
+      - "com.fraud.service=airflow-scheduler"
+      - "com.fraud.layer=orchestration"
+
+  airflow-triggerer:
+    <<: *airflow-common
+    container_name: fraud_airflow_triggerer
+    command: triggerer
+    healthcheck:
+      test: ["CMD-SHELL", 'airflow jobs check --job-type TriggererJob --hostname "$${HOSTNAME}"']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    depends_on:
+      <<: *airflow-common-depends-on
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-init:
+    <<: *airflow-common
+    container_name: fraud_airflow_init
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        mkdir -p /sources/logs /sources/dags /sources/plugins
+        chown -R "${AIRFLOW_UID}:0" /sources/{logs,dags,plugins}
+        exec /entrypoint airflow version
+    environment:
+      <<: *airflow-common-env
+      _AIRFLOW_DB_MIGRATE: 'true'
+      _AIRFLOW_WWW_USER_CREATE: 'true'
+      _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-admin}
+      _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-admin}
+    user: "0:0"
+    volumes:
+      - ./airflow:/sources
+
+  # ============================================
+  # PROMETHEUS + GRAFANA - Observabilidade
+  # ============================================
+  
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: fraud_prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=15d'
+      - '--web.enable-lifecycle'
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus/alerts:/etc/prometheus/alerts:ro
+      - ./docker_volumes/prometheus:/prometheus
+    networks:
+      - fraud-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.fraud.service=prometheus"
+      - "com.fraud.layer=observability"
+
+  grafana:
+    image: grafana/grafana:10.2.3
+    container_name: fraud_grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=http://localhost:3000
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-piechart-panel
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./docker_volumes/grafana:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    networks:
+      - fraud-network
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.fraud.service=grafana"
+      - "com.fraud.layer=observability"
+
+  # Exporters para Prometheus
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.15.0
+    container_name: fraud_postgres_exporter
+    environment:
+      DATA_SOURCE_NAME: "postgresql://fraud_user:fraud_password@@!!_2@postgres:5432/fraud_db?sslmode=disable"
+    ports:
+      - "9187:9187"
+    networks:
+      - fraud-network
+    restart: unless-stopped
+
+  kafka-exporter:
+    image: danielqsj/kafka-exporter:latest
+    container_name: fraud_kafka_exporter
+    command:
+      - --kafka.server=kafka:29092
+    ports:
+      - "9308:9308"
+    networks:
+      - fraud-network
+    restart: unless-stopped
+
+  # ============================================
+  # MLFLOW - Machine Learning Operations
+  # ============================================
+  
+  mlflow-postgres:
+    image: postgres:16
+    container_name: fraud_mlflow_postgres
+    environment:
+      POSTGRES_USER: mlflow
+      POSTGRES_PASSWORD: mlflow
+      POSTGRES_DB: mlflow
+    volumes:
+      - ./docker_volumes/mlflow_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "mlflow"]
+      interval: 10s
+      retries: 5
+    networks:
+      - fraud-network
+    restart: unless-stopped
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.10.0
+    container_name: fraud_mlflow
+    environment:
+      - MLFLOW_BACKEND_STORE_URI=postgresql://mlflow:mlflow@mlflow-postgres:5432/mlflow
+      - MLFLOW_DEFAULT_ARTIFACT_ROOT=s3://mlflow-artifacts/
+      - AWS_ACCESS_KEY_ID=minioadmin
+      - AWS_SECRET_ACCESS_KEY=minioadmin123@@!!_2
+      - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./docker_volumes/mlflow:/mlflow
+    networks:
+      - fraud-network
+    depends_on:
+      mlflow-postgres:
+        condition: service_healthy
+    command: >
+      mlflow server
+      --backend-store-uri postgresql://mlflow:mlflow@mlflow-postgres:5432/mlflow
+      --default-artifact-root s3://mlflow-artifacts/
+      --host 0.0.0.0
+      --port 5000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.fraud.service=mlflow"
+      - "com.fraud.layer=ml"
+
+  # ============================================
+  # HASHICORP VAULT - Gerenciamento de Secrets
+  # ============================================
+  
+  vault:
+    image: hashicorp/vault:1.15
+    container_name: fraud_vault
+    cap_add:
+      - IPC_LOCK
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: fraud-root-token
+      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+      VAULT_ADDR: http://0.0.0.0:8200
+    ports:
+      - "8200:8200"
+    volumes:
+      - ./docker_volumes/vault/data:/vault/data
+      - ./docker_volumes/vault/logs:/vault/logs
+      - ./vault/config:/vault/config:ro
+    networks:
+      - fraud-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "vault", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.fraud.service=vault"
+      - "com.fraud.layer=security"
+
+  # ============================================
+  # APACHE SUPERSET - BI Avançado (Opcional)
+  # ============================================
+  
+  superset-postgres:
+    image: postgres:16
+    container_name: fraud_superset_postgres
+    environment:
+      POSTGRES_USER: superset
+      POSTGRES_PASSWORD: superset
+      POSTGRES_DB: superset
+    volumes:
+      - ./docker_volumes/superset_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "superset"]
+      interval: 10s
+      retries: 5
+    networks:
+      - fraud-network
+    restart: unless-stopped
+
+  superset:
+    image: apache/superset:3.1.0
+    container_name: fraud_superset
+    environment:
+      - SUPERSET_SECRET_KEY=fraud-superset-secret-key-change-me
+      - DATABASE_URL=postgresql://superset:superset@superset-postgres:5432/superset
+      - REDIS_URL=redis://redis:6379/0
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./docker_volumes/superset:/app/superset_home
+      - ./superset/superset_config.py:/app/pythonpath/superset_config.py:ro
+    networks:
+      - fraud-network
+    depends_on:
+      superset-postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+    labels:
+      - "com.fraud.service=superset"
+      - "com.fraud.layer=visualization"
+
+  redis:
+    image: redis:7-alpine
+    container_name: fraud_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./docker_volumes/redis:/data
+    networks:
+      - fraud-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # ELK STACK - Logs Centralizados (Opcional)
+  # ============================================
+  
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.3
+    container_name: fraud_elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - cluster.name=fraud-cluster
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - ./docker_volumes/elasticsearch:/usr/share/elasticsearch/data
+    networks:
+      - fraud-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    labels:
+      - "com.fraud.service=elasticsearch"
+      - "com.fraud.layer=logging"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.3
+    container_name: fraud_kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - SERVER_NAME=kibana
+    ports:
+      - "5601:5601"
+    networks:
+      - fraud-network
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5601/api/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    labels:
+      - "com.fraud.service=kibana"
+      - "com.fraud.layer=logging"
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.11.3
+    container_name: fraud_filebeat
+    user: root
+    volumes:
+      - ./monitoring/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./logs:/logs:ro
+    networks:
+      - fraud-network
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    restart: unless-stopped
+
+networks:
+  fraud-network:
+    name: fraud-network
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  airflow_postgres_data:
+  prometheus_data:
+  grafana_data:
+  mlflow_postgres_data:
+  mlflow_data:
+  vault_data:
+  superset_postgres_data:
+  superset_data:
+  redis_data:
+  elasticsearch_data:
