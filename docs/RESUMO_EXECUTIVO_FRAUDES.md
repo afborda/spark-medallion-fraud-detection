@@ -15,7 +15,7 @@
 
 ---
 
-## 🎯 As 10 Regras de Detecção
+## 🎯 As 12 Regras de Detecção
 
 ### 🔴 Regras Críticas (Alta Severidade)
 
@@ -327,19 +327,21 @@ PADRÃO NORMAL (viagem):
 
 ## 📋 Próximos Passos Recomendados
 
+### ✅ Concluído
+- [x] Dashboard de monitoramento em tempo real (Metabase com auto-refresh)
+- [x] Detecção de fraude em tempo real (streaming via Kafka → Spark → PostgreSQL)
+- [x] Escalar para 50GB+ de dados (51GB processados com sucesso!)
+
 ### Curto Prazo
-- [ ] Implementar dashboard de monitoramento em tempo real
 - [ ] Criar API para consulta de score por transação
 - [ ] Adicionar notificações automáticas para risco CRÍTICO
 
 ### Médio Prazo
 - [ ] Integrar com modelo de Machine Learning para refinamento
 - [ ] Implementar feedback loop (confirmação de fraudes)
-- [ ] Escalar para 50GB de dados
 
 ### Longo Prazo
 - [ ] Análise de padrões comportamentais por cliente
-- [ ] Detecção de fraude em tempo real (streaming)
 - [ ] Integração com sistemas antifraude de terceiros
 
 ---

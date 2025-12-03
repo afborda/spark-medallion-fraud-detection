@@ -47,15 +47,26 @@ transaction_schema = StructType([
 ])
 
 def main():
+    # Credenciais MinIO (hardcoded para streaming - mais seguro usar env vars em produção)
+    MINIO_ENDPOINT_LOCAL = "http://minio:9000"
+    MINIO_ACCESS_KEY_LOCAL = "minioadmin"
+    MINIO_SECRET_KEY_LOCAL = "minioadmin123@@!!_2"
+    
+    print(f"🔧 Configurando MinIO: {MINIO_ENDPOINT_LOCAL}")
+    
     # Criar SparkSession com suporte a Kafka e S3/MinIO
     spark = SparkSession.builder \
         .appName("Streaming_Kafka_to_Bronze") \
-        .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.3") \
-        .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
-        .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
-        .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
+        .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT_LOCAL) \
+        .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY_LOCAL) \
+        .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY_LOCAL) \
         .config("spark.hadoop.fs.s3a.path.style.access", "true") \
         .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
+        .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false") \
+        .config("spark.hadoop.fs.s3a.multipart.size", "104857600") \
+        .config("spark.hadoop.fs.s3a.fast.upload", "true") \
+        .config("spark.hadoop.fs.s3a.committer.name", "directory") \
+        .config("spark.sql.streaming.metricsEnabled", "true") \
         .getOrCreate()
     
     spark.sparkContext.setLogLevel("WARN")

@@ -335,7 +335,7 @@ Bucket: fraud-data
 
 ### Checkpoint 11.10: Regras de Fraude Avançadas ✅ 🎉
 **Objetivo:** Implementar sistema completo de detecção de fraudes com Window Functions
-**Status:** ✅ CONCLUÍDO - 10/12 regras implementadas
+**Status:** ✅ CONCLUÍDO - 12/12 regras implementadas
 
 #### Regras Implementadas no Silver Layer:
 

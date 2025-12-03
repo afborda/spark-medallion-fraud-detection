@@ -52,6 +52,10 @@ Este projeto implementa um **pipeline de dados** para detecção de fraudes em t
 
 O projeto implementa uma **Lambda Architecture** híbrida, combinando processamento em batch para análises históricas com streaming em tempo real para detecção de fraudes.
 
+### 📊 Fluxo Completo do Pipeline
+
+![Fluxo Completo do Projeto](./assets/fluxo.png)
+
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────────────┐
 │                                                                                         │
@@ -200,7 +204,7 @@ O projeto implementa uma **Lambda Architecture** híbrida, combinando processame
 │                         🔍 FRAUD DETECTION FLOW                                │
 ├────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                │
-│   TRANSAÇÃO     ──►    10 REGRAS     ──►    SCORE     ──►    DECISÃO          │
+│   TRANSAÇÃO     ──►    12 REGRAS     ──►    SCORE     ──►    DECISÃO          │
 │   (entrada)          (pontuação)          (0-150)          (ação)              │
 │                                                                                │
 │   ┌─────────┐       ┌─────────────────────────────────┐    ┌────────────────┐ │
@@ -512,10 +516,10 @@ Dashboard de Business Intelligence para análise de fraudes, conectado diretamen
 | 📦 **Batch (Histórico)** | [Acessar Dashboard](https://metabase.abnerfonseca.com.br/public/dashboard/cd809bc2-c8cd-442e-afae-30a17ac50a0f) | Dados de 51M transações |
 
 ### Visão Geral
-![Dashboard Metabase - Visão Geral](./assets/Captura%20de%20Tela%202025-12-01%20às%2019.29.18.png)
+![Dashboard Metabase - Visão Geral](./assets/Dashboard.png)
 
-### Análise Detalhada
-![Dashboard Metabase - Análise](./assets/Captura%20de%20Tela%202025-12-01%20às%2019.29.27.png)
+### Dashboard Real-Time (Streaming)
+![Dashboard Metabase - Streaming](./assets/dashboard2.png)
 
 ### Métricas Disponíveis
 
@@ -549,7 +553,7 @@ Banco: PostgreSQL (fraud_db)
 | **Bronze Layer** | ✅ | `production/bronze_brazilian.py` - 51GB JSON → 5GB Parquet (~10min) |
 | **Silver Layer** | ✅ | `production/silver_brazilian.py` - Limpeza e validação (~13min) |
 | **Gold Layer** | ✅ | `production/gold_brazilian.py` - Agregações e scoring (~11min) |
-| **Fraud Detection** | ✅ | 10/12 regras implementadas com sistema de pontuação |
+| **Fraud Detection** | ✅ | 12/12 regras implementadas com sistema de pontuação |
 | **Integração MinIO** | ✅ | `s3a://fraud-data/medallion/{bronze,silver,gold}` - 12GB total |
 | **Integração PostgreSQL** | ✅ | `load_to_postgres.py` - Carregamento em batch |
 | **Geração de Dados Brasileiros** | ✅ | `generate_parallel.py` com Faker pt_BR - 51GB em ~10min |
@@ -560,9 +564,7 @@ Banco: PostgreSQL (fraud_db)
 
 | Prioridade | Item | Descrição |
 |------------|------|-----------|
-| 🟡 | **2 Regras Faltantes** | Account Takeover (precisa entidade Devices) e Idade Incompatível |
-| 🟡 | **Entidade Cards/Devices** | Tabelas adicionais para regras mais complexas |
-| 🟢 | **Streaming Real-time** | Kafka → Spark Streaming (scripts já existem em `streaming/`) |
+| 🟡 | **Entidade Cards** | Tabelas adicionais para regras mais complexas |
 | 🟢 | **Machine Learning** | Modelo preditivo além das regras baseadas em heurísticas |
 
 #### 🎯 FASES DO PROJETO
@@ -571,12 +573,13 @@ Banco: PostgreSQL (fraud_db)
 |------|-----------|--------|---|
 | **FASE 1** | Ambiente Docker + Dados | ✅ Completo | 100% |
 | **FASE 2** | Pipeline Bronze/Silver/Gold | ✅ Completo | 100% |
-| **FASE 3** | Regras de Fraude (12 regras) | ✅ **10/12 implementadas** | 83% |
+| **FASE 3** | Regras de Fraude (12 regras) | ✅ **12/12 implementadas** | 100% |
 | **FASE 4** | Operacional (Audit/Blocklist/Chargeback) | ⏸️ Opcional | 0% |
 | **FASE 5** | Visualização (Metabase + Traefik) | ✅ **Completo** | 100% |
 | **FASE 6** | Escala 50GB + Documentação | ✅ **51GB processados!** | 100% |
+| **FASE 7** | Streaming Real-Time | ✅ **Completo!** 🌊 | 100% |
 
-#### 📋 REGRAS DE FRAUDE: 10/12 Implementadas ✅
+#### 📋 REGRAS DE FRAUDE: 12/12 Implementadas ✅
 
 | # | Regra | Status | Flag/Implementação | Pontos |
 |---|-------|--------|---------------------|--------|
@@ -604,7 +607,7 @@ Banco: PostgreSQL (fraud_db)
 - [x] **Bronze Layer** - Ingestão JSON → Parquet
 - [x] **Silver Layer** - Limpeza, validação e Window Functions
 - [x] **Gold Layer** - Scoring, classificação e PostgreSQL
-- [x] **Fraud Detection** - **10 regras implementadas!**
+- [x] **Fraud Detection** - **12 regras implementadas!**
   - ✅ `is_cloning_suspect` - Clonagem via Window Function (25 pts)
   - ✅ `is_impossible_velocity` - Velocidade > 900 km/h (40 pts)
   - ✅ `is_high_value` - Valor > 5x média 30d (3 pts)
@@ -623,14 +626,16 @@ Banco: PostgreSQL (fraud_db)
 - [x] **Metabase** - Dashboards de BI funcionando
 - [x] **Traefik** - Reverse proxy com HTTPS
 
-### 🔄 Em Desenvolvimento
+### ✅ Streaming Real-Time (Concluído!)
 
-- [ ] **2 Regras Faltantes** - Account Takeover e Idade (precisam de entidades Cards/Devices)
-- [ ] **Streaming Real-time** - ShadowTraffic → Kafka → Spark Streaming
+- [x] **ShadowTraffic → Kafka** - Geração de ~10 tx/seg em tempo real
+- [x] **Spark Structured Streaming** - Pipeline Bronze → PostgreSQL
+- [x] **Dashboard Real-Time** - Métricas atualizadas a cada 1 minuto
+- [x] **Detecção de Fraudes Streaming** - Flags `is_fraud` processados em tempo real
 
-### 📋 Planejado
+### 📋 Planejado (Futuro)
 
-- [ ] **Cards/Devices** - Entidades adicionais
+- [ ] **Cards/Devices** - Entidades adicionais (para regras Account Takeover e Idade)
 - [ ] **Chargebacks/Blocklist/Audit** - Pipeline operacional
 
 ---

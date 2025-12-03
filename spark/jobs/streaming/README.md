@@ -5,10 +5,10 @@
 Scripts para processamento de streaming usando **Spark Structured Streaming**.
 Processam dados em tempo real do Kafka, aplicam transformações e salvam resultados.
 
-## ⚠️ Status: Em Desenvolvimento
+## ✅ Status: Implementado e Funcionando
 
-Estes scripts estão funcionais mas **não são o fluxo principal** de produção.
-O fluxo atual usa processamento batch (`production/medallion_*.py`).
+Pipeline de streaming em tempo real **operacional em produção**!
+Complementa o processamento batch (`production/medallion_*.py`) com detecção em tempo real.
 
 ## 📁 Arquivos
 
@@ -177,9 +177,14 @@ aws s3 ls s3://lakehouse/checkpoints/ --recursive
 5. **Stateful Operations** - Agregações com estado
 6. **Triggers** - Controle de micro-batches
 
-## 📝 Próximos Passos
+## ✅ Implementações Concluídas
 
-- [ ] Implementar regras de fraude em streaming
-- [ ] Adicionar alertas em tempo real
-- [ ] Dashboard com métricas de streaming
-- [ ] Integração com sistema de notificações
+- [x] Implementar regras de fraude em streaming
+- [x] Adicionar alertas em tempo real (PostgreSQL → Metabase)
+- [x] Dashboard com métricas de streaming (auto-refresh 1 min)
+- [x] Pipeline completo: ShadowTraffic → Kafka → Spark → PostgreSQL → Metabase
+
+## 📝 Próximos Passos (Futuro)
+
+- [ ] Integração com sistema de notificações (SMS/Email)
+- [ ] Alertas push para dispositivos móveis

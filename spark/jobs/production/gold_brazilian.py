@@ -16,7 +16,8 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     col, when, lit, count, sum as spark_sum, avg, max as spark_max, min as spark_min,
     current_timestamp, round as spark_round, percent_rank, countDistinct,
-    first, last, collect_set, array_contains, size, concat_ws
+    first, last, collect_set, array_contains, size, concat_ws,
+    datediff, months_between, floor, current_date, year
 )
 from pyspark.sql.window import Window
 from pyspark.sql.types import *
@@ -64,23 +65,132 @@ print("\n" + "=" * 40)
 print("🚨 Criando FRAUD_DETECTION...")
 print("=" * 40)
 
-# Calcular risco baseado em múltiplos fatores
-df_fraud_detection = df_transactions \
+# ============================================
+# 🎓 LIÇÃO: ENRIQUECER TRANSAÇÕES COM JOINs
+# ============================================
+# Para detectar fraudes avançadas, precisamos combinar dados de:
+# - transactions: dados da compra
+# - devices: informações do dispositivo usado
+# - customers: perfil do cliente (idade, renda, etc.)
+
+print("📊 Enriquecendo transações com dados de devices e customers...")
+
+# JOIN 1: Transações + Devices (para Account Takeover)
+# Selecionamos apenas os campos necessários do devices para evitar conflito de nomes
+df_devices_join = df_devices.select(
+    col("device_id"),
+    col("is_trusted").alias("device_is_trusted"),
+    col("is_rooted").alias("device_is_rooted"),
+    col("is_emulator").alias("device_is_emulator"),
+    col("risk_score").alias("device_risk_score"),
+    col("device_risk_category")
+)
+
+df_enriched = df_transactions.join(
+    df_devices_join,
+    on="device_id",
+    how="left"  # LEFT JOIN: mantém transações mesmo sem device
+)
+
+# JOIN 2: + Customers (para Idade Incompatível)
+df_customers_join = df_customers.select(
+    col("customer_id"),
+    col("data_nascimento_dt"),
+    col("renda_mensal").alias("customer_renda_mensal"),
+    col("faixa_renda").alias("customer_faixa_renda"),
+    col("is_premium").alias("customer_is_premium")
+)
+
+df_enriched = df_enriched.join(
+    df_customers_join,
+    on="customer_id",
+    how="left"
+)
+
+# ============================================
+# 🎓 LIÇÃO: CALCULAR IDADE DO CLIENTE
+# ============================================
+# Idade = (data_atual - data_nascimento) / 365.25
+# Usamos floor() para arredondar para baixo
+
+df_enriched = df_enriched.withColumn(
+    "customer_age",
+    floor(datediff(current_date(), col("data_nascimento_dt")) / 365.25)
+)
+
+print(f"✅ Transações enriquecidas com {df_enriched.count():,} registros")
+
+# ============================================
+# 🎓 LIÇÃO: NOVAS REGRAS DE FRAUDE (12/12 IMPLEMENTADAS!)
+# ============================================
+# 
+# REGRA 11 - ACCOUNT TAKEOVER:
+#   Se device_is_trusted = false E valor > R$500 → +25 pontos
+#   Se device_is_rooted ou device_is_emulator → +30 pontos
+#   Se device_risk_score > 80 → +15 pontos
+#   Motivo: Dispositivo suspeito fazendo compra
+#
+# REGRA 12 - IDADE INCOMPATÍVEL:
+#   Se idade <18 E categoria "Joias" E valor >R$10.000 → +20 pontos
+#   Se idade >75 E categoria "Games/Crypto" E valor >R$2.000 → +15 pontos
+#   Se idade <18 E valor >R$5.000 → +15 pontos
+#   Motivo: Perfil de compra incompatível com faixa etária
+
+# Calcular risco baseado em múltiplos fatores (INCLUINDO AS NOVAS REGRAS!)
+df_fraud_detection = df_enriched \
     .withColumn("risk_points", lit(0)) \
     .withColumn("risk_points", 
         col("risk_points") +
+        # === REGRAS EXISTENTES ===
         when(col("horario_incomum"), 15).otherwise(0) +
         when(col("novo_beneficiario"), 10).otherwise(0) +
         when(col("is_high_risk_mcc"), 20).otherwise(0) +
         when(col("valor") > 5000, 15).otherwise(0) +
-        when(col("valor") > 10000, 15).otherwise(0) +  # +15 adicional para valores muito altos
+        when(col("valor") > 10000, 15).otherwise(0) +
         when(col("tipo") == "PIX", 5).otherwise(0) +
         when(col("autenticacao_3ds") == False, 10).otherwise(0) +
         when(col("cvv_validado") == False, 10).otherwise(0) +
         when(col("periodo_dia") == "MADRUGADA", 10).otherwise(0) +
         when(col("fraud_score") > 70, 20).otherwise(
             when(col("fraud_score") > 50, 10).otherwise(0)
-        )
+        ) +
+        # === REGRA 11: ACCOUNT TAKEOVER (NOVA!) ===
+        # Device não confiável + valor alto = suspeito
+        when(
+            (col("device_is_trusted") == False) & (col("valor") > 500),
+            25
+        ).otherwise(0) +
+        # Device com root/emulador = muito suspeito
+        when(
+            (col("device_is_rooted") == True) | (col("device_is_emulator") == True),
+            30
+        ).otherwise(0) +
+        # Device com risk_score alto
+        when(col("device_risk_score") > 80, 15).otherwise(
+            when(col("device_risk_score") > 60, 8).otherwise(0)
+        ) +
+        # === REGRA 12: IDADE INCOMPATÍVEL (NOVA!) ===
+        # 🎓 LIÇÃO: Regras realistas baseadas em comportamento de mercado
+        # 
+        # Menor de idade (<18) comprando joias muito caras - suspeito!
+        when(
+            (col("customer_age") < 18) & 
+            (col("merchant_category").isin("Joias", "Joalheria", "Luxury", "Joias e Relógios")) & 
+            (col("valor") > 10000),
+            20
+        ).otherwise(0) +
+        # Idoso (>75) comprando games/crypto - perfil muito incomum
+        when(
+            (col("customer_age") > 75) & 
+            (col("merchant_category").isin("Games", "Jogos", "Gaming", "Criptomoedas", "Crypto")) & 
+            (col("valor") > 2000),
+            15
+        ).otherwise(0) +
+        # Menor de idade (<18) com compra alta (mais de R$ 5.000) - suspeito
+        when(
+            (col("customer_age") < 18) & (col("valor") > 5000),
+            15
+        ).otherwise(0)
     ) \
     .withColumn("risk_level",
         when(col("risk_points") >= 50, "CRÍTICO")
@@ -91,12 +201,32 @@ df_fraud_detection = df_transactions \
     .withColumn("requires_review",
         (col("risk_level").isin(["CRÍTICO", "ALTO"])) | 
         (col("is_fraud") == True)
+    ) \
+    .withColumn("is_account_takeover",
+        # Flag para REGRA 11: Account Takeover
+        ((col("device_is_trusted") == False) & (col("valor") > 500)) |
+        (col("device_is_rooted") == True) |
+        (col("device_is_emulator") == True)
+    ) \
+    .withColumn("is_age_mismatch",
+        # Flag para REGRA 12: Idade Incompatível (valores realistas)
+        # Menor de idade + joias muito caras
+        ((col("customer_age") < 18) & 
+         (col("merchant_category").isin("Joias", "Joalheria", "Luxury", "Joias e Relógios")) & 
+         (col("valor") > 10000)) |
+        # Idoso + games/crypto caro
+        ((col("customer_age") > 75) & 
+         (col("merchant_category").isin("Games", "Jogos", "Gaming", "Criptomoedas", "Crypto")) & 
+         (col("valor") > 2000)) |
+        # Menor de idade + compra alta
+        ((col("customer_age") < 18) & (col("valor") > 5000))
     )
 
-# Selecionar campos para tabela Gold
+# Selecionar campos para tabela Gold (incluindo novas colunas de regras)
 df_fraud_gold = df_fraud_detection.select(
     "transaction_id",
     "customer_id",
+    "device_id",
     "timestamp_dt",
     "tx_date",
     "tx_year",
@@ -126,6 +256,18 @@ df_fraud_gold = df_fraud_detection.select(
     "periodo_dia",
     "faixa_valor",
     "is_weekend",
+    # === NOVAS COLUNAS DAS REGRAS 11 e 12 ===
+    "device_is_trusted",
+    "device_is_rooted",
+    "device_is_emulator",
+    "device_risk_score",
+    "device_risk_category",
+    "customer_age",
+    "customer_renda_mensal",
+    # === FLAGS DAS NOVAS REGRAS ===
+    "is_account_takeover",
+    "is_age_mismatch",
+    # === FIM NOVAS COLUNAS ===
     "risk_points",
     "risk_level",
     "requires_review",
