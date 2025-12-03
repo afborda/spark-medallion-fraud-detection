@@ -14,9 +14,18 @@
 
 > **Acesse a infraestrutura rodando em produção!**
 
+### 📊 Dashboards Públicos (Acesso Direto)
+
+| Dashboard | URL | Descrição |
+|-----------|-----|-----------|
+| 🌊 **Real-Time (Streaming)** | [Dashboard Streaming](https://metabase.abnerfonseca.com.br/public/dashboard/d43f14da-5c01-4ab4-a4a9-8e54d0bcc5dd) | Fraudes em tempo real (atualiza a cada 1 min) |
+| 📦 **Batch Analytics** | [Dashboard Batch](https://metabase.abnerfonseca.com.br/public/dashboard/cd809bc2-c8cd-442e-afae-30a17ac50a0f) | Análise histórica de 51M transações |
+
+### 🖥️ Infraestrutura
+
 | Serviço | URL | Descrição |
 |---------|-----|-----------|
-| 📊 **Metabase** | [metabase.abnerfonseca.com.br](https://metabase.abnerfonseca.com.br) | Dashboard de BI com análises de fraude |
+| 📊 **Metabase** | [metabase.abnerfonseca.com.br](https://metabase.abnerfonseca.com.br) | Plataforma de BI completa |
 | ⚡ **Spark Master** | [spark.abnerfonseca.com.br](https://spark.abnerfonseca.com.br) | Interface do cluster Spark (5 workers) |
 | 📦 **MinIO Console** | [minio.abnerfonseca.com.br](https://minio.abnerfonseca.com.br) | Object Storage (Data Lake) |
 
@@ -493,7 +502,14 @@ spark-submit --master spark://spark-master:7077 --jars $JARS /spark/jobs/product
 
 ## 📊 Dashboard Metabase
 
-Dashboard de Business Intelligence para análise de fraudes em tempo real, conectado diretamente ao PostgreSQL.
+Dashboard de Business Intelligence para análise de fraudes, conectado diretamente ao PostgreSQL.
+
+### 🔗 Links dos Dashboards Públicos
+
+| Dashboard | Link | Atualização |
+|-----------|------|-------------|
+| 🌊 **Streaming (Real-Time)** | [Acessar Dashboard](https://metabase.abnerfonseca.com.br/public/dashboard/d43f14da-5c01-4ab4-a4a9-8e54d0bcc5dd) | A cada 1 minuto |
+| 📦 **Batch (Histórico)** | [Acessar Dashboard](https://metabase.abnerfonseca.com.br/public/dashboard/cd809bc2-c8cd-442e-afae-30a17ac50a0f) | Dados de 51M transações |
 
 ### Visão Geral
 ![Dashboard Metabase - Visão Geral](./assets/Captura%20de%20Tela%202025-12-01%20às%2019.29.18.png)
