@@ -253,6 +253,5 @@ services:
       - ./shadowtraffic/license.env
     volumes:
       - ./shadowtraffic:/config
-    command: --config /config/transactions.json --watch --sample 0
+    command: --config /config/transactions.json --watch
     # --watch: Hot reload se mudar o config
-    # --sample 0: Roda infinitamente (sem limite)
