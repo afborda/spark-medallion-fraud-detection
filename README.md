@@ -420,35 +420,14 @@ Banco: PostgreSQL (fraud_db)
 | **Metabase** | ✅ | Dashboard de BI na porta 3000 |
 | **Escala 51GB** | ✅ | **🎉 NOVO! 51.2M transações processadas em ~34min** |
 
-#### ❌ O QUE ESTÁ FALTANDO
+#### 🔄 PRÓXIMOS PASSOS (Opcional)
 
-##### 🔴 CRÍTICO (Alto Impacto)
-
-| Item | Planejado | Atual | Ação Necessária |
-|------|-----------|-------|-----------------|
-| **8 Regras de Fraude Completas** | 8 regras complexas | 2 regras + 8 flags | Implementar regras faltantes |
-| **Dashboard Metabase** | Configurado e rodando | ❌ Não existe | Adicionar ao docker-compose |
-| **Dashboard Streamlit** | `streamlit/dashboard.py` | ❌ Não existe | Criar pasta e arquivo |
-| **Escala 50GB** | Objetivo principal | 2.2GB testado | Gerar e processar 50GB |
-
-##### 🟠 IMPORTANTE (Médio Impacto)
-
-| Item | Planejado | Atual | Ação Necessária |
-|------|-----------|-------|-----------------|
-| **Entidade Cards** | Tabela de cartões | ❌ Não existe | Criar schema e dados |
-| **Entidade Devices** | Tabela de dispositivos | ❌ Não existe | Criar schema e dados |
-| **Chargebacks** | Processamento de disputas | ❌ Não existe | Criar pipeline |
-| **Blocklist** | Lista de bloqueio | ❌ Não existe | Criar tabela e lógica |
-| **Audit Log** | Log de compliance | ❌ Não existe | Implementar logging |
-| **Traefik** | Reverse proxy + SSL | ❌ Não existe | Adicionar ao docker-compose |
-
-##### 🟡 DESEJÁVEL (Baixo Impacto)
-
-| Item | Planejado | Atual | Ação Necessária |
-|------|-----------|-------|-----------------|
-| **Notebooks** | `notebooks/exploration.ipynb` | ❌ Não existe | Criar análise exploratória |
-| **Dicionário de Dados** | `docs/data_dictionary.md` | ❌ Não existe | Documentar campos |
-| **Arquitetura Doc** | `docs/architecture.md` | ❌ Não existe | Criar diagrama |
+| Prioridade | Item | Descrição |
+|------------|------|-----------|
+| 🟡 | **2 Regras Faltantes** | Account Takeover (precisa entidade Devices) e Idade Incompatível |
+| 🟡 | **Entidade Cards/Devices** | Tabelas adicionais para regras mais complexas |
+| 🟢 | **Streaming Real-time** | Kafka → Spark Streaming (scripts já existem em `streaming/`) |
+| 🟢 | **Machine Learning** | Modelo preditivo além das regras baseadas em heurísticas |
 
 #### 🎯 FASES DO PROJETO
 
@@ -457,8 +436,8 @@ Banco: PostgreSQL (fraud_db)
 | **FASE 1** | Ambiente Docker + Dados | ✅ Completo | 100% |
 | **FASE 2** | Pipeline Bronze/Silver/Gold | ✅ Completo | 100% |
 | **FASE 3** | Regras de Fraude (12 regras) | ✅ **10/12 implementadas** | 83% |
-| **FASE 4** | Operacional (Audit/Blocklist/Chargeback) | ❌ Não iniciado | 0% |
-| **FASE 5** | Visualização (Metabase/Streamlit) | ✅ **Metabase OK** | 50% |
+| **FASE 4** | Operacional (Audit/Blocklist/Chargeback) | ⏸️ Opcional | 0% |
+| **FASE 5** | Visualização (Metabase + Traefik) | ✅ **Completo** | 100% |
 | **FASE 6** | Escala 50GB + Documentação | ✅ **51GB processados!** | 100% |
 
 #### 📋 REGRAS DE FRAUDE: 10/12 Implementadas ✅
@@ -534,18 +513,17 @@ Banco: PostgreSQL (fraud_db)
 
 ### Serviços Docker
 
-| Serviço | Container | Porta | Status |
-|---------|-----------|-------|--------|
-| Spark Master | fraud_spark_master | 7077, 8081 | ✅ Rodando |
-| Spark Worker 1-5 | fraud_spark_worker_* | - | ✅ 5 Workers |
-| PostgreSQL | fraud_postgres | 5432 | ✅ Rodando |
-| MinIO Console | fraud_minio | 9003 | ✅ Rodando |
-| MinIO API | fraud_minio | 9002 | ✅ Rodando |
-| Kafka | fraud_kafka | 9092 | ✅ Rodando |
-| Zookeeper | fraud_zookeeper | 2181 | ✅ Rodando |
-| Metabase | - | - | 📋 Planejado |
-| Streamlit | - | - | 📋 Planejado |
-| Traefik | - | 80/443 | 📋 Planejado |
+| Serviço | Container | Porta | URL Pública | Status |
+|---------|-----------|-------|-------------|--------|
+| Spark Master | fraud_spark_master | 7077, 8081 | [spark.abnerfonseca.com.br](https://spark.abnerfonseca.com.br) | ✅ Rodando |
+| Spark Worker 1-5 | fraud_spark_worker_* | 8082-8086 | - | ✅ 5 Workers |
+| PostgreSQL | fraud_postgres | 5432 | - | ✅ Rodando |
+| MinIO Console | fraud_minio | 9003 | [minio.abnerfonseca.com.br](https://minio.abnerfonseca.com.br) | ✅ Rodando |
+| MinIO API | fraud_minio | 9002 | [s3.abnerfonseca.com.br](https://s3.abnerfonseca.com.br) | ✅ Rodando |
+| Kafka | fraud_kafka | 9092 | - | ✅ Rodando |
+| Zookeeper | fraud_zookeeper | 2181 | - | ✅ Rodando |
+| Metabase | fraud_metabase | 3000 | [metabase.abnerfonseca.com.br](https://metabase.abnerfonseca.com.br) | ✅ Rodando |
+| Traefik | traefik | 80/443 | [traefik.abnerfonseca.com.br](https://traefik.abnerfonseca.com.br) | ✅ Rodando |
 
 ### Executar no Cluster Distribuído
 

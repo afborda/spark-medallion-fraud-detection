@@ -2,7 +2,7 @@
 
 > **Projeto:** Bank Fraud Detection Data Pipeline  
 > **Versão:** 1.0  
-> **Última Atualização:** Novembro 2025
+> **Última Atualização:** Dezembro 2025
 
 ---
 
@@ -15,6 +15,7 @@
 5. [Classificação de Nível de Risco](#classificação-de-nível-de-risco)
 6. [Combinações Críticas](#combinações-críticas)
 7. [Resumo das Regras por Camada](#resumo-das-regras-por-camada)
+8. [🔍 Guia Simplificado - Explicação para Usuários Não-Técnicos](#-guia-simplificado---explicação-para-usuários-não-técnicos)
 
 ---
 
@@ -545,6 +546,64 @@ Cenário de maior risco:
 | COMBO-004 | Fraude Noturna Coordenada | Combinação |
 | SCORE | Fraud Score | Cálculo |
 | RISK | Classificação de Risco | Classificação |
+
+---
+
+## 🔍 Guia Simplificado - Explicação para Usuários Não-Técnicos
+
+Esta seção explica as regras de forma simples, para que qualquer pessoa possa entender como o sistema detecta fraudes.
+
+### Tabela de Regras (Linguagem Simples)
+
+| # | Nome da Regra | O que ela faz? | Exemplo Real | Pontos |
+|---|---------------|----------------|--------------|--------|
+| 1 | **Horário Incomum** | Detecta compras feitas em horários estranhos para aquele cliente | João sempre compra de manhã, mas hoje fez uma compra às 3h da madrugada | **15** |
+| 2 | **Novo Beneficiário** | Alerta quando dinheiro é enviado para alguém novo | Maria nunca transferiu para "Carlos Silva", e agora mandou R$2.000 para ele | **10** |
+| 3 | **Categoria de Alto Risco** | Identifica compras em categorias frequentemente usadas em golpes | Compra em loja de criptomoedas, casa de apostas ou joalheria | **20** |
+| 4 | **Valor Alto** | Sinaliza quando o valor está acima de R$5.000 | Cliente faz uma transferência de R$7.500 | **15** |
+| 5 | **Valor Muito Alto** | Alerta extra para valores acima de R$10.000 | Cliente tenta comprar algo de R$15.000 | **+15** |
+| 6 | **Transferência PIX** | PIX é mais arriscado por ser instantâneo e irreversível | Cliente usa PIX ao invés de TED ou cartão | **5** |
+| 7 | **Sem Autenticação 3DS** | Compra online sem verificação de segurança | Compra no cartão sem pedir confirmação no app do banco | **10** |
+| 8 | **CVV Inválido** | Código de segurança do cartão não confere | Alguém digitou o código de 3 dígitos errado | **10** |
+| 9 | **Compra na Madrugada** | Transações entre 0h e 5h são mais suspeitas | Compra feita às 2:30 da manhã | **10** |
+| 10 | **Score de Fraude Alto** | Sistema de ML detectou padrões suspeitos | Combinação de vários fatores indicam fraude | **20** |
+| 11 | **Invasão de Conta** | Detecta quando a conta pode ter sido invadida | Compra alta feita de celular desconhecido ou com root/jailbreak | **25-30** |
+| 12 | **Idade Incompatível** | Compra não combina com a idade do cliente | Menor de 18 anos comprando joia de R$12.000, ou idoso de 80 anos comprando criptomoedas | **15-20** |
+
+### 🚦 O que significam os níveis de risco?
+
+| Nível | Pontos | O que acontece? | Cor |
+|-------|--------|-----------------|-----|
+| 🟢 **BAIXO** | 0 a 14 | Transação aprovada automaticamente | Verde |
+| 🟡 **MÉDIO** | 15 a 29 | Aprovada, mas fica em monitoramento | Amarelo |
+| 🟠 **ALTO** | 30 a 49 | Vai para análise manual de um humano | Laranja |
+| 🔴 **CRÍTICO** | 50+ | Transação bloqueada automaticamente | Vermelho |
+
+### 📊 Exemplo Prático
+
+**Situação:** João, 25 anos, faz uma transferência PIX de R$8.000 às 3h da manhã para alguém novo.
+
+| Regra Acionada | Pontos |
+|----------------|--------|
+| Horário Incomum | 15 |
+| Novo Beneficiário | 10 |
+| Valor Alto (>R$5.000) | 15 |
+| Transferência PIX | 5 |
+| Madrugada | 10 |
+| **TOTAL** | **55** |
+
+**Resultado:** 🔴 **CRÍTICO** - Transação BLOQUEADA para proteção do cliente!
+
+### 💡 Por que essas regras existem?
+
+O objetivo **NÃO** é bloquear compras legítimas, mas sim:
+- ✅ Proteger o cliente de golpes e fraudes
+- ✅ Identificar quando alguém está usando a conta do cliente sem permissão
+- ✅ Detectar padrões de comportamento que indicam invasão de conta
+- ✅ Bloquear automaticamente as transações mais perigosas
+- ✅ Enviar para análise humana os casos duvidosos
+
+Se uma transação legítima for bloqueada, o cliente pode ligar para o banco e liberar. É melhor prevenir do que perder dinheiro! 🛡️
 
 ---
 

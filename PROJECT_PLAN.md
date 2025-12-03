@@ -669,9 +669,9 @@ fraud-detection-pipeline/
 
 ### FASE 3: Fraude
 
-- [ ] 8 regras implementadas
-- [ ] Fraud score calculado
-- [ ] Classificação LOW/MEDIUM/HIGH
+- [x] 8 regras implementadas (10/12 total)
+- [x] Fraud score calculado
+- [x] Classificação BAIXO/MÉDIO/ALTO/CRÍTICO
 - [ ] Audit log registrando decisões
 
 ### FASE 4: Operacional
@@ -679,21 +679,21 @@ fraud-detection-pipeline/
 - [ ] Chargebacks processados
 - [ ] Blocklist funcionando
 - [ ] Métricas de SLA calculadas
-- [ ] KPIs de negócio prontos
+- [x] KPIs de negócio prontos
 
 ### FASE 5: Visualização
 
-- [ ] Dashboard Metabase configurado
-- [ ] Dashboard Streamlit funcionando
-- [ ] Gráficos principais criados
-- [ ] Acesso externo via Traefik
+- [x] Dashboard Metabase configurado
+- [ ] Dashboard Streamlit funcionando (opcional)
+- [x] Gráficos principais criados
+- [x] Acesso externo via Traefik (HTTPS)
 
 ### FASE 6: Documentação
 
-- [ ] README completo
-- [ ] Diagramas de arquitetura
+- [x] README completo
+- [x] Diagramas de arquitetura
 - [ ] Dicionário de dados
-- [ ] Repositório GitHub público
+- [x] Repositório GitHub público
 - [ ] Post no LinkedIn
 
 ---
