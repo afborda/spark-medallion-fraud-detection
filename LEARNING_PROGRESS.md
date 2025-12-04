@@ -17,7 +17,7 @@
 
 ## 📍 STATUS ATUAL
 
-**Último checkpoint completado:** 11.12 - Baking Dependencies (Imutabilidade de Infraestrutura) ✅
+**Último checkpoint completado:** 11.13 - Benchmark JDBC Write Paralelo ✅
 **Próximo checkpoint:** 12 - Streaming Real com Kafka
 **Data da última sessão:** 2025-12-04
 
@@ -521,6 +521,109 @@ docker compose up -d
 # Verificar JARs na imagem
 docker exec fraud_spark_master ls /opt/spark/jars/ | grep -E "hadoop|aws|postgresql"
 ```
+
+### Checkpoint 11.13: Benchmark JDBC Write Paralelo ✅ 🚀
+**Objetivo:** Medir e otimizar performance de escrita no PostgreSQL
+**Status:** ✅ CONCLUÍDO
+**Data:** 2025-12-04
+**Documentação:** [docs/BENCHMARK_JDBC_WRITE.md](docs/BENCHMARK_JDBC_WRITE.md)
+
+#### Resultado do Benchmark (10M registros):
+
+| Métrica | BASELINE | OTIMIZADO | Melhoria |
+|---------|----------|-----------|----------|
+| **Tempo** | 445.7s (~7.4 min) | 163.4s (~2.7 min) | **-63%** |
+| **Throughput** | 22,438 reg/s | 61,217 reg/s | **+172.8%** |
+| **Partições JDBC** | 1 | 16 | +15 conexões |
+| **Batch Size** | 1,000 | 10,000 | 10x maior |
+
+#### 🎯 SPEEDUP: 2.73x mais rápido!
+
+#### O Problema Identificado:
+
+```
+📊 Partições atuais: 1  ← GARGALO!
+```
+
+O DataFrame tinha **apenas 1 partição** após o `.limit()`, resultando em:
+- 1 única conexão JDBC
+- Processamento sequencial
+- Subutilização do cluster (10 cores disponíveis, apenas 1 usado)
+
+#### A Solução Aplicada:
+
+```python
+# ❌ ANTES: Escrita single-threaded
+df.write.jdbc(url, table, properties=props)
+
+# ✅ DEPOIS: Escrita paralela (16 conexões simultâneas)
+df.repartition(16).write \
+    .option("truncate", "true") \
+    .jdbc(url, table, properties={
+        **props,
+        "batchsize": "10000",
+        "rewriteBatchedInserts": "true"
+    })
+```
+
+#### Configurações Otimizadas:
+
+| Parâmetro | Valor | Efeito |
+|-----------|-------|--------|
+| `repartition(16)` | 16 partições | 16 threads paralelas |
+| `batchsize` | 10,000 | 10x menos round-trips |
+| `rewriteBatchedInserts` | true | Multi-row INSERT (PostgreSQL) |
+| `truncate` | true | Preserva índices (mais rápido) |
+
+#### Fluxo de Dados Otimizado:
+
+```
+SEM repartition (1 partição):
+┌─────────────────────────────────────────────────────┐
+│ Spark Driver                                        │
+│    └── Partition 0 ──► 1 JDBC Conn ──► PostgreSQL   │
+└─────────────────────────────────────────────────────┘
+        1 thread = ~22k reg/s
+
+COM repartition(16):
+┌─────────────────────────────────────────────────────┐
+│ Spark Executors (5 workers × 2 cores)               │
+│    ├── Partition 0  ──► JDBC Conn 0  ──┐            │
+│    ├── Partition 1  ──► JDBC Conn 1  ──┤            │
+│    ├── ...          ──► ...          ──┼► PostgreSQL│
+│    └── Partition 15 ──► JDBC Conn 15 ──┘            │
+└─────────────────────────────────────────────────────┘
+        16 threads paralelos = ~61k reg/s
+```
+
+#### Resultado em PRODUÇÃO (48M+ registros):
+
+| Tabela | Registros | Tempo Real | Throughput |
+|--------|-----------|------------|------------|
+| 💳 transactions | 48,445,853 | 21.1 min | 38,180 reg/s |
+| ⚠️ fraud_alerts | 16,380,563 | 2.5 min | 109,707 reg/s |
+| 👤 customer_summary | 100,000 | 5s | 21,300 reg/s |
+| 📈 fraud_metrics | 25 | 1s | - |
+| **TOTAL** | **64,926,441** | **~14 min*** | **45,594 reg/s** |
+
+> *Tempo real de processamento (excluindo ~10 min de espera por workers ocupados)
+
+#### Comparativo Benchmark vs Produção:
+
+| Métrica | Benchmark (10M) | Produção (48M) |
+|---------|-----------------|----------------|
+| Throughput | 61,217 reg/s | 38,180 reg/s |
+| Speedup vs baseline | 2.73x | ~2x (estimado) |
+
+**Script de Benchmark:** `spark/jobs/utils/benchmark_postgres_write.py`
+
+**Conceitos aprendidos:**
+- `repartition()` - Redistribuir dados para paralelismo
+- `batchsize` - Controlar linhas por INSERT batch
+- `rewriteBatchedInserts` - Otimização PostgreSQL para multi-row INSERT
+- `truncate` vs `overwrite` - Performance de recriação de tabela
+- Importância de medir **ANTES** de otimizar (benchmark)
+- Diferença entre tempo de espera (queue) e tempo de execução real
 
 ---
 
