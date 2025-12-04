@@ -17,9 +17,9 @@
 
 ## 📍 STATUS ATUAL
 
-**Último checkpoint completado:** 11.11 - Escala 51GB com Dados Brasileiros 🇧🇷 ✅
+**Último checkpoint completado:** 11.12 - Baking Dependencies (Imutabilidade de Infraestrutura) ✅
 **Próximo checkpoint:** 12 - Streaming Real com Kafka
-**Data da última sessão:** 2025-12-02
+**Data da última sessão:** 2025-12-04
 
 ---
 
@@ -434,6 +434,93 @@ Bucket: fraud-data
 - Compressão Parquet extrema: 51GB JSON → 5GB Parquet (90% redução!)
 - Pipeline particionado por ano/mês no Silver Layer
 - Metabase configuração e conexão com PostgreSQL
+
+### Checkpoint 11.12: Baking Dependencies (Imutabilidade de Infraestrutura) ✅ 🍞
+**Objetivo:** Eliminar duplicação de configuração e melhorar segurança
+**Status:** ✅ CONCLUÍDO
+**Data:** 2025-12-04
+**Documentação:** [docs/BAKING_DEPENDENCIES.md](docs/BAKING_DEPENDENCIES.md)
+
+#### O Problema Resolvido:
+
+| Problema | Antes | Depois |
+|----------|-------|--------|
+| 🔁 JARs | Especificados em cada script | Embutidos na imagem Docker |
+| 🔓 Senhas | Hardcoded no código | Environment variables |
+| 🐛 Manutenção | Alterar 10+ arquivos | Alterar 1 Dockerfile |
+| 📦 Consistência | JARs podem divergir | Mesma imagem = mesmos JARs |
+
+#### Arquivos Criados:
+
+| Arquivo | Propósito |
+|---------|-----------|
+| `Dockerfile.spark` | Imagem Spark customizada com JARs embutidos |
+| `spark/conf/spark-defaults.conf` | Configurações S3A globais (sem secrets) |
+
+#### Arquivos Modificados:
+
+| Arquivo | Mudança |
+|---------|---------|
+| `docker-compose.yml` | Serviços Spark usam `build:` + injeção de env vars |
+| `.env.example` | Variáveis MINIO_ACCESS_KEY e MINIO_SECRET_KEY |
+| `spark/jobs/config.py` | Função `apply_s3a_configs()` lê credenciais do ambiente |
+| `spark/jobs/production/*.py` | Removidas configs duplicadas |
+| `spark/jobs/streaming/*.py` | Removidas configs duplicadas |
+
+#### Padrão "Baking Dependencies":
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     BUILD TIME                               │
+│  Dockerfile.spark                                            │
+│  ├── COPY jars/*.jar → /opt/spark/jars/                     │
+│  └── COPY spark-defaults.conf → /opt/spark/conf/            │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     RUN TIME                                 │
+│  docker-compose.yml                                          │
+│  ├── environment: MINIO_ACCESS_KEY, MINIO_SECRET_KEY        │
+│  └── .env file (gitignored)                                  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+#### Código Antes vs Depois:
+
+```python
+# ❌ ANTES: 15+ linhas de config em CADA script
+spark = SparkSession.builder \
+    .config("spark.jars", "/jars/hadoop-aws-3.3.4.jar,/jars/...") \
+    .config("spark.hadoop.fs.s3a.access.key", "minioadmin") \
+    .config("spark.hadoop.fs.s3a.secret.key", "senha_hardcoded") \
+    ...
+```
+
+```python
+# ✅ DEPOIS: 2 linhas limpas
+spark = get_spark_session("BronzeLayer")
+spark = apply_s3a_configs(spark)
+```
+
+**Conceitos aprendidos:**
+- `Baking Dependencies` - Dependências "assadas" na imagem Docker
+- `Immutable Infrastructure` - Infraestrutura imutável e reproduzível
+- `12 Factor App - Config` - Configuração via environment variables
+- `Separation of Concerns` - Infraestrutura no Docker, lógica no Python
+- `DRY Principle` - Don't Repeat Yourself (eliminar duplicação)
+
+**Comandos para aplicar:**
+```bash
+# Rebuild das imagens
+docker compose build
+
+# Subir cluster com novas imagens
+docker compose up -d
+
+# Verificar JARs na imagem
+docker exec fraud_spark_master ls /opt/spark/jars/ | grep -E "hadoop|aws|postgresql"
+```
 
 ---
 

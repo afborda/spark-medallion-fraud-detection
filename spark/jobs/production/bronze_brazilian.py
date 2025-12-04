@@ -1,11 +1,13 @@
 """
-🥉 BRONZE LAYER - JSON Local → MinIO
+🥉 BRONZE LAYER - JSON Local → MinIO (BATCH)
 Ingestão de dados brutos de arquivos JSON para o Data Lake
 
 Este job processa os dados brasileiros gerados pelo script generate_brazilian_data.py:
 - customers.json: Dados de clientes
 - devices.json: Dispositivos dos clientes  
 - transactions_batch_*.json: Transações financeiras
+
+TIPO: BATCH (processamento em lote de arquivos locais)
 """
 
 import sys
@@ -15,34 +17,20 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import current_timestamp, col, lit, input_file_name
 from pyspark.sql.types import *
 import os
-from config import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, BRONZE_PATH
+from config import BRONZE_PATH, apply_s3a_configs
 
 print("=" * 60)
 print("🥉 BRONZE LAYER - JSON Local → MinIO")
-print("🇧🇷 Processando dados brasileiros")
+print("🇧🇷 Processando dados brasileiros (BATCH)")
 print("=" * 60)
 
-# JARs para S3/MinIO
-JARS_PATH = "/jars"
-HADOOP_AWS = f"{JARS_PATH}/hadoop-aws-3.3.4.jar"
-AWS_SDK = f"{JARS_PATH}/aws-java-sdk-bundle-1.12.262.jar"
-JARS = f"{HADOOP_AWS},{AWS_SDK}"
-CLASSPATH = f"{HADOOP_AWS}:{AWS_SDK}"
-
-spark = SparkSession.builder \
-    .appName("Bronze_JSON_to_MinIO") \
-    .config("spark.jars", JARS) \
-    .config("spark.driver.extraClassPath", CLASSPATH) \
-    .config("spark.executor.extraClassPath", CLASSPATH) \
-    .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
-    .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
-    .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
-    .config("spark.hadoop.fs.s3a.path.style.access", "true") \
-    .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
-    .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false") \
-    .config("spark.sql.adaptive.enabled", "true") \
-    .config("spark.sql.adaptive.coalescePartitions.enabled", "true") \
-    .getOrCreate()
+# Configurações S3 são carregadas via variáveis de ambiente (seguro!)
+spark = apply_s3a_configs(
+    SparkSession.builder
+    .appName("Bronze_JSON_to_MinIO_Batch")
+    .config("spark.sql.adaptive.enabled", "true")
+    .config("spark.sql.adaptive.coalescePartitions.enabled", "true")
+).getOrCreate()
 
 spark.sparkContext.setLogLevel("WARN")
 

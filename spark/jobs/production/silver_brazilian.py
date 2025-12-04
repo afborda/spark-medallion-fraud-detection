@@ -1,5 +1,5 @@
 """
-🥈 SILVER LAYER - Limpeza e Transformação
+🥈 SILVER LAYER - Limpeza e Transformação (BATCH)
 Transforma dados brutos do Bronze em dados limpos e padronizados
 
 Transformações aplicadas:
@@ -8,6 +8,8 @@ Transformações aplicadas:
 - Padronização de strings
 - Tratamento de nulos
 - Criação de campos derivados
+
+TIPO: BATCH (processamento em lote de dados brasileiros)
 """
 
 import sys
@@ -21,28 +23,19 @@ from pyspark.sql.functions import (
     round as spark_round, abs as spark_abs, concat_ws
 )
 from pyspark.sql.types import *
-from config import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, BRONZE_PATH, SILVER_PATH
+from config import BRONZE_PATH, SILVER_PATH, apply_s3a_configs
 
 print("=" * 60)
 print("🥈 SILVER LAYER - Limpeza e Transformação")
-print("🇧🇷 Dados brasileiros")
+print("🇧🇷 Dados brasileiros (BATCH)")
 print("=" * 60)
 
-# JARs para S3/MinIO
-JARS_PATH = "/jars"
-HADOOP_AWS = f"{JARS_PATH}/hadoop-aws-3.3.4.jar"
-AWS_SDK = f"{JARS_PATH}/aws-java-sdk-bundle-1.12.262.jar"
-
-spark = SparkSession.builder \
-    .appName("Silver_Transform") \
-    .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
-    .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
-    .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
-    .config("spark.hadoop.fs.s3a.path.style.access", "true") \
-    .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
-    .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false") \
-    .config("spark.sql.adaptive.enabled", "true") \
-    .getOrCreate()
+# Configurações S3 são carregadas via variáveis de ambiente (seguro!)
+spark = apply_s3a_configs(
+    SparkSession.builder
+    .appName("Silver_Transform_Batch")
+    .config("spark.sql.adaptive.enabled", "true")
+).getOrCreate()
 
 spark.sparkContext.setLogLevel("WARN")
 

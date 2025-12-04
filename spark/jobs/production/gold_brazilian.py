@@ -21,23 +21,19 @@ from pyspark.sql.functions import (
 )
 from pyspark.sql.window import Window
 from pyspark.sql.types import *
-from config import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, SILVER_PATH, GOLD_PATH
+from config import SILVER_PATH, GOLD_PATH, apply_s3a_configs
 
 print("=" * 60)
 print("🥇 GOLD LAYER - Agregações e Detecção de Fraude")
 print("🇧🇷 Dados brasileiros")
 print("=" * 60)
 
-spark = SparkSession.builder \
-    .appName("Gold_Analytics") \
-    .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
-    .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
-    .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
-    .config("spark.hadoop.fs.s3a.path.style.access", "true") \
-    .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
-    .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false") \
-    .config("spark.sql.adaptive.enabled", "true") \
-    .getOrCreate()
+# Configurações S3 são carregadas via variáveis de ambiente (seguro!)
+spark = apply_s3a_configs(
+    SparkSession.builder
+    .appName("Gold_Analytics")
+    .config("spark.sql.adaptive.enabled", "true")
+).getOrCreate()
 
 spark.sparkContext.setLogLevel("WARN")
 

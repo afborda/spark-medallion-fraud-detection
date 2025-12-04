@@ -1,52 +1,82 @@
-# 🚀 Production - Scripts de Produção
+# 📦 Pipeline BATCH - Dados Brasileiros
+
+> Scripts para processamento em lote de dados brasileiros gerados localmente.
 
 ## 📋 Visão Geral
 
-Esta pasta contém os **scripts principais** da arquitetura Medallion usados em produção.
-São os scripts otimizados e testados que processam dados do Kafka até o PostgreSQL.
+Este diretório contém os jobs Spark para processamento **BATCH** (em lote) dos dados brasileiros.
 
-## 📁 Arquivos
+**Fonte de Dados:** Arquivos JSON gerados pelo script `scripts/generate_brazilian_data.py`
 
-| Arquivo | Descrição | Input | Output |
-|---------|-----------|-------|--------|
-| `medallion_bronze.py` | Camada Bronze - Ingestão | Kafka | MinIO (bronze/) |
-| `medallion_silver.py` | Camada Silver - Limpeza + Flags de Fraude | MinIO (bronze/) | MinIO (silver/) |
-| `medallion_gold.py` | Camada Gold - Scoring + Analytics | MinIO (silver/) | MinIO (gold/) + PostgreSQL |
-
-## 🏗️ Arquitetura Medallion
+## 🔄 Fluxo do Pipeline
 
 ```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│    Kafka     │ ──▶ │    Bronze    │ ──▶ │    Silver    │ ──▶ │     Gold     │
-│ (raw events) │     │  (raw JSON)  │     │ (cleaned +   │     │ (aggregated +│
-│              │     │              │     │   flags)     │     │   scores)    │
-└──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘
-                            │                    │                    │
-                            ▼                    ▼                    ▼
-                      MinIO bronze/        MinIO silver/       MinIO gold/
-                                                               PostgreSQL
+┌─────────────────────────────────────────────────────────────────────┐
+│                    PIPELINE BATCH (Dados 🇧🇷)                       │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   /data/raw/*.json                                                  │
+│         │                                                           │
+│         ▼                                                           │
+│   ┌─────────────────┐                                               │
+│   │ bronze_brazilian│  Ingestão: JSON → Parquet (MinIO)            │
+│   └────────┬────────┘                                               │
+│            │                                                        │
+│            ▼                                                        │
+│   ┌─────────────────┐                                               │
+│   │ silver_brazilian│  Limpeza: Tipos, Duplicatas, Derivados       │
+│   └────────┬────────┘                                               │
+│            │                                                        │
+│            ▼                                                        │
+│   ┌─────────────────┐                                               │
+│   │ gold_brazilian  │  Agregações: Fraud Score, Métricas           │
+│   └────────┬────────┘                                               │
+│            │                                                        │
+│            ▼                                                        │
+│   ┌─────────────────┐                                               │
+│   │ load_to_postgres│  Exportação: Parquet → PostgreSQL            │
+│   └─────────────────┘                                               │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
-## 🎯 Detalhes dos Scripts
+## 📁 Scripts Principais (USAR ESTES)
 
-### medallion_bronze.py
-- **Função**: Lê dados brutos do Kafka e salva no MinIO
-- **Formato**: Parquet particionado por data
-- **Sem transformações**: Dados puros (single source of truth)
+| Script | Descrição | Entrada | Saída |
+|--------|-----------|---------|-------|
+| `bronze_brazilian.py` | Ingestão de JSON bruto | `/data/raw/*.json` | `s3a://fraud-data/medallion/bronze/` |
+| `silver_brazilian.py` | Limpeza e transformação | Bronze (Parquet) | `s3a://fraud-data/medallion/silver/` |
+| `gold_brazilian.py` | Agregações e Fraud Score | Silver (Parquet) | `s3a://fraud-data/medallion/gold/` |
+| `load_to_postgres.py` | Carga para PostgreSQL | Gold (Parquet) | PostgreSQL (Metabase) |
 
-### medallion_silver.py
-- **Função**: Limpeza, validação e criação de flags de fraude
-- **Regras Implementadas**:
-  - Regra 1: Clonagem de Cartão (Window Functions + lag)
-  - Regra 7: Categoria Suspeita (electronics, airline_ticket)
-  - Regra 9: Compra Online Alto Valor (> R$1.000)
-  - Regra 10: Muitas Parcelas (≥10 parcelas + > R$500)
-- **Técnicas**: Window Functions, lag(), partitionBy
+## 🚀 Como Executar
 
-### medallion_gold.py
-- **Função**: Cálculo de score de fraude e carregamento no PostgreSQL
-- **Output**: Tabela `fraud_alerts` no PostgreSQL
-- **Score**: Soma ponderada das flags (0-100)
+```bash
+# 1. Bronze Layer
+docker exec fraud_spark_master /opt/spark/bin/spark-submit \
+    --master spark://spark-master:7077 \
+    /jobs/production/bronze_brazilian.py
+
+# 2. Silver Layer
+docker exec fraud_spark_master /opt/spark/bin/spark-submit \
+    --master spark://spark-master:7077 \
+    /jobs/production/silver_brazilian.py
+
+# 3. Gold Layer
+docker exec fraud_spark_master /opt/spark/bin/spark-submit \
+    --master spark://spark-master:7077 \
+    /jobs/production/gold_brazilian.py
+
+# 4. Load to PostgreSQL
+docker exec fraud_spark_master /opt/spark/bin/spark-submit \
+    --master spark://spark-master:7077 \
+    /jobs/production/load_to_postgres.py
+```
+
+## ⚠️ Scripts Legados (DEPRECADOS)
+
+Os scripts `medallion_*.py` são versões antigas que foram usadas para testes com dados do Kafka.
+**Use os scripts `*_brazilian.py`** para o pipeline batch de produção.
 
 ## 🖥️ Como Executar
 

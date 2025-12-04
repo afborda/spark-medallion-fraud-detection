@@ -1,7 +1,11 @@
 """
+🥇 GOLD LAYER - Silver → Gold (STREAMING)
 Spark Streaming - Silver para Gold Layer
 
 Gera métricas agregadas e identifica fraudes em tempo real.
+
+TIPO: STREAMING (tempo real)
+FONTE: MinIO silver/transactions
 """
 
 import sys
@@ -12,18 +16,13 @@ from pyspark.sql.functions import (
     col, count, sum as spark_sum, avg, max as spark_max,
     current_timestamp, window, when
 )
-from config import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY
+from config import apply_s3a_configs
 
 def main():
-    # Criar SparkSession
-    spark = SparkSession.builder \
-        .appName("Streaming_Silver_to_Gold") \
-        .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
-        .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
-        .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
-        .config("spark.hadoop.fs.s3a.path.style.access", "true") \
-        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
-        .getOrCreate()
+    # Configurações S3 são carregadas via variáveis de ambiente (seguro!)
+    spark = apply_s3a_configs(
+        SparkSession.builder.appName("Streaming_Silver_to_Gold")
+    ).getOrCreate()
     
     spark.sparkContext.setLogLevel("WARN")
     

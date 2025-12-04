@@ -1,0 +1,14 @@
+FROM apache/spark:3.5.3
+
+USER root
+
+# Copy JARs
+COPY jars/*.jar /opt/spark/jars/
+
+# Copy Config
+COPY spark/conf/spark-defaults.conf /opt/spark/conf/spark-defaults.conf
+
+# Create event log directory with proper permissions
+RUN mkdir -p /opt/spark/spark-events && chmod 777 /opt/spark/spark-events
+
+USER spark

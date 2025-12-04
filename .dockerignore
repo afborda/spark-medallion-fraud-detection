@@ -1,0 +1,33 @@
+# Ignorar volumes do Docker (dados persistentes)
+docker_volumes/
+data/
+
+# Ignorar ambiente virtual Python
+venv/
+.venv/
+__pycache__/
+
+# Ignorar arquivos de IDE
+.vscode/
+.idea/
+
+# Ignorar Git
+.git/
+.gitignore
+
+# Ignorar documentação (não precisa na imagem)
+docs/
+*.md
+POSTAGENS/
+
+# Ignorar logs
+logs/
+*.log
+
+# Ignorar arquivos de ambiente (segurança)
+.env
+.env.*
+!.env.example
+
+# Ignorar assets
+assets/

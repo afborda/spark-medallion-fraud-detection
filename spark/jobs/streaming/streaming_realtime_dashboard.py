@@ -1,4 +1,5 @@
 """
+📊 STREAMING REALTIME DASHBOARD - Kafka → PostgreSQL (STREAMING)
 Spark Streaming - Pipeline Real-Time para Dashboard
 
 Este job:
@@ -6,6 +7,9 @@ Este job:
 2. Aplica regras de detecção de fraude
 3. Calcula métricas agregadas
 4. Escreve no PostgreSQL para visualização no Metabase
+
+TIPO: STREAMING (tempo real via Kafka/ShadowTraffic)
+DESTINO: PostgreSQL para Metabase Real-Time Dashboard
 """
 
 import sys
@@ -22,6 +26,7 @@ from pyspark.sql.types import (
     BooleanType, LongType, IntegerType, TimestampType
 )
 from datetime import datetime
+from config import KAFKA_BROKER, KAFKA_TOPIC, POSTGRES_URL, POSTGRES_USER, POSTGRES_PASSWORD, apply_s3a_configs
 
 # Schema das transações do ShadowTraffic
 transaction_schema = StructType([
@@ -53,13 +58,6 @@ transaction_schema = StructType([
     StructField("is_fraud", BooleanType(), True),
     StructField("timestamp", LongType(), True)
 ])
-
-# Configurações
-KAFKA_BROKER = "kafka:9092"
-KAFKA_TOPIC = "transactions"
-POSTGRES_URL = "jdbc:postgresql://postgres:5432/fraud_db"
-POSTGRES_USER = "fraud_user"
-POSTGRES_PASSWORD = "fraud_password@@!!_2"
 
 def create_postgres_tables(spark):
     """Cria tabelas no PostgreSQL se não existirem"""

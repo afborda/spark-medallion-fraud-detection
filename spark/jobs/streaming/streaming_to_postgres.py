@@ -1,10 +1,14 @@
 """
+📤 STREAMING TO POSTGRES - Kafka → PostgreSQL (STREAMING)
 Spark Streaming - Kafka para PostgreSQL (Tempo Real)
 
 Este job:
 1. Lê transações do Kafka em tempo real
 2. Aplica regras de detecção de fraude
 3. Salva no PostgreSQL para o Dashboard
+
+TIPO: STREAMING (tempo real via Kafka)
+DESTINO: PostgreSQL para Metabase Dashboard
 """
 
 import sys
@@ -19,7 +23,7 @@ from pyspark.sql.types import (
     StructType, StructField, StringType, DoubleType, 
     BooleanType, LongType, IntegerType
 )
-from config import POSTGRES_URL, POSTGRES_PROPERTIES, KAFKA_BROKER, KAFKA_TOPIC
+from config import POSTGRES_URL, POSTGRES_PROPERTIES, KAFKA_BROKER, KAFKA_TOPIC, apply_s3a_configs
 
 # Schema das transações do Kafka
 transaction_schema = StructType([
@@ -146,11 +150,10 @@ def process_batch(df, batch_id):
 
 
 def main():
-    # Criar SparkSession
-    spark = SparkSession.builder \
-        .appName("Streaming_Kafka_to_PostgreSQL") \
-        .config("spark.jars.packages", "org.postgresql:postgresql:42.7.4") \
-        .getOrCreate()
+    # Configurações S3 são carregadas via variáveis de ambiente (seguro!)
+    spark = apply_s3a_configs(
+        SparkSession.builder.appName("Streaming_Kafka_to_PostgreSQL")
+    ).getOrCreate()
     
     spark.sparkContext.setLogLevel("WARN")
     
@@ -162,8 +165,8 @@ def main():
     # Ler do Kafka
     df_kafka = spark.readStream \
         .format("kafka") \
-        .option("kafka.bootstrap.servers", "fraud_kafka:9092") \
-        .option("subscribe", "transactions") \
+        .option("kafka.bootstrap.servers", KAFKA_BROKER) \
+        .option("subscribe", KAFKA_TOPIC) \
         .option("startingOffsets", "earliest") \
         .option("failOnDataLoss", "false") \
         .load()

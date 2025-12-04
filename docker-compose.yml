@@ -85,7 +85,9 @@ services:
   # Spark 4.x usa AWS SDK v2 que tem bug com endpoints HTTP customizados
   # ============================================
   spark-master:
-    image: apache/spark:3.5.3
+    build:
+      context: .
+      dockerfile: Dockerfile.spark
     container_name: fraud_spark_master
     command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
     networks:
@@ -95,6 +97,17 @@ services:
       SPARK_MASTER_HOST: spark-master
       SPARK_MASTER_PORT: 7077
       SPARK_MASTER_WEBUI_PORT: 8080
+      # Credenciais injetadas via variáveis de ambiente (lidas pelo config.py)
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_BUCKET: ${MINIO_BUCKET}
+      # PostgreSQL
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "8081:8080"
       - "7077:7077"
@@ -102,7 +115,6 @@ services:
     volumes:
       - ./data:/data
       - ./spark/jobs:/jobs
-      - ./jars:/jars
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=site_traefik-network"
@@ -120,7 +132,9 @@ services:
       - "traefik.http.services.spark-jobs.loadbalancer.server.port=4040"
 
   spark-worker-1:
-    image: apache/spark:3.5.3
+    build:
+      context: .
+      dockerfile: Dockerfile.spark
     container_name: fraud_spark_worker_1
     depends_on:
       - spark-master
@@ -129,14 +143,18 @@ services:
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 3g
       SPARK_WORKER_WEBUI_PORT: 8081
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     ports:
       - "8082:8081"
     volumes:
       - ./data:/data
-      - ./jars:/jars
 
   spark-worker-2:
-    image: apache/spark:3.5.3
+    build:
+      context: .
+      dockerfile: Dockerfile.spark
     container_name: fraud_spark_worker_2
     depends_on:
       - spark-master
@@ -145,14 +163,18 @@ services:
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 3g
       SPARK_WORKER_WEBUI_PORT: 8081
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     ports:
       - "8083:8081"
     volumes:
       - ./data:/data
-      - ./jars:/jars
 
   spark-worker-3:
-    image: apache/spark:3.5.3
+    build:
+      context: .
+      dockerfile: Dockerfile.spark
     container_name: fraud_spark_worker_3
     depends_on:
       - spark-master
@@ -161,14 +183,18 @@ services:
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 3g
       SPARK_WORKER_WEBUI_PORT: 8081
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     ports:
       - "8084:8081"
     volumes:
       - ./data:/data
-      - ./jars:/jars
 
   spark-worker-4:
-    image: apache/spark:3.5.3
+    build:
+      context: .
+      dockerfile: Dockerfile.spark
     container_name: fraud_spark_worker_4
     depends_on:
       - spark-master
@@ -177,14 +203,18 @@ services:
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 3g
       SPARK_WORKER_WEBUI_PORT: 8081
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     ports:
       - "8085:8081"
     volumes:
       - ./data:/data
-      - ./jars:/jars
 
   spark-worker-5:
-    image: apache/spark:3.5.3
+    build:
+      context: .
+      dockerfile: Dockerfile.spark
     container_name: fraud_spark_worker_5
     depends_on:
       - spark-master
@@ -193,11 +223,13 @@ services:
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 3g
       SPARK_WORKER_WEBUI_PORT: 8081
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     ports:
       - "8086:8081"
     volumes:
       - ./data:/data
-      - ./jars:/jars
 
   # ============================================
   # METABASE - Business Intelligence Dashboard

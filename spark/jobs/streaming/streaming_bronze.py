@@ -1,7 +1,11 @@
 """
-Spark Streaming - Kafka para Bronze Layer (MinIO)
+🥉 BRONZE LAYER - Kafka → MinIO (STREAMING)
+Spark Streaming - Kafka para Bronze Layer
 
 Este job lê transações do Kafka em tempo real e salva no MinIO.
+
+TIPO: STREAMING (tempo real via Kafka/ShadowTraffic)
+FONTE: Kafka topic 'transactions' (dados em inglês do ShadowTraffic)
 """
 
 import sys
@@ -13,7 +17,7 @@ from pyspark.sql.types import (
     StructType, StructField, StringType, DoubleType, 
     BooleanType, LongType, IntegerType
 )
-from config import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, KAFKA_BROKER, KAFKA_TOPIC
+from config import KAFKA_BROKER, KAFKA_TOPIC, apply_s3a_configs
 
 # Schema das transações (mesmo que definimos no ShadowTraffic)
 transaction_schema = StructType([
@@ -47,27 +51,15 @@ transaction_schema = StructType([
 ])
 
 def main():
-    # Credenciais MinIO (hardcoded para streaming - mais seguro usar env vars em produção)
-    MINIO_ENDPOINT_LOCAL = "http://minio:9000"
-    MINIO_ACCESS_KEY_LOCAL = "minioadmin"
-    MINIO_SECRET_KEY_LOCAL = "minioadmin123@@!!_2"
-    
-    print(f"🔧 Configurando MinIO: {MINIO_ENDPOINT_LOCAL}")
-    
-    # Criar SparkSession com suporte a Kafka e S3/MinIO
-    spark = SparkSession.builder \
-        .appName("Streaming_Kafka_to_Bronze") \
-        .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT_LOCAL) \
-        .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY_LOCAL) \
-        .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY_LOCAL) \
-        .config("spark.hadoop.fs.s3a.path.style.access", "true") \
-        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
-        .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false") \
-        .config("spark.hadoop.fs.s3a.multipart.size", "104857600") \
-        .config("spark.hadoop.fs.s3a.fast.upload", "true") \
-        .config("spark.hadoop.fs.s3a.committer.name", "directory") \
-        .config("spark.sql.streaming.metricsEnabled", "true") \
-        .getOrCreate()
+    # Configurações S3 são carregadas via variáveis de ambiente (seguro!)
+    spark = apply_s3a_configs(
+        SparkSession.builder
+        .appName("Streaming_Kafka_to_Bronze")
+        .config("spark.hadoop.fs.s3a.multipart.size", "104857600")
+        .config("spark.hadoop.fs.s3a.fast.upload", "true")
+        .config("spark.hadoop.fs.s3a.committer.name", "directory")
+        .config("spark.sql.streaming.metricsEnabled", "true")
+    ).getOrCreate()
     
     spark.sparkContext.setLogLevel("WARN")
     

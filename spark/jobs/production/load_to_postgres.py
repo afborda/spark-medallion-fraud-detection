@@ -8,25 +8,17 @@ sys.path.insert(0, '/jobs')
 
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
-from config import (
-    MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY,
-    POSTGRES_URL, POSTGRES_PROPERTIES, GOLD_PATH
-)
+from config import POSTGRES_URL, POSTGRES_PROPERTIES, GOLD_PATH, apply_s3a_configs
 
 print("=" * 60)
 print("📦 LOAD TO POSTGRES - Gold → PostgreSQL")
 print("🇧🇷 Dados brasileiros")
 print("=" * 60)
 
-spark = SparkSession.builder \
-    .appName("Load_to_Postgres") \
-    .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
-    .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
-    .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
-    .config("spark.hadoop.fs.s3a.path.style.access", "true") \
-    .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
-    .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false") \
-    .getOrCreate()
+# Configurações S3 são carregadas via variáveis de ambiente (seguro!)
+spark = apply_s3a_configs(
+    SparkSession.builder.appName("Load_to_Postgres")
+).getOrCreate()
 
 spark.sparkContext.setLogLevel("WARN")
 

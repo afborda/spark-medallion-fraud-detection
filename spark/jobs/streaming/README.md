@@ -1,63 +1,85 @@
-# 🌊 Streaming - Processamento em Tempo Real
+# 🌊 Pipeline STREAMING - Tempo Real (Kafka)
+
+> Scripts para processamento em tempo real de dados vindos do Kafka/ShadowTraffic.
 
 ## 📋 Visão Geral
 
 Scripts para processamento de streaming usando **Spark Structured Streaming**.
 Processam dados em tempo real do Kafka, aplicam transformações e salvam resultados.
 
+**Fonte de Dados:** Kafka topic `transactions` (alimentado pelo ShadowTraffic)
+
 ## ✅ Status: Implementado e Funcionando
 
 Pipeline de streaming em tempo real **operacional em produção**!
-Complementa o processamento batch (`production/medallion_*.py`) com detecção em tempo real.
 
-## 📁 Arquivos
-
-| Arquivo | Descrição | Input | Output |
-|---------|-----------|-------|--------|
-| `streaming_bronze.py` | Ingestão streaming do Kafka | Kafka | MinIO (bronze/) |
-| `streaming_silver.py` | Transformações em streaming | MinIO (bronze/) | MinIO (silver/) |
-| `streaming_gold.py` | Agregações em streaming | MinIO (silver/) | MinIO (gold/) |
-| `streaming_to_postgres.py` | Sink para PostgreSQL | MinIO (gold/) | PostgreSQL |
-
-## 🏗️ Arquitetura Streaming
+## 🔄 Fluxo do Pipeline
 
 ```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│    Kafka     │ ──▶ │   Streaming  │ ──▶ │   Streaming  │ ──▶ │   Streaming  │
-│   (topics)   │     │    Bronze    │     │    Silver    │     │     Gold     │
-└──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘
-      │                     │                    │                    │
-      │                     ▼                    ▼                    ▼
-      │               MinIO bronze/        MinIO silver/        PostgreSQL
-      │                     
-      └─────────────────────────────────────────────────────────────▶ streaming_to_postgres
-                                                                      (direto)
+┌─────────────────────────────────────────────────────────────────────┐
+│                  PIPELINE STREAMING (Tempo Real)                    │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   ShadowTraffic (10 tx/seg)                                         │
+│         │                                                           │
+│         ▼                                                           │
+│   ┌─────────────────┐                                               │
+│   │     Kafka       │  Topic: transactions                          │
+│   └────────┬────────┘                                               │
+│            │                                                        │
+│            ▼                                                        │
+│   ┌─────────────────┐                                               │
+│   │streaming_bronze │  Kafka → Parquet (MinIO streaming/bronze)     │
+│   └────────┬────────┘                                               │
+│            │                                                        │
+│            ▼                                                        │
+│   ┌─────────────────┐                                               │
+│   │streaming_silver │  Limpeza + Flags de Fraude                    │
+│   └────────┬────────┘                                               │
+│            │                                                        │
+│            ▼                                                        │
+│   ┌─────────────────┐                                               │
+│   │streaming_gold   │  Métricas Agregadas                           │
+│   └────────┬────────┘                                               │
+│            │                                                        │
+│            ▼                                                        │
+│   ┌─────────────────────────────┐                                   │
+│   │streaming_realtime_dashboard │  → PostgreSQL (Metabase RT)       │
+│   └─────────────────────────────┘                                   │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
 ```
+
+## 📁 Scripts
+
+| Script | Descrição | Entrada | Saída |
+|--------|-----------|---------|-------|
+| `streaming_bronze.py` | Ingestão streaming | Kafka | `s3a://fraud-data/streaming/bronze/` |
+| `streaming_silver.py` | Transformações streaming | Bronze Streaming | `s3a://fraud-data/streaming/silver/` |
+| `streaming_gold.py` | Agregações streaming | Silver Streaming | `s3a://fraud-data/streaming/gold/` |
+| `streaming_to_postgres.py` | Sink direto Kafka→PG | Kafka | PostgreSQL |
+| `streaming_realtime_dashboard.py` | Dashboard RT completo | Kafka | PostgreSQL (métricas) |
 
 ## 🔄 Diferença: Batch vs Streaming
 
-| Aspecto | Batch (production/) | Streaming (streaming/) |
+| Aspecto | Batch (`production/`) | Streaming (`streaming/`) |
 |---------|---------------------|------------------------|
-| Latência | Minutos/Horas | Segundos |
-| Processamento | Dados históricos | Dados em tempo real |
-| Trigger | Manual/Agendado | Contínuo |
-| Complexidade | Menor | Maior |
-| Uso atual | ✅ Principal | 🔄 Alternativo |
+| **Fonte** | JSON local (🇧🇷) | Kafka (ShadowTraffic) |
+| **Latência** | Minutos | Segundos |
+| **Volume** | 51M transações | ~10 tx/segundo |
+| **Uso** | Análise histórica | Dashboard tempo real |
 
-## 🎯 Detalhes dos Scripts
+## 🚀 Como Executar
 
-### streaming_bronze.py
-```python
-# Conceitos-chave:
-- readStream do Kafka
-- writeStream para MinIO
-- Checkpointing para fault-tolerance
-- Trigger: processingTime ou continuous
+```bash
+# Iniciar ShadowTraffic (gera dados no Kafka)
+docker compose --profile streaming up -d
+
+# Rodar pipeline streaming
+docker exec fraud_spark_master /opt/spark/bin/spark-submit \
+    --master spark://spark-master:7077 \
+    /jobs/streaming/streaming_realtime_dashboard.py
 ```
-
-### streaming_silver.py
-```python
-# Conceitos-chave:
 - readStream do MinIO (bronze)
 - Transformações stateless
 - Watermarking para late data

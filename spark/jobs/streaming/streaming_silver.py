@@ -1,7 +1,11 @@
 """
+🥈 SILVER LAYER - Bronze → Silver (STREAMING)
 Spark Streaming - Bronze para Silver Layer
 
 Lê dados Bronze, aplica limpeza e cria indicadores de fraude.
+
+TIPO: STREAMING (tempo real)
+FONTE: MinIO bronze/transactions (dados do Kafka/ShadowTraffic)
 """
 
 import sys
@@ -16,7 +20,7 @@ from pyspark.sql.types import (
     StructType, StructField, StringType, DoubleType, 
     BooleanType, LongType, IntegerType, TimestampType
 )
-from config import MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY
+from config import apply_s3a_configs
 
 # Schema dos dados Bronze
 bronze_schema = StructType([
@@ -51,15 +55,10 @@ bronze_schema = StructType([
 ])
 
 def main():
-    # Criar SparkSession
-    spark = SparkSession.builder \
-        .appName("Streaming_Bronze_to_Silver") \
-        .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT) \
-        .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
-        .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
-        .config("spark.hadoop.fs.s3a.path.style.access", "true") \
-        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
-        .getOrCreate()
+    # Configurações S3 são carregadas via variáveis de ambiente (seguro!)
+    spark = apply_s3a_configs(
+        SparkSession.builder.appName("Streaming_Bronze_to_Silver")
+    ).getOrCreate()
     
     spark.sparkContext.setLogLevel("WARN")
     
