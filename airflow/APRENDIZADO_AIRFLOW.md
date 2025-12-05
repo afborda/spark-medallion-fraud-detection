@@ -1,7 +1,7 @@
 # 🎓 Aprendizado Apache Airflow - Progresso do Abner
 
 > **Última atualização:** 2025-12-05
-> **Status:** Em andamento - Módulo 4 CONCLUÍDO ✅
+> **Status:** Em andamento - Módulo 5 CONCLUÍDO ✅
 > **Método:** Ensino linha por linha, digitando código, com perguntas de fixação
 
 ---
@@ -99,20 +99,47 @@
 - **Retorno:** Nome do `task_id` que deve executar
 - **Pergunta respondida:** "O que BranchPythonOperator retorna?" → B) O task_id
 
+### Módulo 5: Produção (CONCLUÍDO ✅)
+
+#### 5.1 Health Check DAG
+- **Problema real:** Streaming parou por 24h e ninguém percebeu
+- **Solução:** DAG que monitora a cada 5 minutos
+- **Arquivo criado:** `airflow/dags/streaming_health_check.py`
+- **Verificações:**
+  - `check_spark_process` → ps aux | grep spark-submit
+  - `check_metrics_freshness` → métricas < 10 min?
+- **Ações automáticas:**
+  - `restart_streaming` → reinicia o job
+  - `send_alert` → notifica via Telegram
+
+#### 5.2 Variáveis de Ambiente Seguras
+- **Aprendido:** Nunca colocar tokens/senhas no código
+- **Padrão:** `.env` (não vai pro Git) + `${VAR}` no docker-compose
+- **Arquivos:** `.env.example` como template
+- **Pergunta respondida:** "Por que ${VAR} no docker-compose?" → B) Docker lê do .env automaticamente
+
+#### 5.3 Cron Expressions
+- **Aprendido:** `*/5 * * * *` = a cada 5 minutos
+- **Formato:** minuto hora dia mês dia_semana
+- **Exemplos:**
+  - `0 8 * * *` = todo dia às 8h
+  - `0 0 * * 0` = todo domingo à meia-noite
+
+#### 5.4 Teste Real do Sistema
+- **Cenário:** Matamos o streaming propositalmente
+- **Resultado:** Airflow detectou, reiniciou e enviou alerta Telegram ✅
+- **Tempo de detecção:** < 5 minutos
+
 ---
 
 ## 📍 Onde Paramos
 
-**Próximo passo:** Módulo 5 - Produção (Monitoramento, Health Checks, CI/CD)
+**Próximo passo:** Módulo 5 - Tópicos Avançados (opcional)
 
-**Motivação real:** O streaming job parou por 24h sem ninguém perceber!
-O Airflow pode monitorar e reiniciar automaticamente.
-
-**Pendente Módulo 5:**
-- [ ] DAG de health check (verificar se jobs estão rodando)
-- [ ] Alertas por email/Slack quando algo falha
+**Pendente (opcional):**
 - [ ] DAG Factory pattern
 - [ ] Testes com pytest
+- [ ] CI/CD
 
 ---
 
@@ -148,6 +175,19 @@ O Airflow pode monitorar e reiniciar automaticamente.
 - [x] Branching - condicionais com BranchPythonOperator
 - [x] Criado DAG hello_taskflow.py com ETL exemplo
 
+### Módulo 5: Produção ✅ CONCLUÍDO
+- [x] Health Check DAG (streaming_health_check.py)
+- [x] Auto-restart de jobs com problema
+- [x] Alertas via Telegram
+- [x] Variáveis de ambiente seguras (.env)
+- [x] Cron expressions (*/5 * * * *)
+- [x] Teste real: matar streaming e ver Airflow reiniciar + alertar
+
+### Módulo 5: Tópicos Avançados (PENDENTE - OPCIONAL)
+- [ ] DAG Factory pattern
+- [ ] Testes com pytest
+- [ ] CI/CD
+
 ### Módulo 5: Produção (PRÓXIMO 👈)
 - [ ] Health check DAG (monitorar streaming job)
 - [ ] Alertas automáticos
@@ -164,9 +204,11 @@ O Airflow pode monitorar e reiniciar automaticamente.
 | `airflow/dags/hello_world.py` | ✅ Completo | Primeiro DAG de exemplo |
 | `airflow/dags/medallion_pipeline.py` | ✅ Completo | Pipeline Spark completo |
 | `airflow/dags/hello_taskflow.py` | ✅ Completo | DAG com TaskFlow API (ETL exemplo) |
+| `airflow/dags/streaming_health_check.py` | ✅ Completo | Health Check com auto-restart e Telegram |
 | `airflow/APRENDIZADO_AIRFLOW.md` | ✅ Ativo | Este arquivo de progresso |
-| `docker-compose.airflow.yml` | ✅ Completo | Docker Compose do Airflow |
+| `docker-compose.airflow.yml` | ✅ Completo | Docker Compose do Airflow + vars Telegram |
 | `Dockerfile.airflow` | ✅ Completo | Imagem customizada com Docker CLI |
+| `.env.example` | ✅ Atualizado | Template com TELEGRAM_BOT_TOKEN e CHAT_ID |
 | `airflow/logs/` | ✅ Criado | Logs do Airflow |
 | `airflow/plugins/` | ✅ Criado | Plugins customizados |
 
