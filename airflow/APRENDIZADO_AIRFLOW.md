@@ -1,7 +1,7 @@
 # 🎓 Aprendizado Apache Airflow - Progresso do Abner
 
 > **Última atualização:** 2025-12-05
-> **Status:** Em andamento - Módulo 3 CONCLUÍDO ✅
+> **Status:** Em andamento - Módulo 4 CONCLUÍDO ✅
 > **Método:** Ensino linha por linha, digitando código, com perguntas de fixação
 
 ---
@@ -64,17 +64,55 @@
 - **Exemplo:** `task_inicio >> [task_hello, task_fim]`
 - **Pergunta respondida:** Escolheu C, era B (lista Python)
 
+### Módulo 4: Operadores Avançados (CONCLUÍDO ✅)
+
+#### 4.1 TaskFlow API
+- **Aprendido:** Forma moderna de escrever DAGs com decorators
+- **Analogia:** Class Components vs Functional Components no React Native
+- **Decorators:** `@dag` e `@task`
+- **Vantagem:** Menos código, mais legível, XCom automático
+- **Arquivo criado:** `airflow/dags/hello_taskflow.py`
+- **Pergunta respondida:** "Se esquecer meu_primeiro_taskflow() o que acontece?" → B) Não aparece na UI
+
+#### 4.2 XCom (Cross-Communication)
+- **Aprendido:** Como tasks passam dados entre si
+- **TaskFlow:** `return` automático, parâmetros automáticos
+- **Clássico:** `ti.xcom_push()` e `ti.xcom_pull()`
+- **ti:** Task Instance (instância da task rodando)
+- **Limite:** ~48KB por valor (guarda no PostgreSQL)
+- **Best practice:** Passar caminhos de arquivo, não dados grandes
+- **Pergunta respondida:** "Por que não passar DataFrame 1GB via XCom?" → B) Estoura o banco
+
+#### 4.3 Sensors
+- **Aprendido:** Tasks que esperam condições
+- **Tipos principais:**
+  - `FileSensor` → arquivos locais
+  - `S3KeySensor` → arquivos no S3/MinIO
+  - `ExternalTaskSensor` → outra DAG terminar
+  - `HttpSensor` → API responder
+- **Parâmetros:** `poke_interval`, `timeout`, `mode='reschedule'`
+- **Pergunta respondida:** "Qual sensor para arquivo no MinIO?" → B) S3KeySensor
+
+#### 4.4 Branching
+- **Aprendido:** Condicionais (if/else) no DAG
+- **Operador:** `BranchPythonOperator`
+- **Retorno:** Nome do `task_id` que deve executar
+- **Pergunta respondida:** "O que BranchPythonOperator retorna?" → B) O task_id
+
 ---
 
 ## 📍 Onde Paramos
 
-**Próximo passo:** Módulo 4 - Operadores Avançados e TaskFlow API
+**Próximo passo:** Módulo 5 - Produção (Monitoramento, Health Checks, CI/CD)
 
-**Pendente:**
-- [ ] TaskFlow API (@task, @dag) - forma moderna de escrever DAGs
-- [ ] Sensors (esperar arquivos/condições)
-- [ ] XCom - passar dados entre tasks
+**Motivação real:** O streaming job parou por 24h sem ninguém perceber!
+O Airflow pode monitorar e reiniciar automaticamente.
+
+**Pendente Módulo 5:**
+- [ ] DAG de health check (verificar se jobs estão rodando)
+- [ ] Alertas por email/Slack quando algo falha
 - [ ] DAG Factory pattern
+- [ ] Testes com pytest
 
 ---
 
@@ -103,13 +141,16 @@
 - [x] Execução bem sucedida: Bronze → Silver → Gold → Postgres
 - [x] Pipeline executou ~65M registros em ~1h40min
 
-### Módulo 4: Operadores Avançados (PRÓXIMO 👈)
-- [ ] TaskFlow API (@task, @dag)
-- [ ] Sensors (esperar arquivos/condições)
-- [ ] XCom - passar dados entre tasks
-- [ ] Branching (condicionais)
+### Módulo 4: Operadores Avançados ✅ CONCLUÍDO
+- [x] TaskFlow API (@task, @dag) - forma moderna de escrever DAGs
+- [x] XCom - passar dados entre tasks (automático e manual)
+- [x] Sensors - esperar arquivos/condições (S3KeySensor, FileSensor)
+- [x] Branching - condicionais com BranchPythonOperator
+- [x] Criado DAG hello_taskflow.py com ETL exemplo
 
-### Módulo 5: Produção
+### Módulo 5: Produção (PRÓXIMO 👈)
+- [ ] Health check DAG (monitorar streaming job)
+- [ ] Alertas automáticos
 - [ ] DAG Factory pattern
 - [ ] Testes com pytest
 - [ ] CI/CD
@@ -122,6 +163,7 @@
 |---------|--------|-----------|
 | `airflow/dags/hello_world.py` | ✅ Completo | Primeiro DAG de exemplo |
 | `airflow/dags/medallion_pipeline.py` | ✅ Completo | Pipeline Spark completo |
+| `airflow/dags/hello_taskflow.py` | ✅ Completo | DAG com TaskFlow API (ETL exemplo) |
 | `airflow/APRENDIZADO_AIRFLOW.md` | ✅ Ativo | Este arquivo de progresso |
 | `docker-compose.airflow.yml` | ✅ Completo | Docker Compose do Airflow |
 | `Dockerfile.airflow` | ✅ Completo | Imagem customizada com Docker CLI |
@@ -131,6 +173,8 @@
 ---
 
 ## 🔑 Comandos/Códigos Importantes Aprendidos
+
+### Módulo 1-3: Forma Clássica
 
 ```python
 # Imports básicos
@@ -163,6 +207,95 @@ task = PythonOperator(
 # Dependências
 task_a >> task_b           # sequencial
 task_a >> [task_b, task_c] # paralelo
+```
+
+### Módulo 4: TaskFlow API (Forma Moderna)
+
+```python
+# Imports TaskFlow
+from airflow.decorators import dag, task
+from datetime import datetime
+
+# DAG com decorator
+@dag(
+    dag_id='meu_dag',
+    start_date=datetime(2025, 1, 1),
+    schedule=None,
+    catchup=False,
+    tags=['exemplo']
+)
+def minha_dag():
+    
+    @task
+    def extrair():
+        dados = {'valores': [1, 2, 3]}
+        return dados  # XCom automático!
+    
+    @task
+    def transformar(dados: dict):  # Recebe automaticamente!
+        return {'resultado': sum(dados['valores'])}
+    
+    @task
+    def carregar(dados: dict):
+        print(f"Total: {dados['resultado']}")
+    
+    # Fluxo natural como código Python
+    dados = extrair()
+    transformados = transformar(dados)
+    carregar(transformados)
+
+# OBRIGATÓRIO: instanciar o DAG
+minha_dag()
+```
+
+### XCom Manual (Forma Clássica)
+
+```python
+# Push (enviar dados)
+def minha_task(**context):
+    ti = context['ti']  # TaskInstance
+    ti.xcom_push(key='minha_chave', value={'dado': 123})
+
+# Pull (receber dados)
+def outra_task(**context):
+    ti = context['ti']
+    dados = ti.xcom_pull(task_ids='minha_task', key='minha_chave')
+```
+
+### Sensors
+
+```python
+from airflow.providers.amazon.aws.sensors.s3 import S3KeySensor
+
+esperar_arquivo = S3KeySensor(
+    task_id='esperar_csv',
+    bucket_name='raw-data',
+    bucket_key='transacoes/*.csv',
+    aws_conn_id='minio_conn',
+    poke_interval=60,      # Verifica a cada 60s
+    timeout=3600,          # Timeout 1 hora
+    mode='reschedule',     # Libera worker entre checks
+)
+```
+
+### Branching
+
+```python
+from airflow.operators.python import BranchPythonOperator
+
+def escolher_caminho(**context):
+    hora = datetime.now().hour
+    if hora < 12:
+        return 'task_manha'   # Retorna task_id!
+    else:
+        return 'task_tarde'
+
+branch = BranchPythonOperator(
+    task_id='decidir',
+    python_callable=escolher_caminho,
+)
+
+branch >> [task_manha, task_tarde]
 ```
 
 ```bash
