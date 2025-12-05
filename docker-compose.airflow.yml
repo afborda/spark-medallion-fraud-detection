@@ -1,0 +1,94 @@
+# ============================================
+# AIRFLOW - Orquestrador de Pipelines
+# ============================================
+# Uso: docker compose -f docker-compose.yml -f docker-compose.airflow.yml up -d
+# UI: http://localhost:8888 ou https://airflow.abnerfonseca.com.br
+# Login: admin/admin
+# ============================================
+
+x-airflow-common: &airflow-common
+  image: apache/airflow:2.10.3
+  environment: &airflow-common-env
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    # Nota: senha com URL encoding (@ = %40, ! = %21)
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://fraud_user:fraud_password%40%40%21%21_2@postgres:5432/airflow
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__WEBSERVER__SECRET_KEY: 'sua-chave-secreta-aqui-mude-em-producao'
+  volumes:
+    - ./airflow/dags:/opt/airflow/dags
+    - ./airflow/logs:/opt/airflow/logs
+    - ./airflow/plugins:/opt/airflow/plugins
+  user: "${AIRFLOW_UID:-50000}:0"
+  depends_on:
+    - postgres
+
+services:
+  # ============================================
+  # AIRFLOW INIT - Inicializa o banco e cria usuário admin
+  # ============================================
+  airflow-init:
+    <<: *airflow-common
+    container_name: fraud_airflow_init
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        airflow db init
+        airflow users create \
+          --username admin \
+          --password admin \
+          --firstname Admin \
+          --lastname User \
+          --role Admin \
+          --email admin@example.com
+        echo "Airflow inicializado com sucesso!"
+    restart: "no"
+
+  # ============================================
+  # AIRFLOW WEBSERVER - Interface Web (UI)
+  # ============================================
+  airflow-webserver:
+    <<: *airflow-common
+    container_name: fraud_airflow_webserver
+    command: webserver
+    networks:
+      - default
+      - traefik-network
+    ports:
+      - "8888:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=site_traefik-network"
+      # Airflow Webserver
+      - "traefik.http.routers.airflow.rule=Host(`airflow.abnerfonseca.com.br`)"
+      - "traefik.http.routers.airflow.entrypoints=websecure"
+      - "traefik.http.routers.airflow.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.airflow.service=airflow"
+      - "traefik.http.services.airflow.loadbalancer.server.port=8080"
+
+  # ============================================
+  # AIRFLOW SCHEDULER - Agendador de Tarefas
+  # ============================================
+  airflow-scheduler:
+    <<: *airflow-common
+    container_name: fraud_airflow_scheduler
+    command: scheduler
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8974/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+networks:
+  traefik-network:
+    external: true
+    name: site_traefik-network
