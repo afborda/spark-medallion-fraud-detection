@@ -1,7 +1,7 @@
 # 🎓 Aprendizado Apache Airflow - Progresso do Abner
 
 > **Última atualização:** 2025-12-05
-> **Status:** Em andamento - Módulo 2 CONCLUÍDO ✅
+> **Status:** Em andamento - Módulo 3 CONCLUÍDO ✅
 > **Método:** Ensino linha por linha, digitando código, com perguntas de fixação
 
 ---
@@ -68,12 +68,13 @@
 
 ## 📍 Onde Paramos
 
-**Próximo passo:** Módulo 3 - Conectar Airflow ao Spark para orquestrar o pipeline Medallion
+**Próximo passo:** Módulo 4 - Operadores Avançados e TaskFlow API
 
 **Pendente:**
-- [ ] Criar DAG que executa jobs Spark (BashOperator ou SparkSubmitOperator)
-- [ ] DAG do pipeline completo: Bronze → Silver → Gold → Postgres
-- [ ] Passar parâmetros entre tasks (XCom)
+- [ ] TaskFlow API (@task, @dag) - forma moderna de escrever DAGs
+- [ ] Sensors (esperar arquivos/condições)
+- [ ] XCom - passar dados entre tasks
+- [ ] DAG Factory pattern
 
 ---
 
@@ -94,16 +95,19 @@
 - [x] Executar DAG manualmente
 - [x] Ver execução com tasks verdes
 
-### Módulo 3: Integração com Spark (PRÓXIMO 👈)
-- [ ] BashOperator para executar spark-submit
-- [ ] Conectar Airflow ao cluster Spark
-- [ ] DAG do pipeline Medallion
-- [ ] Passar parâmetros entre tasks (XCom)
+### Módulo 3: Integração com Spark ✅ CONCLUÍDO
+- [x] BashOperator para executar docker exec
+- [x] Docker-in-Docker (montar socket)
+- [x] Dockerfile customizado com Docker CLI
+- [x] DAG medallion_pipeline completo
+- [x] Execução bem sucedida: Bronze → Silver → Gold → Postgres
+- [x] Pipeline executou ~65M registros em ~1h40min
 
-### Módulo 4: Operadores Avançados
-- [ ] SparkSubmitOperator
-- [ ] Sensors (esperar arquivos/condições)
+### Módulo 4: Operadores Avançados (PRÓXIMO 👈)
 - [ ] TaskFlow API (@task, @dag)
+- [ ] Sensors (esperar arquivos/condições)
+- [ ] XCom - passar dados entre tasks
+- [ ] Branching (condicionais)
 
 ### Módulo 5: Produção
 - [ ] DAG Factory pattern
@@ -117,8 +121,10 @@
 | Arquivo | Status | Descrição |
 |---------|--------|-----------|
 | `airflow/dags/hello_world.py` | ✅ Completo | Primeiro DAG de exemplo |
+| `airflow/dags/medallion_pipeline.py` | ✅ Completo | Pipeline Spark completo |
 | `airflow/APRENDIZADO_AIRFLOW.md` | ✅ Ativo | Este arquivo de progresso |
 | `docker-compose.airflow.yml` | ✅ Completo | Docker Compose do Airflow |
+| `Dockerfile.airflow` | ✅ Completo | Imagem customizada com Docker CLI |
 | `airflow/logs/` | ✅ Criado | Logs do Airflow |
 | `airflow/plugins/` | ✅ Criado | Plugins customizados |
 
@@ -210,6 +216,27 @@ services:
 ```
 fraud_password@@!!_2 → fraud_password%40%40%21%21_2
 ```
+
+### 3. Docker-in-Docker (executar docker de dentro do Airflow)
+**Problema:** Airflow em container não tinha acesso ao Docker do host
+**Solução:**
+1. Montar socket: `- /var/run/docker.sock:/var/run/docker.sock`
+2. Criar Dockerfile.airflow com Docker CLI instalado
+3. Rodar como root: `user: "0:0"`
+
+---
+
+## 🏆 Resultados do Pipeline Medallion
+
+**Execução bem sucedida em 2025-12-05:**
+
+| Task | Tempo | Registros |
+|------|-------|-----------|
+| bronze_ingestion | ~20 min | 51M transações |
+| silver_transformation | ~25 min | 51M registros |
+| gold_aggregation | ~40 min | Métricas + Alertas |
+| load_to_postgres | ~15 min | ~65M registros |
+| **TOTAL** | **~1h40min** | **Pipeline completo!** |
 
 ---
 

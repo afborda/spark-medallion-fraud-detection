@@ -7,7 +7,9 @@
 # ============================================
 
 x-airflow-common: &airflow-common
-  image: apache/airflow:2.10.3
+  build:
+    context: .
+    dockerfile: Dockerfile.airflow
   environment: &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
     # Nota: senha com URL encoding (@ = %40, ! = %21)
@@ -20,7 +22,9 @@ x-airflow-common: &airflow-common
     - ./airflow/dags:/opt/airflow/dags
     - ./airflow/logs:/opt/airflow/logs
     - ./airflow/plugins:/opt/airflow/plugins
-  user: "${AIRFLOW_UID:-50000}:0"
+    # Docker socket para executar docker exec de dentro do Airflow
+    - /var/run/docker.sock:/var/run/docker.sock
+  user: "0:0"  # Root para acessar docker socket
   depends_on:
     - postgres
 
