@@ -1,7 +1,7 @@
 # 🔧 Ajustes Realizados no Pipeline
 
 > **Data:** 06 de Dezembro de 2025  
-> **Versão:** 1.0  
+> **Versão:** 1.1  
 > **Status:** ✅ Implementado e Testado
 
 ---
@@ -9,6 +9,11 @@
 ## 📋 Resumo dos Ajustes
 
 Este documento detalha os ajustes críticos realizados no pipeline de detecção de fraudes para melhorar a estabilidade, confiabilidade e manutenibilidade do sistema.
+
+### Últimas Atualizações (v1.1)
+- ✅ Correção de comunicação Driver ↔ Executor em cluster Docker
+- ✅ Configuração de `spark.driver.host` e `spark.driver.port`
+- ✅ Streaming funcionando com 5 executores paralelos
 
 ---
 
@@ -291,6 +296,53 @@ script='load_to_postgres.py'
 
 ---
 
+## 4️⃣ Correção de Comunicação Driver ↔ Executor (v1.1)
+
+### Problema Identificado
+Ao executar `spark-submit` no container `fraud_spark_master`, os workers não conseguiam conectar de volta ao driver.
+
+**Erro observado:**
+```
+Connection refused: 4bc53250070f/172.22.0.6:42599
+java.io.IOException: Failed to connect to 4bc53250070f/172.22.0.6:42599
+```
+
+**Causa raiz:**
+- O Spark usava o Container ID (`4bc53250070f`) como hostname do driver
+- Os workers não conseguiam resolver o Container ID para IP
+- A porta do driver era dinâmica e não estava acessível na rede Docker
+
+### Solução Implementada
+
+**Parâmetros adicionados no spark-submit:**
+```bash
+docker exec fraud_spark_master /opt/spark/bin/spark-submit \
+    --master spark://spark-master:7077 \
+    --deploy-mode client \
+    --conf "spark.driver.host=spark-master" \      # Hostname resolvível
+    --conf "spark.driver.port=5555" \              # Porta fixa
+    --conf "spark.driver.bindAddress=0.0.0.0" \    # Aceita conexões de qualquer IP
+    --conf "spark.ui.port=4050" \                  # UI em porta diferente
+    # ... resto das configurações
+    /jobs/streaming/streaming_to_postgres.py
+```
+
+### Configurações Chave
+
+| Parâmetro | Valor | Propósito |
+|-----------|-------|-----------|
+| `spark.driver.host` | `spark-master` | Hostname que workers usam para conectar |
+| `spark.driver.port` | `5555` | Porta fixa para comunicação RPC |
+| `spark.driver.bindAddress` | `0.0.0.0` | Aceita conexões de qualquer interface |
+| `spark.ui.port` | `4050` | UI separada da porta 4040 padrão |
+
+### Resultado
+- ✅ 5 executores conectados com sucesso
+- ✅ Streaming processando ~80k transações
+- ✅ Sem warnings de "resources not accepted"
+
+---
+
 ## 📞 Suporte
 
 Em caso de problemas com os ajustes:
@@ -308,6 +360,12 @@ Em caso de problemas com os ajustes:
 3. Verificar conectividade com MinIO:
    ```bash
    docker exec fraud_spark_master curl -I http://minio:9000/minio/health/live
+   ```
+
+4. Verificar comunicação Driver ↔ Executor:
+   ```bash
+   # Ver se executores estão RUNNING
+   docker logs fraud_spark_master --tail 30 | grep "Executor updated"
    ```
 
 ---
