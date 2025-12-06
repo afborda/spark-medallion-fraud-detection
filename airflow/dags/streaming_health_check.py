@@ -48,24 +48,26 @@ def streaming_health_check():
 
     @task
     def check_metrics_freshness():
-        """Verifica se as métricas estão sendo atualizadas"""
+        """Verifica se as transações estão sendo processadas pelo streaming"""
         try:
+            # Verifica a tabela transactions (atualizada pelo streaming principal)
+            # Usa event_time que é o timestamp da transação processada
             result = subprocess.run(
                 ['docker', 'exec', 'fraud_postgres', 
                  'psql', '-U', 'fraud_user', '-d', 'fraud_db', '-t', '-c',
-                 "SELECT EXTRACT(EPOCH FROM (NOW() - MAX(processed_at)))/60 FROM streaming_metrics;"
+                 "SELECT EXTRACT(EPOCH FROM (NOW() - MAX(event_time)))/60 FROM transactions;"
                 ],
                 capture_output=True,
                 text=True,
                 timeout=30
             )
             
-            # Pega os minutos desde a última atualização
+            # Pega os minutos desde a última transação
             minutes_since_update = float(result.stdout.strip())
             is_fresh = minutes_since_update < 10  # Menos de 10 min = OK
             
-            print(f"Minutes since last update: {minutes_since_update:.1f}")
-            print(f"Metrics fresh: {is_fresh}")
+            print(f"Minutes since last transaction: {minutes_since_update:.1f}")
+            print(f"Streaming active: {is_fresh}")
             
             return {
                 'minutes_since_update': minutes_since_update,
