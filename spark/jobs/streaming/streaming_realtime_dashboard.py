@@ -8,7 +8,7 @@ Este job:
 3. Calcula métricas agregadas
 4. Escreve no PostgreSQL para visualização no Metabase
 
-TIPO: STREAMING (tempo real via Kafka/ShadowTraffic)
+TIPO: STREAMING (tempo real via Kafka/fraud-generator)
 DESTINO: PostgreSQL para Metabase Real-Time Dashboard
 """
 
@@ -19,7 +19,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     from_json, col, current_timestamp, window, count, sum as spark_sum,
     avg, max as spark_max, min as spark_min, when, lit, expr,
-    date_format, hour, minute, round as spark_round
+    date_format, hour, minute, round as spark_round, to_timestamp
 )
 from pyspark.sql.types import (
     StructType, StructField, StringType, DoubleType, 
@@ -28,35 +28,46 @@ from pyspark.sql.types import (
 from datetime import datetime
 from config import KAFKA_BROKER, KAFKA_TOPIC, POSTGRES_URL, POSTGRES_USER, POSTGRES_PASSWORD, apply_s3a_configs
 
-# Schema das transações do ShadowTraffic
+# Schema das transações do Brazilian Fraud Data Generator (v4-beta - English field names)
 transaction_schema = StructType([
     StructField("transaction_id", StringType(), True),
     StructField("customer_id", StringType(), True),
-    StructField("amount", DoubleType(), True),
-    StructField("merchant", StringType(), True),
-    StructField("category", StringType(), True),
-    StructField("transaction_hour", DoubleType(), True),
-    StructField("day_of_week", StringType(), True),
-    StructField("customer_home_state", StringType(), True),
-    StructField("purchase_state", StringType(), True),
-    StructField("purchase_city", StringType(), True),
-    StructField("purchase_latitude", DoubleType(), True),
-    StructField("purchase_longitude", DoubleType(), True),
-    StructField("device_latitude", DoubleType(), True),
-    StructField("device_longitude", DoubleType(), True),
+    StructField("session_id", StringType(), True),
     StructField("device_id", StringType(), True),
+    StructField("timestamp", StringType(), True),  # ISO format string
+    StructField("type", StringType(), True),  # PIX, CREDIT_CARD, etc
+    StructField("amount", DoubleType(), True),
+    StructField("currency", StringType(), True),
+    StructField("channel", StringType(), True),
     StructField("ip_address", StringType(), True),
-    StructField("payment_method", StringType(), True),
+    StructField("geolocation_lat", DoubleType(), True),
+    StructField("geolocation_lon", DoubleType(), True),
+    StructField("merchant_id", StringType(), True),
+    StructField("merchant_name", StringType(), True),
+    StructField("merchant_category", StringType(), True),
+    StructField("mcc_code", StringType(), True),
+    StructField("mcc_risk_level", StringType(), True),
+    StructField("card_number_hash", StringType(), True),
     StructField("card_brand", StringType(), True),
+    StructField("card_type", StringType(), True),
     StructField("installments", IntegerType(), True),
-    StructField("had_travel_purchase_last_12m", BooleanType(), True),
-    StructField("is_first_purchase_in_state", BooleanType(), True),
-    StructField("transactions_last_24h", DoubleType(), True),
-    StructField("avg_transaction_amount_30d", DoubleType(), True),
-    StructField("is_international", BooleanType(), True),
-    StructField("is_online", BooleanType(), True),
+    StructField("card_entry", StringType(), True),
+    StructField("cvv_validated", BooleanType(), True),
+    StructField("auth_3ds", BooleanType(), True),
+    StructField("pix_key_type", StringType(), True),
+    StructField("pix_key_destination", StringType(), True),
+    StructField("destination_bank", StringType(), True),
+    StructField("distance_from_last_txn_km", DoubleType(), True),
+    StructField("time_since_last_txn_min", IntegerType(), True),
+    StructField("transactions_last_24h", IntegerType(), True),
+    StructField("accumulated_amount_24h", DoubleType(), True),
+    StructField("unusual_time", BooleanType(), True),
+    StructField("new_beneficiary", BooleanType(), True),
+    StructField("status", StringType(), True),
+    StructField("refusal_reason", StringType(), True),
+    StructField("fraud_score", DoubleType(), True),
     StructField("is_fraud", BooleanType(), True),
-    StructField("timestamp", LongType(), True)
+    StructField("fraud_type", StringType(), True)
 ])
 
 def create_postgres_tables(spark):
@@ -168,10 +179,16 @@ def process_batch_metrics(batch_df, epoch_id):
     print(f"📦 Processando Batch {epoch_id}")
     print(f"{'='*60}")
     
-    # Adicionar timestamp de processamento
+    # Adicionar timestamp de processamento (fraud-generator usa ISO string)
     batch_df = batch_df.withColumn("event_time", 
-        (col("timestamp") / 1000).cast(TimestampType())
+        to_timestamp(col("timestamp"))
     )
+    
+    # Criar aliases para compatibilidade com código existente (v4-beta usa inglês)
+    batch_df = batch_df.withColumn("merchant", col("merchant_name")) \
+        .withColumn("category", col("merchant_category")) \
+        .withColumn("payment_method", col("type")) \
+        .withColumn("purchase_state", lit("BR"))  # TODO: extrair do geolocation
     
     # 1. MÉTRICAS GERAIS (janela de 1 minuto)
     metrics_df = batch_df.groupBy(

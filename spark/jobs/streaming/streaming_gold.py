@@ -5,7 +5,7 @@ Spark Streaming - Silver para Gold Layer
 Gera métricas agregadas e identifica fraudes em tempo real.
 
 TIPO: STREAMING (tempo real)
-FONTE: MinIO silver/transactions
+FONTE: MinIO silver/transactions (fraud-generator v4-beta)
 """
 
 import sys
@@ -14,12 +14,11 @@ sys.path.insert(0, '/jobs')
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     col, count, sum as spark_sum, avg, max as spark_max,
-    current_timestamp, window, when
+    current_timestamp, window, when, round as spark_round
 )
 from config import apply_s3a_configs
 
 def main():
-    # Configurações S3 são carregadas via variáveis de ambiente (seguro!)
     spark = apply_s3a_configs(
         SparkSession.builder.appName("Streaming_Silver_to_Gold")
     ).getOrCreate()
@@ -28,6 +27,7 @@ def main():
     
     print("=" * 60)
     print("🏆 INICIANDO STREAMING - SILVER → GOLD")
+    print("   Fonte: fraud-generator v4-beta")
     print("=" * 60)
     
     # Ler dados Silver como streaming
@@ -38,29 +38,37 @@ def main():
     
     print("✅ Lendo Silver Layer")
     
-    # === GOLD 1: Transações de Alto Risco ===
-    # Filtrar apenas transações com risco ALTO ou CRÍTICO
+    # === GOLD 1: Alertas de Fraude (Alto Risco) ===
     df_high_risk = df_silver.filter(
-        col("risk_level").isin("ALTO", "CRÍTICO")
+        col("risk_level").isin("HIGH", "CRITICAL")
     ).select(
         "transaction_id",
-        "customer_id", 
+        "customer_id",
+        "device_id",
+        "event_time",
+        "type",
         "amount_clean",
-        "merchant",
-        "category",
-        "customer_home_state",
-        "purchase_state",
-        "purchase_city",
-        "fraud_score_calculated",
+        "channel",
+        "merchant_name",
+        "merchant_category",
+        "mcc_risk_level",
+        "card_brand",
+        "pix_key_type",
+        "destination_bank",
+        "distance_from_last_txn_km",
+        "transactions_last_24h",
+        "accumulated_amount_24h",
+        "is_pix_new_beneficiary",
+        "is_location_jump",
+        "unusual_time",
+        "fraud_score",
+        "fraud_score_combined",
         "risk_level",
-        "is_cross_state_no_travel",
-        "is_gps_mismatch",
-        "is_high_value",
         "is_fraud",
-        "processed_at"
+        "fraud_type",
+        "silver_processed_at"
     )
     
-    # Escrever alertas de alto risco
     query_alerts = df_high_risk.writeStream \
         .format("parquet") \
         .option("path", "s3a://fraud-data/streaming/gold/fraud_alerts") \
@@ -69,15 +77,55 @@ def main():
         .trigger(processingTime="15 seconds") \
         .start()
     
-    print("✅ Gold 1: Alertas de fraude sendo salvos")
+    print("✅ Gold 1: Alertas de fraude (HIGH/CRITICAL)")
     
-    # === GOLD 2: Métricas por Categoria ===
-    df_metrics_category = df_silver.groupBy("category", "risk_level") \
+    # === GOLD 2: Métricas por Tipo de Transação ===
+    df_metrics_type = df_silver.groupBy("type", "risk_level") \
         .agg(
             count("*").alias("total_transactions"),
-            spark_sum("amount_clean").alias("total_amount"),
-            avg("amount_clean").alias("avg_amount"),
-            avg("fraud_score_calculated").alias("avg_fraud_score")
+            spark_round(spark_sum("amount_clean"), 2).alias("total_amount"),
+            spark_round(avg("amount_clean"), 2).alias("avg_amount"),
+            spark_round(avg("fraud_score_combined"), 2).alias("avg_fraud_score"),
+            spark_sum(when(col("is_fraud") == True, 1).otherwise(0)).alias("fraud_count")
+        )
+    
+    query_type = df_metrics_type.writeStream \
+        .format("parquet") \
+        .option("path", "s3a://fraud-data/streaming/gold/metrics_by_type") \
+        .option("checkpointLocation", "s3a://fraud-data/streaming/checkpoints/gold_type") \
+        .outputMode("complete") \
+        .trigger(processingTime="30 seconds") \
+        .start()
+    
+    print("✅ Gold 2: Métricas por tipo (PIX, CREDIT_CARD, etc)")
+    
+    # === GOLD 3: Métricas por Canal ===
+    df_metrics_channel = df_silver.groupBy("channel", "risk_level") \
+        .agg(
+            count("*").alias("total_transactions"),
+            spark_round(spark_sum("amount_clean"), 2).alias("total_amount"),
+            spark_round(avg("fraud_score_combined"), 2).alias("avg_fraud_score"),
+            spark_sum(when(col("is_fraud") == True, 1).otherwise(0)).alias("fraud_count")
+        )
+    
+    query_channel = df_metrics_channel.writeStream \
+        .format("parquet") \
+        .option("path", "s3a://fraud-data/streaming/gold/metrics_by_channel") \
+        .option("checkpointLocation", "s3a://fraud-data/streaming/checkpoints/gold_channel") \
+        .outputMode("complete") \
+        .trigger(processingTime="30 seconds") \
+        .start()
+    
+    print("✅ Gold 3: Métricas por canal (MOBILE_APP, WEB_BANKING, etc)")
+    
+    # === GOLD 4: Métricas por Categoria de Merchant ===
+    df_metrics_category = df_silver.groupBy("merchant_category", "mcc_risk_level") \
+        .agg(
+            count("*").alias("total_transactions"),
+            spark_round(spark_sum("amount_clean"), 2).alias("total_amount"),
+            spark_round(avg("amount_clean"), 2).alias("avg_amount"),
+            spark_sum(when(col("is_fraud") == True, 1).otherwise(0)).alias("fraud_count"),
+            spark_sum(when(col("is_pix_new_beneficiary") == True, 1).otherwise(0)).alias("pix_new_beneficiary_count")
         )
     
     query_category = df_metrics_category.writeStream \
@@ -88,31 +136,36 @@ def main():
         .trigger(processingTime="30 seconds") \
         .start()
     
-    print("✅ Gold 2: Métricas por categoria sendo agregadas")
+    print("✅ Gold 4: Métricas por categoria de merchant")
     
-    # === GOLD 3: Métricas por Estado ===
-    df_metrics_state = df_silver.groupBy("purchase_state", "risk_level") \
+    # === GOLD 5: Métricas por Card Brand ===
+    df_metrics_brand = df_silver.filter(col("card_brand").isNotNull()) \
+        .groupBy("card_brand", "card_type") \
         .agg(
             count("*").alias("total_transactions"),
-            spark_sum(when(col("is_fraud") == True, 1).otherwise(0)).alias("total_frauds"),
-            avg("fraud_score_calculated").alias("avg_fraud_score")
+            spark_round(spark_sum("amount_clean"), 2).alias("total_amount"),
+            spark_round(avg("installments"), 1).alias("avg_installments"),
+            spark_sum(when(col("is_fraud") == True, 1).otherwise(0)).alias("fraud_count"),
+            spark_sum(when(col("is_manual_card_entry") == True, 1).otherwise(0)).alias("manual_entry_count")
         )
     
-    query_state = df_metrics_state.writeStream \
+    query_brand = df_metrics_brand.writeStream \
         .format("parquet") \
-        .option("path", "s3a://fraud-data/streaming/gold/metrics_by_state") \
-        .option("checkpointLocation", "s3a://fraud-data/streaming/checkpoints/gold_state") \
+        .option("path", "s3a://fraud-data/streaming/gold/metrics_by_card_brand") \
+        .option("checkpointLocation", "s3a://fraud-data/streaming/checkpoints/gold_brand") \
         .outputMode("complete") \
         .trigger(processingTime="30 seconds") \
         .start()
     
-    print("✅ Gold 3: Métricas por estado sendo agregadas")
+    print("✅ Gold 5: Métricas por bandeira de cartão")
     
     print("")
     print("📊 Streaming Gold ativo!")
     print("   - Alertas de fraude")
-    print("   - Métricas por categoria")
-    print("   - Métricas por estado")
+    print("   - Métricas por tipo de transação")
+    print("   - Métricas por canal")
+    print("   - Métricas por categoria de merchant")
+    print("   - Métricas por bandeira de cartão")
     print("=" * 60)
     
     # Aguardar todas as queries

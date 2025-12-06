@@ -4,8 +4,8 @@ Spark Streaming - Kafka para Bronze Layer
 
 Este job lê transações do Kafka em tempo real e salva no MinIO.
 
-TIPO: STREAMING (tempo real via Kafka/ShadowTraffic)
-FONTE: Kafka topic 'transactions' (dados em inglês do ShadowTraffic)
+TIPO: STREAMING (tempo real via Kafka/fraud-generator v4-beta)
+FONTE: Kafka topic 'transactions' (dados em inglês do fraud-generator)
 """
 
 import sys
@@ -15,39 +15,50 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import from_json, col, current_timestamp
 from pyspark.sql.types import (
     StructType, StructField, StringType, DoubleType, 
-    BooleanType, LongType, IntegerType
+    BooleanType, IntegerType
 )
 from config import KAFKA_BROKER, KAFKA_TOPIC, apply_s3a_configs
 
-# Schema das transações (mesmo que definimos no ShadowTraffic)
+# Schema das transações do Brazilian Fraud Data Generator (v4-beta - English field names)
 transaction_schema = StructType([
     StructField("transaction_id", StringType(), True),
     StructField("customer_id", StringType(), True),
-    StructField("amount", DoubleType(), True),
-    StructField("merchant", StringType(), True),
-    StructField("category", StringType(), True),
-    StructField("transaction_hour", DoubleType(), True),
-    StructField("day_of_week", StringType(), True),
-    StructField("customer_home_state", StringType(), True),
-    StructField("purchase_state", StringType(), True),
-    StructField("purchase_city", StringType(), True),
-    StructField("purchase_latitude", DoubleType(), True),
-    StructField("purchase_longitude", DoubleType(), True),
-    StructField("device_latitude", DoubleType(), True),
-    StructField("device_longitude", DoubleType(), True),
+    StructField("session_id", StringType(), True),
     StructField("device_id", StringType(), True),
+    StructField("timestamp", StringType(), True),  # ISO format string
+    StructField("type", StringType(), True),  # PIX, CREDIT_CARD, DEBIT_CARD, TED, BOLETO
+    StructField("amount", DoubleType(), True),
+    StructField("currency", StringType(), True),
+    StructField("channel", StringType(), True),  # MOBILE_APP, WEB_BANKING, ATM, BRANCH
     StructField("ip_address", StringType(), True),
-    StructField("payment_method", StringType(), True),
-    StructField("card_brand", StringType(), True),
+    StructField("geolocation_lat", DoubleType(), True),
+    StructField("geolocation_lon", DoubleType(), True),
+    StructField("merchant_id", StringType(), True),
+    StructField("merchant_name", StringType(), True),
+    StructField("merchant_category", StringType(), True),
+    StructField("mcc_code", StringType(), True),
+    StructField("mcc_risk_level", StringType(), True),
+    StructField("card_number_hash", StringType(), True),
+    StructField("card_brand", StringType(), True),  # VISA, MASTERCARD, ELO, etc
+    StructField("card_type", StringType(), True),  # CREDIT, DEBIT
     StructField("installments", IntegerType(), True),
-    StructField("had_travel_purchase_last_12m", BooleanType(), True),
-    StructField("is_first_purchase_in_state", BooleanType(), True),
-    StructField("transactions_last_24h", DoubleType(), True),
-    StructField("avg_transaction_amount_30d", DoubleType(), True),
-    StructField("is_international", BooleanType(), True),
-    StructField("is_online", BooleanType(), True),
+    StructField("card_entry", StringType(), True),  # CHIP, CONTACTLESS, MANUAL, ONLINE
+    StructField("cvv_validated", BooleanType(), True),
+    StructField("auth_3ds", BooleanType(), True),
+    StructField("pix_key_type", StringType(), True),  # CPF, CNPJ, EMAIL, PHONE, RANDOM
+    StructField("pix_key_destination", StringType(), True),
+    StructField("destination_bank", StringType(), True),
+    StructField("distance_from_last_txn_km", DoubleType(), True),
+    StructField("time_since_last_txn_min", IntegerType(), True),
+    StructField("transactions_last_24h", IntegerType(), True),
+    StructField("accumulated_amount_24h", DoubleType(), True),
+    StructField("unusual_time", BooleanType(), True),
+    StructField("new_beneficiary", BooleanType(), True),
+    StructField("status", StringType(), True),  # APPROVED, DECLINED, PENDING, BLOCKED
+    StructField("refusal_reason", StringType(), True),
+    StructField("fraud_score", DoubleType(), True),
     StructField("is_fraud", BooleanType(), True),
-    StructField("timestamp", LongType(), True)
+    StructField("fraud_type", StringType(), True)
 ])
 
 def main():
@@ -65,6 +76,7 @@ def main():
     
     print("=" * 60)
     print("🚀 INICIANDO SPARK STREAMING - KAFKA → BRONZE")
+    print("   Fonte: fraud-generator v4-beta (campos em inglês)")
     print("=" * 60)
     
     # Ler do Kafka
@@ -72,7 +84,8 @@ def main():
         .format("kafka") \
         .option("kafka.bootstrap.servers", KAFKA_BROKER) \
         .option("subscribe", KAFKA_TOPIC) \
-        .option("startingOffsets", "earliest") \
+        .option("startingOffsets", "latest") \
+        .option("failOnDataLoss", "false") \
         .load()
     
     print(f"✅ Conectado ao Kafka - Tópico: {KAFKA_TOPIC}")
@@ -82,6 +95,7 @@ def main():
         .selectExpr("CAST(value AS STRING) as json_value") \
         .select(from_json(col("json_value"), transaction_schema).alias("data")) \
         .select("data.*") \
+        .filter(col("transaction_id").isNotNull()) \
         .withColumn("processed_at", current_timestamp())
     
     print("✅ Schema aplicado às transações")
@@ -90,7 +104,7 @@ def main():
     query = df_transactions.writeStream \
         .format("parquet") \
         .option("path", "s3a://fraud-data/streaming/bronze/transactions") \
-        .option("checkpointLocation", "s3a://fraud-data/streaming/checkpoints/transactions") \
+        .option("checkpointLocation", "s3a://fraud-data/streaming/checkpoints/bronze") \
         .outputMode("append") \
         .trigger(processingTime="10 seconds") \
         .start()

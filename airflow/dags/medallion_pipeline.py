@@ -38,7 +38,7 @@ with DAG(
     # ==========================================
     bronze = BashOperator(
         task_id='bronze_ingestion',
-        bash_command=SPARK_SUBMIT.format(script='bronze_brazilian.py'),
+        bash_command=SPARK_SUBMIT.format(script='batch_bronze_from_raw.py'),
     )
 
     # ==========================================
@@ -46,7 +46,7 @@ with DAG(
     # ==========================================
     silver = BashOperator(
         task_id='silver_transformation',
-        bash_command=SPARK_SUBMIT.format(script='silver_brazilian.py'),
+        bash_command=SPARK_SUBMIT.format(script='batch_silver_from_bronze.py'),
     )
 
     # ==========================================
@@ -54,7 +54,7 @@ with DAG(
     # ==========================================
     gold = BashOperator(
         task_id='gold_aggregation',
-        bash_command=SPARK_SUBMIT.format(script='gold_brazilian.py'),
+        bash_command=SPARK_SUBMIT.format(script='batch_gold_from_silver.py'),
     )
 
     # ==========================================
@@ -62,7 +62,7 @@ with DAG(
     # ==========================================
     postgres = BashOperator(
         task_id='load_to_postgres',
-        bash_command=SPARK_SUBMIT.format(script='load_to_postgres.py'),
+        bash_command=SPARK_SUBMIT.format(script='batch_postgres_from_gold.py'),
     )
 
     # ==========================================

@@ -85,9 +85,7 @@ services:
   # Spark 4.x usa AWS SDK v2 que tem bug com endpoints HTTP customizados
   # ============================================
   spark-master:
-    build:
-      context: .
-      dockerfile: Dockerfile.spark
+    image: spark-fraud:baked
     container_name: fraud_spark_master
     command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
     networks:
@@ -132,9 +130,7 @@ services:
       - "traefik.http.services.spark-jobs.loadbalancer.server.port=4040"
 
   spark-worker-1:
-    build:
-      context: .
-      dockerfile: Dockerfile.spark
+    image: spark-fraud:baked
     container_name: fraud_spark_worker_1
     depends_on:
       - spark-master
@@ -150,11 +146,16 @@ services:
       - "8082:8081"
     volumes:
       - ./data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
 
   spark-worker-2:
-    build:
-      context: .
-      dockerfile: Dockerfile.spark
+    image: spark-fraud:baked
     container_name: fraud_spark_worker_2
     depends_on:
       - spark-master
@@ -170,11 +171,16 @@ services:
       - "8083:8081"
     volumes:
       - ./data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
 
   spark-worker-3:
-    build:
-      context: .
-      dockerfile: Dockerfile.spark
+    image: spark-fraud:baked
     container_name: fraud_spark_worker_3
     depends_on:
       - spark-master
@@ -190,11 +196,16 @@ services:
       - "8084:8081"
     volumes:
       - ./data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
 
   spark-worker-4:
-    build:
-      context: .
-      dockerfile: Dockerfile.spark
+    image: spark-fraud:baked
     container_name: fraud_spark_worker_4
     depends_on:
       - spark-master
@@ -210,11 +221,16 @@ services:
       - "8085:8081"
     volumes:
       - ./data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
 
   spark-worker-5:
-    build:
-      context: .
-      dockerfile: Dockerfile.spark
+    image: spark-fraud:baked
     container_name: fraud_spark_worker_5
     depends_on:
       - spark-master
@@ -230,6 +246,13 @@ services:
       - "8086:8081"
     volumes:
       - ./data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
 
   # ============================================
   # METABASE - Business Intelligence Dashboard
@@ -270,20 +293,46 @@ services:
 # ============================================
 
 # ============================================
-# SHADOWTRAFFIC - Gerador de Dados Streaming
-# Gera transações em tempo real para Kafka
+# FRAUD-GENERATOR - Gerador de Dados Brasileiro
+# Gera transações bancárias brasileiras realistas para Kafka
 # Uso: docker compose --profile streaming up -d
 # ============================================
-  shadowtraffic:
-    image: shadowtraffic/shadowtraffic:latest
-    container_name: fraud_shadowtraffic
+  fraud-generator:
+    image: brazilian-fraud-generator:latest
+    container_name: fraud_generator
     profiles:
       - streaming  # Só sobe com --profile streaming
     depends_on:
       - kafka
-    env_file:
-      - ./shadowtraffic/license.env
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_TOPIC: transactions
+    command: >
+      stream.py
+        --target kafka
+        --kafka-server kafka:9092
+        --kafka-topic transactions
+        --rate 10
+        --customers 1000
+        --fraud-rate 0.02
+    restart: unless-stopped
+
+# ============================================
+# FRAUD-GENERATOR BATCH - Gera dados em lote para MinIO
+# Gera arquivos Parquet diretamente no bucket MinIO
+# Uso: docker compose --profile batch run --rm fraud-generator-batch
+# ============================================
+  fraud-generator-batch:
+    image: brazilian-fraud-generator:latest
+    container_name: fraud_generator_batch
+    profiles:
+      - batch  # Só sobe com --profile batch
     volumes:
-      - ./shadowtraffic:/config
-    command: --config /config/transactions.json --watch
-    # --watch: Hot reload se mudar o config
+      - ./docker_volumes/minio/fraud-data/raw/batch:/output
+    command: >
+      generate.py
+        --size 5GB
+        --format parquet
+        --output /output
+        --fraud-rate 0.02
+        --workers 4

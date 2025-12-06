@@ -2,10 +2,10 @@
 🥈 SILVER LAYER - Bronze → Silver (STREAMING)
 Spark Streaming - Bronze para Silver Layer
 
-Lê dados Bronze, aplica limpeza e cria indicadores de fraude.
+Lê dados Bronze, aplica limpeza e enriquece com indicadores de risco.
 
 TIPO: STREAMING (tempo real)
-FONTE: MinIO bronze/transactions (dados do Kafka/ShadowTraffic)
+FONTE: MinIO bronze/transactions (dados do fraud-generator v4-beta)
 """
 
 import sys
@@ -13,49 +13,59 @@ sys.path.insert(0, '/jobs')
 
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
-    col, when, abs as spark_abs, sqrt, pow as spark_pow,
-    current_timestamp, round as spark_round, lit
+    col, when, abs as spark_abs, current_timestamp, 
+    round as spark_round, lit, to_timestamp, hour
 )
 from pyspark.sql.types import (
     StructType, StructField, StringType, DoubleType, 
-    BooleanType, LongType, IntegerType, TimestampType
+    BooleanType, IntegerType, TimestampType
 )
 from config import apply_s3a_configs
 
-# Schema dos dados Bronze
+# Schema dos dados Bronze (fraud-generator v4-beta)
 bronze_schema = StructType([
     StructField("transaction_id", StringType(), True),
     StructField("customer_id", StringType(), True),
-    StructField("amount", DoubleType(), True),
-    StructField("merchant", StringType(), True),
-    StructField("category", StringType(), True),
-    StructField("transaction_hour", DoubleType(), True),
-    StructField("day_of_week", StringType(), True),
-    StructField("customer_home_state", StringType(), True),
-    StructField("purchase_state", StringType(), True),
-    StructField("purchase_city", StringType(), True),
-    StructField("purchase_latitude", DoubleType(), True),
-    StructField("purchase_longitude", DoubleType(), True),
-    StructField("device_latitude", DoubleType(), True),
-    StructField("device_longitude", DoubleType(), True),
+    StructField("session_id", StringType(), True),
     StructField("device_id", StringType(), True),
+    StructField("timestamp", StringType(), True),
+    StructField("type", StringType(), True),
+    StructField("amount", DoubleType(), True),
+    StructField("currency", StringType(), True),
+    StructField("channel", StringType(), True),
     StructField("ip_address", StringType(), True),
-    StructField("payment_method", StringType(), True),
+    StructField("geolocation_lat", DoubleType(), True),
+    StructField("geolocation_lon", DoubleType(), True),
+    StructField("merchant_id", StringType(), True),
+    StructField("merchant_name", StringType(), True),
+    StructField("merchant_category", StringType(), True),
+    StructField("mcc_code", StringType(), True),
+    StructField("mcc_risk_level", StringType(), True),
+    StructField("card_number_hash", StringType(), True),
     StructField("card_brand", StringType(), True),
+    StructField("card_type", StringType(), True),
     StructField("installments", IntegerType(), True),
-    StructField("had_travel_purchase_last_12m", BooleanType(), True),
-    StructField("is_first_purchase_in_state", BooleanType(), True),
-    StructField("transactions_last_24h", DoubleType(), True),
-    StructField("avg_transaction_amount_30d", DoubleType(), True),
-    StructField("is_international", BooleanType(), True),
-    StructField("is_online", BooleanType(), True),
+    StructField("card_entry", StringType(), True),
+    StructField("cvv_validated", BooleanType(), True),
+    StructField("auth_3ds", BooleanType(), True),
+    StructField("pix_key_type", StringType(), True),
+    StructField("pix_key_destination", StringType(), True),
+    StructField("destination_bank", StringType(), True),
+    StructField("distance_from_last_txn_km", DoubleType(), True),
+    StructField("time_since_last_txn_min", IntegerType(), True),
+    StructField("transactions_last_24h", IntegerType(), True),
+    StructField("accumulated_amount_24h", DoubleType(), True),
+    StructField("unusual_time", BooleanType(), True),
+    StructField("new_beneficiary", BooleanType(), True),
+    StructField("status", StringType(), True),
+    StructField("refusal_reason", StringType(), True),
+    StructField("fraud_score", DoubleType(), True),
     StructField("is_fraud", BooleanType(), True),
-    StructField("timestamp", LongType(), True),
+    StructField("fraud_type", StringType(), True),
     StructField("processed_at", TimestampType(), True)
 ])
 
 def main():
-    # Configurações S3 são carregadas via variáveis de ambiente (seguro!)
     spark = apply_s3a_configs(
         SparkSession.builder.appName("Streaming_Bronze_to_Silver")
     ).getOrCreate()
@@ -64,6 +74,7 @@ def main():
     
     print("=" * 60)
     print("🔄 INICIANDO STREAMING - BRONZE → SILVER")
+    print("   Fonte: fraud-generator v4-beta")
     print("=" * 60)
     
     # Ler dados Bronze como streaming
@@ -77,145 +88,176 @@ def main():
     
     # === TRANSFORMAÇÕES SILVER ===
     
-    # 1. Limpar valores negativos de amount
+    # 1. Converter timestamp para tipo correto e extrair hora
     df_clean = df_bronze.withColumn(
+        "event_time", 
+        to_timestamp(col("timestamp"))
+    ).withColumn(
+        "transaction_hour",
+        hour(to_timestamp(col("timestamp")))
+    )
+    
+    # 2. Limpar valores negativos de amount
+    df_clean = df_clean.withColumn(
         "amount_clean", 
         when(col("amount") < 0, spark_abs(col("amount"))).otherwise(col("amount"))
     )
     
-    # 2. Calcular distância entre device e compra (fórmula simplificada)
-    # Distância em graus (aproximada)
+    # 3. Flag: PIX para novo beneficiário (alto risco)
     df_clean = df_clean.withColumn(
-        "distance_device_purchase",
-        spark_round(
-            sqrt(
-                spark_pow(col("device_latitude") - col("purchase_latitude"), 2) +
-                spark_pow(col("device_longitude") - col("purchase_longitude"), 2)
-            ),
-            4
-        )
-    )
-    
-    # 3. Flag: Compra em estado diferente do domicílio
-    df_clean = df_clean.withColumn(
-        "is_cross_state",
-        when(col("customer_home_state") != col("purchase_state"), True).otherwise(False)
-    )
-    
-    # 4. Flag: Compra na madrugada (00h-06h)
-    df_clean = df_clean.withColumn(
-        "is_night_transaction",
-        when(col("transaction_hour") < 6, True).otherwise(False)
-    )
-    
-    # 5. Flag: Valor muito acima da média (3x)
-    df_clean = df_clean.withColumn(
-        "is_high_value",
-        when(col("amount_clean") > col("avg_transaction_amount_30d") * 3, True).otherwise(False)
-    )
-    
-    # 6. Flag: Muitas transações em 24h (> 5)
-    df_clean = df_clean.withColumn(
-        "is_high_velocity",
-        when(col("transactions_last_24h") > 5, True).otherwise(False)
-    )
-    
-    # 7. Flag: GPS muito distante (> 5 graus ≈ 500km)
-    df_clean = df_clean.withColumn(
-        "is_gps_mismatch",
-        when(col("distance_device_purchase") > 5, True).otherwise(False)
-    )
-    
-    # 8. Flag: Cross-state sem passagem nos últimos 12 meses
-    df_clean = df_clean.withColumn(
-        "is_cross_state_no_travel",
+        "is_pix_new_beneficiary",
         when(
-            (col("is_cross_state") == True) & 
-            (col("had_travel_purchase_last_12m") == False),
+            (col("type") == "PIX") & (col("new_beneficiary") == True),
             True
         ).otherwise(False)
     )
     
-    # 9. Calcular FRAUD SCORE baseado nos indicadores
+    # 4. Flag: Valor alto (> R$ 5.000)
+    df_clean = df_clean.withColumn(
+        "is_high_value",
+        when(col("amount_clean") > 5000, True).otherwise(False)
+    )
+    
+    # 5. Flag: Muitas transações em 24h (> 10)
+    df_clean = df_clean.withColumn(
+        "is_high_velocity",
+        when(col("transactions_last_24h") > 10, True).otherwise(False)
+    )
+    
+    # 6. Flag: Acumulado alto em 24h (> R$ 10.000)
+    df_clean = df_clean.withColumn(
+        "is_high_accumulated",
+        when(col("accumulated_amount_24h") > 10000, True).otherwise(False)
+    )
+    
+    # 7. Flag: Distância grande desde última transação (> 100km)
+    df_clean = df_clean.withColumn(
+        "is_location_jump",
+        when(col("distance_from_last_txn_km") > 100, True).otherwise(False)
+    )
+    
+    # 8. Flag: Cartão digitado manualmente (maior risco)
+    df_clean = df_clean.withColumn(
+        "is_manual_card_entry",
+        when(col("card_entry") == "MANUAL", True).otherwise(False)
+    )
+    
+    # 9. Flag: Sem autenticação 3DS em transação online
+    df_clean = df_clean.withColumn(
+        "is_no_3ds_online",
+        when(
+            (col("channel") == "WEB_BANKING") & (col("auth_3ds") == False),
+            True
+        ).otherwise(False)
+    )
+    
+    # 10. Calcular FRAUD SCORE ADICIONAL baseado nos novos indicadores
     df_silver = df_clean.withColumn(
-        "fraud_score_calculated",
+        "fraud_score_additional",
         (
-            when(col("is_cross_state"), 15).otherwise(0) +
-            when(col("is_night_transaction"), 10).otherwise(0) +
-            when(col("is_high_value"), 20).otherwise(0) +
-            when(col("is_high_velocity"), 15).otherwise(0) +
-            when(col("is_gps_mismatch"), 25).otherwise(0) +
-            when(col("is_cross_state_no_travel"), 30).otherwise(0) +
-            when(col("is_first_purchase_in_state"), 10).otherwise(0) +
-            when(col("is_international"), 15).otherwise(0)
+            when(col("is_pix_new_beneficiary"), 25).otherwise(0) +
+            when(col("is_high_value"), 15).otherwise(0) +
+            when(col("is_high_velocity"), 20).otherwise(0) +
+            when(col("is_high_accumulated"), 15).otherwise(0) +
+            when(col("is_location_jump"), 25).otherwise(0) +
+            when(col("is_manual_card_entry"), 10).otherwise(0) +
+            when(col("is_no_3ds_online"), 15).otherwise(0) +
+            when(col("unusual_time") == True, 10).otherwise(0) +
+            when(col("mcc_risk_level") == "high", 20).otherwise(
+                when(col("mcc_risk_level") == "medium", 10).otherwise(0)
+            )
         )
     )
     
-    # 10. Determinar nível de risco
+    # 11. Combinar fraud_score original com adicional
+    df_silver = df_silver.withColumn(
+        "fraud_score_combined",
+        spark_round(col("fraud_score") + (col("fraud_score_additional") * 0.5), 2)
+    )
+    
+    # 12. Determinar nível de risco
     df_silver = df_silver.withColumn(
         "risk_level",
-        when(col("fraud_score_calculated") >= 70, "CRÍTICO")
-        .when(col("fraud_score_calculated") >= 50, "ALTO")
-        .when(col("fraud_score_calculated") >= 30, "MÉDIO")
-        .when(col("fraud_score_calculated") >= 15, "BAIXO")
+        when(col("fraud_score_combined") >= 80, "CRITICAL")
+        .when(col("fraud_score_combined") >= 60, "HIGH")
+        .when(col("fraud_score_combined") >= 40, "MEDIUM")
+        .when(col("fraud_score_combined") >= 20, "LOW")
         .otherwise("NORMAL")
     )
     
-    # 11. Adicionar timestamp de processamento
-    df_silver = df_silver.withColumn("processed_at", current_timestamp())
+    # 13. Adicionar timestamp de processamento Silver
+    df_silver = df_silver.withColumn("silver_processed_at", current_timestamp())
     
     # Selecionar colunas finais
     df_final = df_silver.select(
         "transaction_id",
         "customer_id",
-        "amount_clean",
-        "merchant",
-        "category",
+        "session_id",
+        "device_id",
+        "event_time",
         "transaction_hour",
-        "day_of_week",
-        "customer_home_state",
-        "purchase_state",
-        "purchase_city",
-        "payment_method",
+        "type",
+        "amount_clean",
+        "currency",
+        "channel",
+        "ip_address",
+        "geolocation_lat",
+        "geolocation_lon",
+        "merchant_id",
+        "merchant_name",
+        "merchant_category",
+        "mcc_code",
+        "mcc_risk_level",
         "card_brand",
+        "card_type",
         "installments",
-        "distance_device_purchase",
-        "is_cross_state",
-        "is_night_transaction",
+        "card_entry",
+        "cvv_validated",
+        "auth_3ds",
+        "pix_key_type",
+        "destination_bank",
+        "distance_from_last_txn_km",
+        "time_since_last_txn_min",
+        "transactions_last_24h",
+        "accumulated_amount_24h",
+        "unusual_time",
+        "new_beneficiary",
+        "is_pix_new_beneficiary",
         "is_high_value",
         "is_high_velocity",
-        "is_gps_mismatch",
-        "is_cross_state_no_travel",
-        "is_first_purchase_in_state",
-        "is_international",
-        "is_online",
-        "fraud_score_calculated",
+        "is_high_accumulated",
+        "is_location_jump",
+        "is_manual_card_entry",
+        "is_no_3ds_online",
+        "status",
+        "fraud_score",
+        "fraud_score_additional",
+        "fraud_score_combined",
         "risk_level",
         "is_fraud",
-        "timestamp",
-        "processed_at"
+        "fraud_type",
+        "silver_processed_at"
     )
     
     print("✅ Transformações aplicadas:")
+    print("   - Conversão de timestamp")
     print("   - Limpeza de valores negativos")
-    print("   - Cálculo de distância GPS")
-    print("   - Flags de comportamento suspeito")
-    print("   - Fraud Score calculado")
-    print("   - Nível de risco atribuído")
+    print("   - Flags de risco (PIX novo beneficiário, alto valor, etc)")
+    print("   - Fraud score combinado")
+    print("   - Classificação de risco")
     
-    # Escrever no Silver Layer
+    # Escrever no MinIO (Silver Layer)
     query = df_final.writeStream \
         .format("parquet") \
         .option("path", "s3a://fraud-data/streaming/silver/transactions") \
-        .option("checkpointLocation", "s3a://fraud-data/streaming/checkpoints/silver_transactions") \
+        .option("checkpointLocation", "s3a://fraud-data/streaming/checkpoints/silver") \
         .outputMode("append") \
         .trigger(processingTime="15 seconds") \
         .start()
     
-    print("")
     print("✅ Escrevendo no MinIO: s3a://fraud-data/streaming/silver/transactions")
     print("")
-    print("📊 Streaming Silver ativo!")
+    print("📊 Streaming ativo!")
     print("=" * 60)
     
     query.awaitTermination()
