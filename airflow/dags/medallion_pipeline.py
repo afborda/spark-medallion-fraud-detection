@@ -7,11 +7,21 @@ Fluxo de recursos:
 - Antes do batch: Streaming reduzido para 40% (4 cores)
 - Durante batch: Batch usa 60% (6 cores)
 - Após batch: Streaming restaurado para 100% (10 cores)
+
+Schedule: Diário às 03:00 (horário de menor uso)
 """
 
 from airflow import DAG
 from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
+
+# Importa notificador Discord
+from discord_notifier import (
+    notify_batch_started,
+    notify_batch_completed,
+    notify_batch_failed
+)
 
 # ==========================================
 # CONFIGURAÇÃO DE RECURSOS DO CLUSTER
@@ -119,12 +129,74 @@ def restore_streaming_on_failure(context):
     """
     Callback executado se qualquer task falhar.
     Garante que streaming volta ao normal mesmo com erro no batch.
+    Envia notificação Discord sobre a falha.
     """
     import subprocess
+    
+    # Restaura streaming
     print("⚠️ Pipeline falhou! Restaurando streaming para 100%...")
     cmd = RESTORE_STREAMING.format(full_cores=STREAMING_FULL_CORES)
     subprocess.run(cmd, shell=True, check=False)
     print("✅ Streaming restaurado após falha")
+    
+    # Notifica Discord sobre a falha
+    dag_run = context.get('dag_run')
+    task_instance = context.get('task_instance')
+    exception = context.get('exception')
+    
+    # Identifica tasks que completaram
+    completed_tasks = []
+    task_order = ['prepare_resources', 'bronze_ingestion', 'silver_transformation', 
+                  'gold_aggregation', 'load_to_postgres']
+    
+    failed_task = task_instance.task_id if task_instance else 'unknown'
+    
+    for task in task_order:
+        if task == failed_task:
+            break
+        completed_tasks.append(task)
+    
+    notify_batch_failed(
+        dag_run_id=dag_run.run_id if dag_run else 'unknown',
+        failed_task=failed_task,
+        error_message=str(exception) if exception else 'Erro desconhecido',
+        tasks_completed=completed_tasks
+    )
+
+
+def notify_pipeline_start(**context):
+    """Task para notificar início do pipeline."""
+    dag_run = context.get('dag_run')
+    notify_batch_started(
+        dag_run_id=dag_run.run_id if dag_run else 'manual',
+        scheduled_time=dag_run.execution_date.strftime('%Y-%m-%d %H:%M') if dag_run else 'manual'
+    )
+
+
+def notify_pipeline_success(**context):
+    """Task para notificar conclusão do pipeline."""
+    dag_run = context.get('dag_run')
+    
+    # Calcula duração (aproximada)
+    if dag_run and dag_run.start_date:
+        duration = (datetime.now() - dag_run.start_date.replace(tzinfo=None)).total_seconds()
+    else:
+        duration = 0
+    
+    tasks_status = {
+        'prepare_resources': 'success',
+        'bronze_ingestion': 'success',
+        'silver_transformation': 'success',
+        'gold_aggregation': 'success',
+        'load_to_postgres': 'success',
+        'restore_resources': 'success'
+    }
+    
+    notify_batch_completed(
+        dag_run_id=dag_run.run_id if dag_run else 'manual',
+        total_duration_seconds=duration,
+        tasks_status=tasks_status
+    )
 
 
 with DAG(
@@ -132,11 +204,20 @@ with DAG(
     default_args=default_args,
     description='Pipeline Medallion com gerenciamento de recursos Streaming/Batch (40%/60%)',
     start_date=datetime(2025, 12, 1),
-    schedule_interval='@daily',
+    # Executa diariamente às 03:00 (horário de menor uso do sistema)
+    schedule_interval='0 3 * * *',
     catchup=False,
-    tags=['medallion', 'spark', 'producao', 'resource-management'],
+    tags=['medallion', 'spark', 'producao', 'resource-management', 'batch'],
     on_failure_callback=restore_streaming_on_failure,
 ) as dag:
+
+    # ==========================================
+    # TASK: NOTIFICAR INÍCIO
+    # ==========================================
+    notify_start = PythonOperator(
+        task_id='notify_start',
+        python_callable=notify_pipeline_start,
+    )
 
     # ==========================================
     # TASK 0: PREPARAR RECURSOS
@@ -204,7 +285,16 @@ with DAG(
     )
 
     # ==========================================
-    # DEPENDÊNCIAS - Define a ordem de execução
-    # prepare_resources → bronze → silver → gold → postgres → restore_resources
+    # TASK: NOTIFICAR SUCESSO
     # ==========================================
-    prepare_resources >> bronze >> silver >> gold >> postgres >> restore_resources
+    notify_success = PythonOperator(
+        task_id='notify_success',
+        python_callable=notify_pipeline_success,
+        trigger_rule='all_success',  # Só executa se tudo deu certo
+    )
+
+    # ==========================================
+    # DEPENDÊNCIAS - Define a ordem de execução
+    # notify_start → prepare_resources → bronze → silver → gold → postgres → restore_resources → notify_success
+    # ==========================================
+    notify_start >> prepare_resources >> bronze >> silver >> gold >> postgres >> restore_resources >> notify_success

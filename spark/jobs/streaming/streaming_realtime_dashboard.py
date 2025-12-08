@@ -126,9 +126,8 @@ def create_postgres_tables(spark):
         amount DECIMAL(18,2),
         merchant VARCHAR(200),
         category VARCHAR(100),
-        purchase_state VARCHAR(50),
-        purchase_city VARCHAR(100),
-        payment_method VARCHAR(50),
+        channel VARCHAR(50),
+        transaction_type VARCHAR(50),
         card_brand VARCHAR(50),
         detected_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
@@ -249,10 +248,10 @@ def process_batch_metrics(batch_df, epoch_id):
     
     write_to_postgres(cat_metrics_df, epoch_id, "streaming_metrics_by_category")
     
-    # 3. MÉTRICAS POR ESTADO
+    # 3. MÉTRICAS POR CANAL (channel)
     state_metrics_df = batch_df.groupBy(
         window(col("event_time"), "1 minute"),
-        col("purchase_state").alias("state")
+        col("channel").alias("state")
     ).agg(
         count("*").alias("transaction_count"),
         spark_round(spark_sum("amount"), 2).alias("total_amount"),
@@ -276,9 +275,11 @@ def process_batch_metrics(batch_df, epoch_id):
     # 4. FRAUDES RECENTES (últimas 100)
     frauds_df = batch_df.filter(col("is_fraud") == True) \
         .select(
-            "transaction_id", "customer_id", "amount", "merchant",
-            "category", "purchase_state", "purchase_city", 
-            "payment_method", "card_brand"
+            col("transaction_id"), col("customer_id"), col("amount"), 
+            col("merchant_name").alias("merchant"),
+            col("merchant_category").alias("category"), 
+            col("channel"), col("type").alias("transaction_type"), 
+            col("card_brand")
         ).withColumn("detected_at", current_timestamp()) \
         .limit(100)
     
@@ -330,12 +331,17 @@ def main():
     print("✅ Schema aplicado")
     
     # Streaming query com foreachBatch para escrever no PostgreSQL
+    # Checkpoint persistente no volume /data (montado do host)
+    checkpoint_location = "/data/checkpoints/streaming_dashboard"
+    
     query = df_transactions.writeStream \
         .foreachBatch(process_batch_metrics) \
         .outputMode("update") \
         .trigger(processingTime="30 seconds") \
-        .option("checkpointLocation", "/tmp/streaming_dashboard_checkpoint") \
+        .option("checkpointLocation", checkpoint_location) \
         .start()
+    
+    print(f"📍 Checkpoint: {checkpoint_location}")
     
     print("\n" + "=" * 70)
     print("📊 STREAMING ATIVO - Métricas sendo enviadas ao PostgreSQL")
