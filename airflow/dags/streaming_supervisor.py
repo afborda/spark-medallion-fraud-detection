@@ -43,7 +43,7 @@ SPARK_MASTER_CONTAINER = "fraud_spark_master"
 STREAMING_JOBS = {
     "streaming_to_postgres": {
         "script": "/jobs/streaming/streaming_to_postgres.py",
-        "cores": 4,
+        "cores": 2,
         "memory": "1g",
         "process_name": "streaming_to_postgres"
     },
@@ -55,8 +55,8 @@ STREAMING_JOBS = {
     }
 }
 
-TOTAL_STREAMING_CORES = 6  # 60% do cluster (4 + 2)
-MAX_CLUSTER_USAGE = 0.6    # Limite de 60%
+TOTAL_STREAMING_CORES = 4  # 100% do cluster (2 + 2, cluster tem 4 cores)
+MAX_CLUSTER_USAGE = 1.0    # Limite de 100% (dedicado para streaming)
 
 default_args = {
     'owner': 'abner',
@@ -96,7 +96,7 @@ def check_spark_cluster(**context):
         
         # Salva no XCom para próximas tasks
         context['ti'].xcom_push(key='cluster_status', value={
-            'healthy': alive_workers >= 3,  # Mínimo 3 workers
+            'healthy': alive_workers >= 2,  # Mínimo 2 workers (temos 4)
             'alive_workers': alive_workers,
             'total_cores': total_cores,
             'cores_used': cores_used,
@@ -104,8 +104,8 @@ def check_spark_cluster(**context):
             'active_apps': active_apps
         })
         
-        if alive_workers < 3:
-            reason = f"Apenas {alive_workers} workers ativos (mínimo: 3)"
+        if alive_workers < 2:
+            reason = f"Apenas {alive_workers} workers ativos (mínimo: 2)"
             notify_cluster_unhealthy(
                 cluster_status={
                     'alive_workers': alive_workers,
@@ -132,8 +132,11 @@ def check_streaming_jobs(**context):
     """
     Verifica quais jobs de streaming estão rodando.
     Retorna lista de jobs que precisam ser iniciados.
+    Verifica tanto processos quanto apps ativos no Spark cluster.
     """
     import subprocess
+    import urllib.request
+    import json
     
     jobs_to_start = []
     jobs_running = []
@@ -142,13 +145,29 @@ def check_streaming_jobs(**context):
     print(f"🔍 VERIFICANDO JOBS DE STREAMING")
     print(f"═══════════════════════════════════════════════")
     
+    # Verifica apps ativos no Spark para confirmar que estão usando o cluster
+    try:
+        with urllib.request.urlopen(SPARK_MASTER_URL, timeout=10) as response:
+            data = json.loads(response.read().decode())
+        active_apps = data.get('activeapps', [])
+        print(f"   Apps ativos no cluster: {len(active_apps)}")
+    except:
+        active_apps = []
+        print(f"   ⚠️ Não foi possível verificar apps ativos")
+    
     for job_name, job_config in STREAMING_JOBS.items():
-        # Verifica se o processo está rodando
+        # Verifica se o processo está rodando E se há app ativo no cluster
         cmd = f"docker exec {SPARK_MASTER_CONTAINER} pgrep -f '{job_config['process_name']}'"
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
         
-        if result.returncode == 0 and result.stdout.strip():
-            print(f"   ✅ {job_name}: RODANDO (PID: {result.stdout.strip().split()[0]})")
+        # Considera rodando se: processo existe E (tem app no cluster OU tem PIDs)
+        has_process = result.returncode == 0 and result.stdout.strip()
+        has_app = any(job_config['process_name'].lower() in app.get('name', '').lower() for app in active_apps)
+        
+        if has_process or has_app:
+            pids = result.stdout.strip().split()[0] if has_process else 'N/A'
+            status = '✅ CLUSTER' if has_app else '⚠️ LOCAL'
+            print(f"   {status} {job_name}: RODANDO (PID: {pids})")
             jobs_running.append(job_name)
         else:
             print(f"   ❌ {job_name}: PARADO")

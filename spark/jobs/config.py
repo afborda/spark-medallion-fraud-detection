@@ -16,7 +16,7 @@ MINIO_BUCKET = os.getenv("MINIO_BUCKET", "fraud-data")
 # ============================================
 # PostgreSQL
 # ============================================
-POSTGRES_HOST = os.getenv("POSTGRES_HOST", "fraud_postgres")
+POSTGRES_HOST = os.getenv("POSTGRES_HOST", "postgres")
 POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
 POSTGRES_DB = os.getenv("POSTGRES_DB", "fraud_db")
 POSTGRES_USER = os.getenv("POSTGRES_USER", "fraud_user")
@@ -27,7 +27,8 @@ POSTGRES_URL = f"jdbc:postgresql://{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}
 POSTGRES_PROPERTIES = {
     "user": POSTGRES_USER,
     "password": POSTGRES_PASSWORD,
-    "driver": "org.postgresql.Driver"
+    "driver": "org.postgresql.Driver",
+    "stringtype": "unspecified"
 }
 
 # ============================================

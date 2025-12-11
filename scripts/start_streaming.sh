@@ -4,16 +4,17 @@
 # ============================================
 # Uso: ./scripts/start_streaming.sh
 # 
-# Este script inicia os jobs de streaming com a alocação
-# correta de recursos (60% para streaming, 40% reservado para batch)
+# VPS: 8 vCores, 24 GB RAM
+# Cluster: 4 workers x 1 core = 4 cores total
+# Streaming usa 100% quando batch não está rodando
 # ============================================
 
 set -e
 
-# Configurações de recursos
-STREAMING_POSTGRES_CORES=4    # 40% do cluster
-STREAMING_DASHBOARD_CORES=2   # 20% do cluster
-TOTAL_STREAMING_CORES=6       # 60% total para streaming
+# Configurações de recursos (VPS atualizada)
+STREAMING_POSTGRES_CORES=2    # 50% do cluster
+STREAMING_DASHBOARD_CORES=2   # 50% do cluster
+TOTAL_STREAMING_CORES=4       # 100% do cluster para streaming
 
 echo "════════════════════════════════════════════════════════════"
 echo "🚀 INICIANDO JOBS DE STREAMING"

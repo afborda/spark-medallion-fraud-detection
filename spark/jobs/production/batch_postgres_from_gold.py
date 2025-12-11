@@ -2,7 +2,15 @@
 📦 LOAD TO POSTGRES - Gold → PostgreSQL (BATCH)
 Carrega dados da camada Gold para PostgreSQL para BI/Metabase
 
-🚀 OTIMIZADO: Escrita paralela com repartition + batchsize
+🚀 OTIMIZADO: Parallel Batch Insert com múltiplas conexões JDBC
+
+TÉCNICA UTILIZADA:
+1. repartition(N) → divide os dados em N partições
+2. numPartitions=N → abre N conexões JDBC paralelas (1 por partição)
+3. batchsize=10000 → cada INSERT agrupa até 10.000 registros
+4. rewriteBatchedInserts=true → otimização do PostgreSQL para bulk
+
+Resultado: N conexões × 10.000 registros por batch = alta throughput
 
 FONTE: s3a://fraud-data/gold/batch/
 DESTINO: PostgreSQL (fraud_db)
@@ -17,24 +25,30 @@ from pyspark.sql.functions import col
 from config import POSTGRES_URL, POSTGRES_PROPERTIES, apply_s3a_configs
 
 # =============================================================================
-# CONFIGURAÇÕES
+# CONFIGURAÇÕES - PARALLEL BATCH INSERT
 # =============================================================================
 GOLD_PATH = "s3a://fraud-data/gold/batch"
-NUM_PARTITIONS_LARGE = 16   # Para tabelas grandes
-NUM_PARTITIONS_SMALL = 4    # Para tabelas pequenas
-BATCH_SIZE = 10000
 
-# Properties otimizadas para PostgreSQL
+# Número de conexões paralelas JDBC
+NUM_PARTITIONS_LARGE = 8    # Tabelas grandes (transactions, alerts)
+NUM_PARTITIONS_SMALL = 4    # Tabelas pequenas (metrics)
+
+# Batch Insert: registros agrupados por INSERT
+BATCH_SIZE = 10000  # 10k registros por INSERT statement
+
+# Properties otimizadas para Parallel Batch Insert
 WRITE_PROPERTIES = POSTGRES_PROPERTIES.copy()
 WRITE_PROPERTIES["batchsize"] = str(BATCH_SIZE)
 WRITE_PROPERTIES["rewriteBatchedInserts"] = "true"
+WRITE_PROPERTIES["numPartitions"] = str(NUM_PARTITIONS_LARGE)  # Conexões paralelas!
 
 def main():
     print("=" * 70)
     print("📦 LOAD TO POSTGRES - Gold → PostgreSQL")
-    print("🚀 Modo: ESCRITA PARALELA OTIMIZADA")
-    print(f"   Partições: {NUM_PARTITIONS_LARGE} (grandes) / {NUM_PARTITIONS_SMALL} (pequenas)")
-    print(f"   Batch size: {BATCH_SIZE}")
+    print("🚀 Modo: PARALLEL BATCH INSERT")
+    print(f"   Conexões JDBC paralelas: {NUM_PARTITIONS_LARGE} (grandes) / {NUM_PARTITIONS_SMALL} (pequenas)")
+    print(f"   Batch size: {BATCH_SIZE:,} registros por INSERT")
+    print(f"   Throughput esperado: ~{NUM_PARTITIONS_LARGE}x mais rápido que single connection")
     print("=" * 70)
     
     spark = apply_s3a_configs(
@@ -46,11 +60,12 @@ def main():
     start_total = time.time()
     
     # =========================================================================
-    # 1. CARREGAR FRAUD_DETECTION → transactions
+    # 1. CARREGAR FRAUD_DETECTION → transactions (PARALLEL BATCH INSERT)
     # =========================================================================
     print("\n" + "=" * 50)
     print("💳 Carregando FRAUD_DETECTION → transactions...")
-    print(f"   🔀 Partições: {NUM_PARTITIONS_LARGE}")
+    print(f"   🔀 Conexões paralelas: {NUM_PARTITIONS_LARGE}")
+    print(f"   📦 Batch size: {BATCH_SIZE:,} registros/INSERT")
     print("=" * 50)
     
     start_tx = time.time()
@@ -104,11 +119,12 @@ def main():
     print(f"💾 Tabela 'batch_transactions' criada em {elapsed_tx:.1f}s ({throughput_tx:,.0f} reg/s)")
     
     # =========================================================================
-    # 2. CARREGAR FRAUD_ALERTS
+    # 2. CARREGAR FRAUD_ALERTS (PARALLEL BATCH INSERT)
     # =========================================================================
     print("\n" + "=" * 50)
     print("⚠️ Carregando FRAUD_ALERTS...")
-    print(f"   🔀 Partições: {NUM_PARTITIONS_LARGE}")
+    print(f"   🔀 Conexões paralelas: {NUM_PARTITIONS_LARGE}")
+    print(f"   📦 Batch size: {BATCH_SIZE:,} registros/INSERT")
     print("=" * 50)
     
     start_alerts = time.time()

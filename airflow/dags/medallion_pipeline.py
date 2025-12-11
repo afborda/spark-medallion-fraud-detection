@@ -3,10 +3,10 @@
 Pipeline completo: Bronze → Silver → Gold → Postgres
 Com gerenciamento dinâmico de recursos Streaming/Batch
 
-Fluxo de recursos:
-- Antes do batch: Streaming reduzido para 40% (4 cores)
-- Durante batch: Batch usa 60% (6 cores)
-- Após batch: Streaming restaurado para 100% (10 cores)
+Fluxo de recursos (VPS 8 cores, 24 GB):
+- Antes do batch: Streaming reduzido para 25% (1 core)
+- Durante batch: Batch usa 75% (3 cores)
+- Após batch: Streaming restaurado para 100% (4 cores)
 
 Schedule: Diário às 03:00 (horário de menor uso)
 """
@@ -25,11 +25,13 @@ from discord_notifier import (
 
 # ==========================================
 # CONFIGURAÇÃO DE RECURSOS DO CLUSTER
+# VPS: 8 vCores, 24 GB RAM
+# Cluster Spark: 4 workers x 1 core = 4 cores total
 # ==========================================
-TOTAL_CORES = 10          # Total de cores no cluster Spark (5 workers x 2 cores)
-STREAMING_CORES = 4       # 40% para streaming durante batch
-BATCH_CORES = 6           # 60% para batch
-STREAMING_FULL_CORES = 10 # 100% quando batch não está rodando
+TOTAL_CORES = 4           # Total de cores no cluster Spark (4 workers x 1 core)
+STREAMING_CORES = 1       # 25% para streaming durante batch
+BATCH_CORES = 3           # 75% para batch
+STREAMING_FULL_CORES = 4  # 100% quando batch não está rodando
 
 default_args = {
     'owner': 'abner',
@@ -41,6 +43,7 @@ default_args = {
 
 # ==========================================
 # COMANDO SPARK-SUBMIT PARA BATCH (com limite de cores)
+# Cluster: 4 workers x 1 core = 4 cores total
 # ==========================================
 SPARK_SUBMIT_BATCH = """
 docker exec fraud_spark_master \
@@ -55,10 +58,11 @@ docker exec fraud_spark_master \
 # ==========================================
 # COMANDO PARA REDUZIR STREAMING (antes do batch)
 # Para o streaming atual e reinicia com menos recursos
+# Batch usa 3 cores, deixa 1 core para streaming
 # SEMPRE inicia streaming se não estiver rodando
 # ==========================================
 REDUCE_STREAMING = """
-echo "🔄 Configurando streaming para {streaming_cores} cores (40%)..."
+echo "🔄 Configurando streaming para {streaming_cores} cores (25%)..."
 
 # 1. Para streaming existente (se houver)
 echo "📍 Verificando streaming existente..."
@@ -82,12 +86,12 @@ docker exec -d fraud_spark_master \
 sleep 10
 STREAMING_CHECK=$(docker exec fraud_spark_master pgrep -f "streaming_to_postgres" || echo "")
 if [ -n "$STREAMING_CHECK" ]; then
-    echo "✅ Streaming iniciado com {streaming_cores} cores (40%)"
+    echo "✅ Streaming iniciado com {streaming_cores} cores (25%)"
 else
     echo "⚠️ Streaming pode não ter iniciado - verifique logs"
 fi
 
-echo "✅ Recursos preparados para batch (streaming: 40%, batch: 60%)"
+echo "✅ Recursos preparados para batch (streaming: 25%, batch: 75%)"
 """
 
 # ==========================================
@@ -202,7 +206,7 @@ def notify_pipeline_success(**context):
 with DAG(
     dag_id='medallion_pipeline',
     default_args=default_args,
-    description='Pipeline Medallion com gerenciamento de recursos Streaming/Batch (40%/60%)',
+    description='Pipeline Medallion com gerenciamento de recursos Streaming/Batch (25%/75%)',
     start_date=datetime(2025, 12, 1),
     # Executa diariamente às 03:00 (horário de menor uso do sistema)
     schedule_interval='0 3 * * *',

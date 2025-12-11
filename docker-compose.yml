@@ -20,6 +20,14 @@ services:
       - "5432:5432"
     volumes:
       - ./docker_volumes/postgres:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   minio:
     image: quay.io/minio/minio:latest
@@ -36,6 +44,14 @@ services:
       - "9003:9001"
     volumes:
       - ./docker_volumes/minio:/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 256M
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=site_traefik-network"
@@ -60,6 +76,14 @@ services:
     volumes:
       - ./docker_volumes/zookeeper/data:/var/lib/zookeeper/data
       - ./docker_volumes/zookeeper/logs:/var/lib/zookeeper/log
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
   
   kafka:
     image: confluentinc/cp-kafka:7.5.0
@@ -77,6 +101,14 @@ services:
       - "9092:9092"
     volumes:
       - ./docker_volumes/kafka:/var/lib/kafka/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
   
   # ============================================
   # SPARK CLUSTER - 1 Master + 5 Workers (3GB cada)
@@ -96,16 +128,16 @@ services:
       SPARK_MASTER_PORT: 7077
       SPARK_MASTER_WEBUI_PORT: 8080
       # Credenciais injetadas via variáveis de ambiente (lidas pelo config.py)
-      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-      MINIO_BUCKET: ${MINIO_BUCKET}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT:-http://minio:9000}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin123@@!!_2}
+      MINIO_BUCKET: ${MINIO_BUCKET:-fraud-data}
       # PostgreSQL
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_PORT: ${POSTGRES_PORT}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_DB: ${POSTGRES_DB:-fraud_db}
+      POSTGRES_USER: ${POSTGRES_USER:-fraud_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fraud123}
     ports:
       - "8081:8080"
       - "7077:7077"
@@ -113,6 +145,14 @@ services:
     volumes:
       - ./data:/data
       - ./spark/jobs:/jobs
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 2G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=site_traefik-network"
@@ -136,16 +176,29 @@ services:
       - spark-master
     command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     environment:
-      SPARK_WORKER_CORES: 2
-      SPARK_WORKER_MEMORY: 3g
+      SPARK_WORKER_CORES: 1
+      SPARK_WORKER_MEMORY: 2500m
       SPARK_WORKER_WEBUI_PORT: 8081
       MINIO_ENDPOINT: ${MINIO_ENDPOINT}
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_DB: ${POSTGRES_DB:-fraud_db}
+      POSTGRES_USER: ${POSTGRES_USER:-fraud_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fraud123}
     ports:
       - "8082:8081"
     volumes:
       - ./data:/data
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2500M
+        reservations:
+          cpus: '0.5'
+          memory: 1G
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081"]
       interval: 30s
@@ -161,16 +214,29 @@ services:
       - spark-master
     command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     environment:
-      SPARK_WORKER_CORES: 2
-      SPARK_WORKER_MEMORY: 3g
+      SPARK_WORKER_CORES: 1
+      SPARK_WORKER_MEMORY: 2500m
       SPARK_WORKER_WEBUI_PORT: 8081
       MINIO_ENDPOINT: ${MINIO_ENDPOINT}
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_DB: ${POSTGRES_DB:-fraud_db}
+      POSTGRES_USER: ${POSTGRES_USER:-fraud_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fraud123}
     ports:
       - "8083:8081"
     volumes:
       - ./data:/data
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2500M
+        reservations:
+          cpus: '0.5'
+          memory: 1G
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081"]
       interval: 30s
@@ -186,16 +252,29 @@ services:
       - spark-master
     command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     environment:
-      SPARK_WORKER_CORES: 2
-      SPARK_WORKER_MEMORY: 3g
+      SPARK_WORKER_CORES: 1
+      SPARK_WORKER_MEMORY: 2500m
       SPARK_WORKER_WEBUI_PORT: 8081
       MINIO_ENDPOINT: ${MINIO_ENDPOINT}
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_DB: ${POSTGRES_DB:-fraud_db}
+      POSTGRES_USER: ${POSTGRES_USER:-fraud_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fraud123}
     ports:
       - "8084:8081"
     volumes:
       - ./data:/data
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2500M
+        reservations:
+          cpus: '0.5'
+          memory: 1G
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081"]
       interval: 30s
@@ -211,16 +290,29 @@ services:
       - spark-master
     command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     environment:
-      SPARK_WORKER_CORES: 2
-      SPARK_WORKER_MEMORY: 3g
+      SPARK_WORKER_CORES: 1
+      SPARK_WORKER_MEMORY: 2500m
       SPARK_WORKER_WEBUI_PORT: 8081
       MINIO_ENDPOINT: ${MINIO_ENDPOINT}
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_DB: ${POSTGRES_DB:-fraud_db}
+      POSTGRES_USER: ${POSTGRES_USER:-fraud_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fraud123}
     ports:
       - "8085:8081"
     volumes:
       - ./data:/data
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2500M
+        reservations:
+          cpus: '0.5'
+          memory: 1G
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081"]
       interval: 30s
@@ -229,30 +321,7 @@ services:
       start_period: 60s
     restart: unless-stopped
 
-  spark-worker-5:
-    image: spark-fraud:baked
-    container_name: fraud_spark_worker_5
-    depends_on:
-      - spark-master
-    command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
-    environment:
-      SPARK_WORKER_CORES: 2
-      SPARK_WORKER_MEMORY: 3g
-      SPARK_WORKER_WEBUI_PORT: 8081
-      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-    ports:
-      - "8086:8081"
-    volumes:
-      - ./data:/data
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-    restart: unless-stopped
+  # Worker 5 removido para economizar recursos
 
   # ============================================
   # METABASE - Business Intelligence Dashboard
@@ -278,6 +347,14 @@ services:
       - "3000:3000"
     volumes:
       - ./docker_volumes/metabase:/metabase-data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1500M
+        reservations:
+          cpus: '0.25'
+          memory: 512M
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=site_traefik-network"
@@ -293,15 +370,17 @@ services:
 # ============================================
 
 # ============================================
-# FRAUD-GENERATOR - Gerador de Dados Brasileiro
-# Gera transações bancárias brasileiras realistas para Kafka
-# Uso: docker compose --profile streaming up -d
+# FRAUD-GENERATOR STREAMING - Gera transações em tempo real para Kafka
+# Recursos: 30% CPU, 2GB RAM
+# Uso: docker compose up -d fraud-generator
+# Uso: docker compose build fraud-generator (para rebuild)
 # ============================================
   fraud-generator:
+    build:
+      context: ./fraud-generator
+      dockerfile: Dockerfile
     image: brazilian-fraud-generator:latest
     container_name: fraud_generator
-    profiles:
-      - streaming  # Só sobe com --profile streaming
     depends_on:
       - kafka
     environment:
@@ -312,27 +391,46 @@ services:
         --target kafka
         --kafka-server kafka:9092
         --kafka-topic transactions
-        --rate 10
-        --customers 1000
-        --fraud-rate 0.02
+        --rate ${STREAM_RATE:-10}
+        --customers ${STREAM_CUSTOMERS:-1000}
+        --fraud-rate ${STREAM_FRAUD_RATE:-0.02}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
     restart: unless-stopped
 
 # ============================================
 # FRAUD-GENERATOR BATCH - Gera dados em lote para MinIO
-# Gera arquivos Parquet diretamente no bucket MinIO
-# Uso: docker compose --profile batch run --rm fraud-generator-batch
+# Recursos: 60% CPU, 8GB RAM
+# Uso: SIZE=30GB docker compose up -d fraud-generator-batch
+# Ou:  SIZE=30GB docker compose run --rm fraud-generator-batch
 # ============================================
   fraud-generator-batch:
     image: brazilian-fraud-generator:latest
     container_name: fraud_generator_batch
-    profiles:
-      - batch  # Só sobe com --profile batch
-    volumes:
-      - ./docker_volumes/minio/fraud-data/raw/batch:/output
+    environment:
+      # Usa as mesmas credenciais do MinIO definidas no .env
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
     command: >
       generate.py
-        --size 5GB
-        --format parquet
-        --output /output
-        --fraud-rate 0.02
-        --workers 4
+        --size ${SIZE:-1GB}
+        --type transactions
+        --format ${FORMAT:-parquet}
+        --fraud-rate ${FRAUD_RATE:-0.05}
+        --workers ${WORKERS:-4}
+        --output minio://fraud-data/raw/batch
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 6G
+        reservations:
+          cpus: '2.0'
+          memory: 2G

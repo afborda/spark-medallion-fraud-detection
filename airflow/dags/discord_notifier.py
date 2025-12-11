@@ -329,7 +329,7 @@ if __name__ == "__main__":
     
     # Teste 1: Jobs iniciados
     test_jobs = [
-        {"name": "streaming_to_postgres", "cores": 4, "memory": "1g"},
+        {"name": "streaming_to_postgres", "cores": 2, "memory": "1g"},
         {"name": "streaming_realtime_dashboard", "cores": 2, "memory": "1g"}
     ]
     test_cluster = {

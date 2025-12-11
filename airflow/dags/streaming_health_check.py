@@ -10,9 +10,9 @@ import os
 @dag(
     dag_id='streaming_health_check',
     start_date=datetime(2025, 1, 1),
-    schedule='*/5 * * * *',  # A cada 5 minutos
+    schedule=None,  # DESABILITADO - Usar streaming_supervisor em vez disso
     catchup=False,
-    tags=['streaming', 'health_check', 'monitoramento'],
+    tags=['streaming', 'health_check', 'monitoramento', 'DEPRECATED'],
     default_args={
         'owner': 'abner',
         'retries': 1,

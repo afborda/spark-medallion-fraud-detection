@@ -1,10 +1,17 @@
 """
 🥉 BRONZE LAYER - MinIO Raw → MinIO Bronze (BATCH)
-Ingestão de dados brutos do MinIO raw/batch para o Bronze Layer
+Ingestão de dados brutos do MinIO raw para o Bronze Layer
 
 Este job processa os dados gerados pelo fraud-generator no MinIO:
-- Lê de: s3a://fraud-data/raw/batch/
+- Lê de: s3a://fraud-data/raw/batch/ (estrutura plana do fraud-generator)
+- Fallback: s3a://fraud-data/raw/year=*/month=*/day=*/ (estrutura particionada)
 - Escreve em: s3a://fraud-data/bronze/batch/
+
+OTIMIZAÇÕES IMPLEMENTADAS:
+1. Leitura em blocos de 128MB (maxPartitionBytes) para melhor paralelismo
+2. Suporte a dois formatos de entrada:
+   - Estrutura plana: fraud-generator original (transactions_*.parquet)
+   - Estrutura particionada: year=YYYY/month=MM/day=DD/
 
 TIPO: BATCH (processamento em lote)
 FONTE: fraud-generator v4-beta (campos em inglês)
@@ -27,9 +34,15 @@ from config import apply_s3a_configs
 # =============================================================================
 # CONFIGURAÇÕES
 # =============================================================================
-RAW_PATH = "s3a://fraud-data/raw/batch"
+
+# Paths no MinIO - Suporta estrutura plana e particionada
+RAW_PATH_FLAT = "s3a://fraud-data/raw/batch"          # fraud-generator original
+RAW_PATH_PARTITIONED = "s3a://fraud-data/raw"          # estrutura particionada
 BRONZE_PATH = "s3a://fraud-data/bronze/batch"
-REPARTITION_COUNT = 16  # Otimização de particionamento
+
+# Otimização de particionamento
+REPARTITION_COUNT = 16
+MAX_PARTITION_BYTES = 134217728  # 128MB em bytes
 
 # Schema das transações do Brazilian Fraud Data Generator (v4-beta - English)
 transaction_schema = StructType([
@@ -76,9 +89,10 @@ transaction_schema = StructType([
 def main():
     print("=" * 70)
     print("🥉 BRONZE LAYER - BATCH PROCESSING")
-    print("   Fonte: s3a://fraud-data/raw/batch")
+    print("   Fonte 1: s3a://fraud-data/raw/batch/ (fraud-generator)")
+    print("   Fonte 2: s3a://fraud-data/raw/year=*/month=*/day=*/ (particionado)")
     print("   Destino: s3a://fraud-data/bronze/batch")
-    print("   Repartition: 16 partições")
+    print("   Leitura: blocos de 128MB (maxPartitionBytes)")
     print("=" * 70)
     
     # Configurações S3 via variáveis de ambiente
@@ -89,6 +103,14 @@ def main():
         .config("spark.sql.adaptive.coalescePartitions.enabled", "true")
         .config("spark.hadoop.fs.s3a.multipart.size", "104857600")
         .config("spark.hadoop.fs.s3a.fast.upload", "true")
+        # Otimização de leitura: blocos de 128MB
+        .config("spark.sql.files.maxPartitionBytes", str(MAX_PARTITION_BYTES))
+        .config("spark.sql.files.openCostInBytes", "4194304")  # 4MB - custo de abertura
+        # S3A Committer - evita problema de rename no S3
+        .config("spark.hadoop.fs.s3a.committer.name", "directory")
+        .config("spark.hadoop.fs.s3a.committer.staging.conflict-mode", "replace")
+        .config("spark.hadoop.mapreduce.outputcommitter.factory.scheme.s3a", 
+                "org.apache.hadoop.fs.s3a.commit.S3ACommitterFactory")
         # Suporte para timestamps INT96/NANOS do PyArrow
         .config("spark.sql.parquet.int96RebaseModeInRead", "CORRECTED")
         .config("spark.sql.parquet.datetimeRebaseModeInRead", "CORRECTED")
@@ -99,45 +121,95 @@ def main():
     spark.sparkContext.setLogLevel("WARN")
     
     # =========================================================================
-    # LER DADOS DO RAW (PARQUET ou JSONL - fraud-generator)
+    # LER DADOS DO RAW - TENTA ESTRUTURA PLANA PRIMEIRO, DEPOIS PARTICIONADA
     # =========================================================================
     print("\n📂 Verificando arquivos no RAW...")
+    print(f"   📊 Lendo em blocos de {MAX_PARTITION_BYTES // (1024*1024)}MB")
     
-    # Tentar ler Parquet primeiro (formato mais eficiente)
+    df_raw = None
+    file_format = None
+    source_path = None
+    
+    # TENTATIVA 1: Estrutura plana do fraud-generator (raw/batch/) - Parquet
+    print("\n🔍 Tentando estrutura plana (fraud-generator)...")
     try:
-        # Ler todos os parquets de transações
-        df_raw = spark.read \
+        df_test = spark.read \
             .option("recursiveFileLookup", "true") \
             .option("pathGlobFilter", "transactions_*.parquet") \
-            .parquet(f"{RAW_PATH}")
+            .parquet(RAW_PATH_FLAT)
         
-        # Verificar se leu algo
-        if df_raw.head(1):
+        if df_test.head(1):
+            df_raw = df_test
             file_format = "parquet"
-            print(f"✅ Encontrados arquivos Parquet")
-        else:
-            raise Exception("Nenhum dado encontrado em Parquet")
-        
-    except Exception as parquet_error:
-        print(f"⚠️ Parquet não encontrado ({parquet_error}), tentando JSONL...")
+            source_path = RAW_PATH_FLAT
+            print(f"   ✅ Encontrados arquivos Parquet em {RAW_PATH_FLAT}")
+    except Exception as e:
+        print(f"   ⚠️ Parquet não encontrado em raw/batch/")
+    
+    # TENTATIVA 2: Estrutura plana JSONL (raw/batch/)
+    if df_raw is None:
+        print("\n🔍 Tentando JSONL em estrutura plana...")
         try:
-            df_raw = spark.read \
+            df_test = spark.read \
                 .schema(transaction_schema) \
                 .option("recursiveFileLookup", "true") \
-                .json(f"{RAW_PATH}")
-            file_format = "jsonl"
-            print(f"✅ Encontrados arquivos JSONL")
+                .json(RAW_PATH_FLAT)
             
-        except Exception as json_error:
-            print(f"❌ Erro ao ler dados: {json_error}")
-            raise
+            if df_test.head(1):
+                df_raw = df_test
+                file_format = "jsonl"
+                source_path = RAW_PATH_FLAT
+                print(f"   ✅ Encontrados arquivos JSONL em {RAW_PATH_FLAT}")
+        except Exception as e:
+            print(f"   ⚠️ JSONL não encontrado em raw/batch/")
+    
+    # TENTATIVA 3: Estrutura particionada Parquet (year=/month=/day=)
+    if df_raw is None:
+        print("\n🔍 Tentando estrutura particionada...")
+        try:
+            df_test = spark.read \
+                .option("recursiveFileLookup", "true") \
+                .option("pathGlobFilter", "transactions_*.parquet") \
+                .option("basePath", RAW_PATH_PARTITIONED) \
+                .parquet(f"{RAW_PATH_PARTITIONED}/year=*/month=*/day=*/")
+            
+            if df_test.head(1):
+                df_raw = df_test
+                file_format = "parquet"
+                source_path = f"{RAW_PATH_PARTITIONED}/year=*/month=*/day=*/"
+                print(f"   ✅ Encontrados arquivos Parquet particionados")
+        except Exception as e:
+            print(f"   ⚠️ Parquet particionado não encontrado")
+    
+    # TENTATIVA 4: Estrutura particionada JSONL
+    if df_raw is None:
+        print("\n🔍 Tentando JSONL particionado...")
+        try:
+            df_test = spark.read \
+                .schema(transaction_schema) \
+                .option("recursiveFileLookup", "true") \
+                .option("basePath", RAW_PATH_PARTITIONED) \
+                .json(f"{RAW_PATH_PARTITIONED}/year=*/month=*/day=*/")
+            
+            if df_test.head(1):
+                df_raw = df_test
+                file_format = "jsonl"
+                source_path = f"{RAW_PATH_PARTITIONED}/year=*/month=*/day=*/"
+                print(f"   ✅ Encontrados arquivos JSONL particionados")
+        except Exception as e:
+            print(f"   ❌ JSONL particionado não encontrado")
+    
+    if df_raw is None:
+        raise Exception("❌ Nenhum arquivo de transações encontrado no RAW!")
     
     # Filtrar apenas transações (ignorar customers e devices se existirem)
     if "transaction_id" in df_raw.columns:
         df_raw = df_raw.filter(col("transaction_id").isNotNull())
     
     total_records = df_raw.count()
-    print(f"✅ Lidos {total_records:,} registros do RAW ({file_format})")
+    print(f"\n✅ Lidos {total_records:,} registros do RAW")
+    print(f"   📁 Fonte: {source_path}")
+    print(f"   📄 Formato: {file_format}")
     
     # =========================================================================
     # ADICIONAR METADADOS BRONZE

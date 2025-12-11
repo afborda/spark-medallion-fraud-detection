@@ -198,12 +198,13 @@ def main():
     print("=" * 60)
     print("📡 Conectando ao Kafka...")
     
-    # Ler do Kafka
+    # Ler do Kafka (PROCESSAR APENAS NOVOS desde agora)
     df_kafka = spark.readStream \
         .format("kafka") \
         .option("kafka.bootstrap.servers", KAFKA_BROKER) \
         .option("subscribe", KAFKA_TOPIC) \
         .option("startingOffsets", "latest") \
+        .option("maxOffsetsPerTrigger", "10000") \
         .option("failOnDataLoss", "false") \
         .load()
     
@@ -219,8 +220,8 @@ def main():
     print("=" * 60)
     
     # Processar em micro-batches e salvar no PostgreSQL
-    # Checkpoint persistente no MinIO para sobreviver a reinícios
-    checkpoint_location = "s3a://fraud-data/streaming/checkpoints/postgres"
+    # Checkpoint LOCAL (temporário para debug)
+    checkpoint_location = "/tmp/streaming_checkpoints/postgres"
     
     query = df_transactions.writeStream \
         .foreachBatch(process_batch) \
