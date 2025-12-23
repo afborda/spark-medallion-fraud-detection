@@ -12,13 +12,17 @@ Tipos de notificações:
 - 📊 Status geral do cluster
 """
 
+import os
 import requests
 import json
 from datetime import datetime
 
 
-# Webhook do Discord
-DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1447677762252046417/oVsnCG8DHcmE17solRpRtOHpLVwo8d_G0pE0JiEQ-MIQrUk-mPVR8Zvi-9jvK7zb2uj4"
+# Webhook do Discord - lê da variável de ambiente ou usa fallback
+DISCORD_WEBHOOK_URL = os.environ.get(
+    "DISCORD_WEBHOOK_URL",
+    "https://discord.com/api/webhooks/1448633719786311752/lIn7G1c-XK3RT0xJt0fQ9foImWDqqT2LJvOlD029MeefxvacTWlMbg7Pn-P4u5GBIH_Z"
+)
 
 # Cores para diferentes tipos de mensagens (formato decimal)
 COLOR_SUCCESS = 3066993   # Verde (0x2ecc71)
@@ -328,16 +332,16 @@ if __name__ == "__main__":
     print("🧪 Testando notificações Discord...")
     
     # Teste 1: Jobs iniciados
+    # NOTA: streaming_realtime_dashboard foi REMOVIDO - agora só temos streaming_to_postgres
     test_jobs = [
-        {"name": "streaming_to_postgres", "cores": 2, "memory": "1g"},
-        {"name": "streaming_realtime_dashboard", "cores": 2, "memory": "1g"}
+        {"name": "streaming_to_postgres", "cores": 2, "memory": "2g"}
     ]
     test_cluster = {
-        "alive_workers": 5,
-        "total_cores": 10,
-        "cores_used": 6,
-        "cores_free": 4,
-        "active_apps": 2
+        "alive_workers": 4,
+        "total_cores": 4,
+        "cores_used": 2,
+        "cores_free": 2,
+        "active_apps": 1
     }
     
     print("📤 Enviando: Jobs iniciados...")

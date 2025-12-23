@@ -1,12 +1,13 @@
 """
 🏅 MEDALLION PIPELINE - Orquestrado pelo Airflow
 Pipeline completo: Bronze → Silver → Gold → Postgres
-Com gerenciamento dinâmico de recursos Streaming/Batch
 
-Fluxo de recursos (VPS 8 cores, 24 GB):
-- Antes do batch: Streaming reduzido para 25% (1 core)
-- Durante batch: Batch usa 75% (3 cores)
-- Após batch: Streaming restaurado para 100% (4 cores)
+ARQUITETURA DE WORKERS DEDICADOS:
+- Workers 1-2: STREAMING (6GB total, 2 cores) - SEMPRE ATIVOS
+- Workers 3-4: BATCH (6GB total, 2 cores) - Usados por este DAG
+
+✅ COEXISTÊNCIA: Streaming e Batch rodam SIMULTANEAMENTE
+   Sem competição por recursos, sem parar/reiniciar streaming!
 
 Schedule: Diário às 03:00 (horário de menor uso)
 """
@@ -24,14 +25,13 @@ from discord_notifier import (
 )
 
 # ==========================================
-# CONFIGURAÇÃO DE RECURSOS DO CLUSTER
-# VPS: 8 vCores, 24 GB RAM
-# Cluster Spark: 4 workers x 1 core = 4 cores total
+# CONFIGURAÇÃO DE RECURSOS - WORKERS DEDICADOS
+# Workers 1-2: Streaming (não tocamos)
+# Workers 3-4: Batch (usamos aqui)
 # ==========================================
-TOTAL_CORES = 4           # Total de cores no cluster Spark (4 workers x 1 core)
-STREAMING_CORES = 1       # 25% para streaming durante batch
-BATCH_CORES = 3           # 75% para batch
-STREAMING_FULL_CORES = 4  # 100% quando batch não está rodando
+BATCH_WORKERS = 2         # Workers 3 e 4
+BATCH_CORES = 2           # 1 core por worker = 2 cores total
+BATCH_MEMORY = "2g"       # 2GB por executor (workers têm 3GB cada)
 
 default_args = {
     'owner': 'abner',
@@ -42,107 +42,84 @@ default_args = {
 }
 
 # ==========================================
-# COMANDO SPARK-SUBMIT PARA BATCH (com limite de cores)
-# Cluster: 4 workers x 1 core = 4 cores total
+# COMANDO SPARK-SUBMIT PARA BATCH
+# Usa apenas workers 3-4 (batch dedicados)
+# Streaming continua rodando nos workers 1-2
 # ==========================================
 SPARK_SUBMIT_BATCH = """
 docker exec fraud_spark_master \
     /opt/spark/bin/spark-submit \
     --master spark://spark-master:7077 \
     --total-executor-cores {cores} \
-    --executor-memory 2g \
+    --executor-memory {memory} \
     --conf spark.sql.adaptive.enabled=true \
+    --conf spark.dynamicAllocation.enabled=false \
     /jobs/production/{script}
 """
 
 # ==========================================
-# COMANDO PARA REDUZIR STREAMING (antes do batch)
-# Para o streaming atual e reinicia com menos recursos
-# Batch usa 3 cores, deixa 1 core para streaming
-# SEMPRE inicia streaming se não estiver rodando
+# VERIFICAÇÃO PRÉ-BATCH
+# Verifica se workers batch (3-4) estão disponíveis
+# NÃO interfere no streaming (workers 1-2)
 # ==========================================
-REDUCE_STREAMING = """
-echo "🔄 Configurando streaming para {streaming_cores} cores (25%)..."
+CHECK_BATCH_WORKERS = """
+echo "🔍 Verificando workers dedicados ao batch..."
 
-# 1. Para streaming existente (se houver)
-echo "📍 Verificando streaming existente..."
-docker exec fraud_spark_master pkill -f "streaming_to_postgres" 2>/dev/null || true
+# Verifica status do cluster
+CLUSTER_INFO=$(curl -s http://spark-master:8080/json/ 2>/dev/null || curl -s http://localhost:8081/json/)
+WORKERS_ALIVE=$(echo $CLUSTER_INFO | python3 -c "import sys,json; d=json.load(sys.stdin); print(len([w for w in d.get('workers',[]) if w.get('state')=='ALIVE']))" 2>/dev/null || echo "0")
 
-# 2. Aguarda processos finalizarem
-sleep 10
+echo "📊 Workers ativos: $WORKERS_ALIVE"
 
-# 3. SEMPRE inicia streaming com recursos reduzidos
-echo "🚀 Iniciando streaming com {streaming_cores} cores..."
-docker exec -d fraud_spark_master \
-    /opt/spark/bin/spark-submit \
-    --master spark://spark-master:7077 \
-    --total-executor-cores {streaming_cores} \
-    --executor-memory 1g \
-    --conf spark.streaming.stopGracefullyOnShutdown=true \
-    --conf spark.sql.adaptive.enabled=true \
-    /jobs/streaming/streaming_to_postgres.py
-
-# 4. Aguarda streaming iniciar e verifica
-sleep 10
-STREAMING_CHECK=$(docker exec fraud_spark_master pgrep -f "streaming_to_postgres" || echo "")
-if [ -n "$STREAMING_CHECK" ]; then
-    echo "✅ Streaming iniciado com {streaming_cores} cores (25%)"
-else
-    echo "⚠️ Streaming pode não ter iniciado - verifique logs"
+if [ "$WORKERS_ALIVE" -lt "2" ]; then
+    echo "⚠️ Menos de 2 workers ativos! Batch pode ser mais lento."
 fi
 
-echo "✅ Recursos preparados para batch (streaming: 25%, batch: 75%)"
+# Verifica cores disponíveis para batch
+CORES_TOTAL=$(echo $CLUSTER_INFO | python3 -c "import sys,json; print(json.load(sys.stdin).get('cores',0))" 2>/dev/null || echo "0")
+CORES_USED=$(echo $CLUSTER_INFO | python3 -c "import sys,json; print(json.load(sys.stdin).get('coresused',0))" 2>/dev/null || echo "0")
+
+echo "📊 Cores total: $CORES_TOTAL, Em uso: $CORES_USED"
+echo "✅ Batch usará {cores} cores dos workers dedicados"
+echo ""
+echo "ℹ️  NOTA: Streaming continua rodando nos workers 1-2 (não será interrompido)"
 """
 
 # ==========================================
 # COMANDO PARA RESTAURAR STREAMING (após batch)
 # Devolve recursos completos ao streaming
 # ==========================================
-RESTORE_STREAMING = """
-echo "🔄 Restaurando streaming para {full_cores} cores (100%)..."
+# VERIFICAÇÃO PÓS-BATCH
+# Confirma que streaming continua saudável
+# ==========================================
+VERIFY_STREAMING_HEALTHY = """
+echo "🔍 Verificando saúde do streaming após batch..."
 
-# 1. Verifica se streaming está rodando (com recursos reduzidos)
+# Verifica se streaming ainda está rodando
 STREAMING_PID=$(docker exec fraud_spark_master pgrep -f "streaming_to_postgres" || echo "")
 
 if [ -n "$STREAMING_PID" ]; then
-    echo "📍 Streaming encontrado (PID: $STREAMING_PID). Atualizando recursos..."
-    
-    # 2. Para o streaming reduzido
-    docker exec fraud_spark_master pkill -f "streaming_to_postgres" || true
-    
-    # 3. Aguarda processos finalizarem
-    sleep 10
+    echo "✅ Streaming continua ativo (PID: $STREAMING_PID)"
+else
+    echo "⚠️ Streaming não está rodando - pode precisar reiniciar manualmente"
+    echo "   Execute: ./scripts/start_streaming.sh"
 fi
 
-# 4. Reinicia streaming com recursos completos
-echo "🚀 Reiniciando streaming com {full_cores} cores..."
-docker exec -d fraud_spark_master \
-    /opt/spark/bin/spark-submit \
-    --master spark://spark-master:7077 \
-    --total-executor-cores {full_cores} \
-    --executor-memory 2g \
-    --conf spark.streaming.stopGracefullyOnShutdown=true \
-    --conf spark.sql.adaptive.enabled=true \
-    /jobs/streaming/streaming_to_postgres.py
+# Verifica recursos do cluster
+CLUSTER_INFO=$(curl -s http://spark-master:8080/json/ 2>/dev/null || curl -s http://localhost:8081/json/)
+CORES_USED=$(echo $CLUSTER_INFO | python3 -c "import sys,json; print(json.load(sys.stdin).get('coresused',0))" 2>/dev/null || echo "0")
 
-echo "✅ Streaming restaurado com {full_cores} cores (100%)"
+echo "📊 Cores em uso após batch: $CORES_USED"
+echo "✅ Batch concluído! Workers 3-4 liberados."
 """
 
 
-def restore_streaming_on_failure(context):
+def on_batch_failure(context):
     """
     Callback executado se qualquer task falhar.
-    Garante que streaming volta ao normal mesmo com erro no batch.
-    Envia notificação Discord sobre a falha.
+    Com workers dedicados, streaming NÃO precisa ser restaurado!
+    Apenas notifica Discord sobre a falha.
     """
-    import subprocess
-    
-    # Restaura streaming
-    print("⚠️ Pipeline falhou! Restaurando streaming para 100%...")
-    cmd = RESTORE_STREAMING.format(full_cores=STREAMING_FULL_CORES)
-    subprocess.run(cmd, shell=True, check=False)
-    print("✅ Streaming restaurado após falha")
-    
     # Notifica Discord sobre a falha
     dag_run = context.get('dag_run')
     task_instance = context.get('task_instance')
@@ -150,7 +127,7 @@ def restore_streaming_on_failure(context):
     
     # Identifica tasks que completaram
     completed_tasks = []
-    task_order = ['prepare_resources', 'bronze_ingestion', 'silver_transformation', 
+    task_order = ['check_resources', 'bronze_ingestion', 'silver_transformation', 
                   'gold_aggregation', 'load_to_postgres']
     
     failed_task = task_instance.task_id if task_instance else 'unknown'
@@ -166,6 +143,8 @@ def restore_streaming_on_failure(context):
         error_message=str(exception) if exception else 'Erro desconhecido',
         tasks_completed=completed_tasks
     )
+    
+    print("ℹ️  Workers dedicados: Streaming continua rodando normalmente nos workers 1-2")
 
 
 def notify_pipeline_start(**context):
@@ -206,13 +185,13 @@ def notify_pipeline_success(**context):
 with DAG(
     dag_id='medallion_pipeline',
     default_args=default_args,
-    description='Pipeline Medallion com gerenciamento de recursos Streaming/Batch (25%/75%)',
+    description='Pipeline Medallion com workers dedicados (Batch: workers 3-4, Streaming: workers 1-2)',
     start_date=datetime(2025, 12, 1),
     # Executa diariamente às 03:00 (horário de menor uso do sistema)
     schedule_interval='0 3 * * *',
     catchup=False,
-    tags=['medallion', 'spark', 'producao', 'resource-management', 'batch'],
-    on_failure_callback=restore_streaming_on_failure,
+    tags=['medallion', 'spark', 'producao', 'batch', 'workers-dedicados'],
+    on_failure_callback=on_batch_failure,
 ) as dag:
 
     # ==========================================
@@ -224,12 +203,12 @@ with DAG(
     )
 
     # ==========================================
-    # TASK 0: PREPARAR RECURSOS
-    # Reduz streaming para liberar cores para batch
+    # TASK 0: VERIFICAR RECURSOS
+    # Verifica workers batch disponíveis (NÃO para streaming)
     # ==========================================
-    prepare_resources = BashOperator(
-        task_id='prepare_resources',
-        bash_command=REDUCE_STREAMING.format(streaming_cores=STREAMING_CORES),
+    check_resources = BashOperator(
+        task_id='check_resources',
+        bash_command=CHECK_BATCH_WORKERS.format(cores=BATCH_CORES),
         retries=1,
         retry_delay=timedelta(seconds=30),
     )
@@ -241,6 +220,7 @@ with DAG(
         task_id='bronze_ingestion',
         bash_command=SPARK_SUBMIT_BATCH.format(
             cores=BATCH_CORES,
+            memory=BATCH_MEMORY,
             script='batch_bronze_from_raw.py'
         ),
     )
@@ -252,6 +232,7 @@ with DAG(
         task_id='silver_transformation',
         bash_command=SPARK_SUBMIT_BATCH.format(
             cores=BATCH_CORES,
+            memory=BATCH_MEMORY,
             script='batch_silver_from_bronze.py'
         ),
     )
@@ -263,6 +244,7 @@ with DAG(
         task_id='gold_aggregation',
         bash_command=SPARK_SUBMIT_BATCH.format(
             cores=BATCH_CORES,
+            memory=BATCH_MEMORY,
             script='batch_gold_from_silver.py'
         ),
     )
@@ -274,17 +256,18 @@ with DAG(
         task_id='load_to_postgres',
         bash_command=SPARK_SUBMIT_BATCH.format(
             cores=BATCH_CORES,
+            memory=BATCH_MEMORY,
             script='batch_postgres_from_gold.py'
         ),
     )
 
     # ==========================================
-    # TASK 5: RESTAURAR RECURSOS
-    # Devolve recursos completos ao streaming
+    # TASK 5: VERIFICAR STREAMING
+    # Confirma que streaming continua saudável
     # ==========================================
-    restore_resources = BashOperator(
-        task_id='restore_resources',
-        bash_command=RESTORE_STREAMING.format(full_cores=STREAMING_FULL_CORES),
+    verify_streaming = BashOperator(
+        task_id='verify_streaming',
+        bash_command=VERIFY_STREAMING_HEALTHY,
         trigger_rule='all_done',  # Executa mesmo se tasks anteriores falharem
     )
 
@@ -299,6 +282,6 @@ with DAG(
 
     # ==========================================
     # DEPENDÊNCIAS - Define a ordem de execução
-    # notify_start → prepare_resources → bronze → silver → gold → postgres → restore_resources → notify_success
+    # notify_start → check_resources → bronze → silver → gold → postgres → verify_streaming → notify_success
     # ==========================================
-    notify_start >> prepare_resources >> bronze >> silver >> gold >> postgres >> restore_resources >> notify_success
+    notify_start >> check_resources >> bronze >> silver >> gold >> postgres >> verify_streaming >> notify_success

@@ -32,7 +32,7 @@ from config import apply_s3a_configs
 # =============================================================================
 SILVER_PATH = "s3a://fraud-data/silver/batch/transactions"
 GOLD_PATH = "s3a://fraud-data/gold/batch"
-REPARTITION_COUNT = 16
+REPARTITION_COUNT = 8  # Alinhado com 4 cores totais
 
 def main():
     print("=" * 70)

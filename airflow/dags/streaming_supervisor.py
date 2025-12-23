@@ -4,16 +4,19 @@
 
 Este DAG atua como supervisor dos jobs de streaming:
 1. Verifica se o cluster Spark está saudável
-2. Verifica se os jobs de streaming estão rodando
-3. Reinicia jobs que caíram
+2. Verifica se o job de streaming está rodando
+3. Reinicia o job se cair
 4. Envia alertas se houver problemas
 
 Schedule: A cada 5 minutos
 Recursos: Não consome cores do Spark (roda no Airflow)
 
+ARQUITETURA DE WORKERS DEDICADOS:
+- Workers 1-2: STREAMING (6GB, 2 cores) - Monitorado por este DAG
+- Workers 3-4: BATCH (6GB, 2 cores) - Gerenciado pelo medallion_pipeline
+
 Jobs monitorados:
-- streaming_to_postgres (4 cores) - Kafka → PostgreSQL
-- streaming_realtime_dashboard (2 cores) - Métricas para Metabase
+- streaming_to_postgres (2 cores) - Kafka → PostgreSQL
 """
 
 from airflow import DAG
@@ -39,24 +42,19 @@ from discord_notifier import (
 SPARK_MASTER_URL = "http://spark-master:8080/json/"  # Dentro do Docker
 SPARK_MASTER_CONTAINER = "fraud_spark_master"
 
-# Configuração dos jobs de streaming
+# Configuração dos jobs de streaming (APENAS streaming_to_postgres)
+# streaming_realtime_dashboard removido - Metabase faz agregações via SQL
 STREAMING_JOBS = {
     "streaming_to_postgres": {
         "script": "/jobs/streaming/streaming_to_postgres.py",
         "cores": 2,
-        "memory": "1g",
+        "memory": "2g",
         "process_name": "streaming_to_postgres"
-    },
-    "streaming_realtime_dashboard": {
-        "script": "/jobs/streaming/streaming_realtime_dashboard.py",
-        "cores": 2,
-        "memory": "1g",
-        "process_name": "streaming_realtime_dashboard"
     }
 }
 
-TOTAL_STREAMING_CORES = 4  # 100% do cluster (2 + 2, cluster tem 4 cores)
-MAX_CLUSTER_USAGE = 1.0    # Limite de 100% (dedicado para streaming)
+TOTAL_STREAMING_CORES = 2  # Workers 1-2 dedicados ao streaming
+MAX_CLUSTER_USAGE = 0.5    # Streaming usa 50% do cluster (2 de 4 cores)
 
 default_args = {
     'owner': 'abner',

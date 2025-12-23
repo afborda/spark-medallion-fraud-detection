@@ -111,7 +111,10 @@ services:
           memory: 512M
   
   # ============================================
-  # SPARK CLUSTER - 1 Master + 5 Workers (3GB cada)
+  # SPARK CLUSTER - 1 Master + 2 Workers ROBUSTOS
+  # Workers 1-2: 2 cores + 5GB cada = 4 cores + 10GB total
+  # Container: 6GB (5GB worker + 1GB overhead JVM)
+  # 
   # IMPORTANTE: Spark 3.5.x usa Hadoop 3.3.x + AWS SDK v1
   # que é compatível com MinIO via HTTP (path-style access)
   # Spark 4.x usa AWS SDK v2 que tem bug com endpoints HTTP customizados
@@ -169,6 +172,11 @@ services:
       - "traefik.http.routers.spark-jobs.service=spark-jobs"
       - "traefik.http.services.spark-jobs.loadbalancer.server.port=4040"
 
+  # ============================================
+  # SPARK WORKERS ROBUSTOS (2 workers × 2 cores × 5GB)
+  # Usados tanto para streaming quanto batch
+  # Streaming usa 2 cores (50%), Batch usa 4 cores (100%)
+  # ============================================
   spark-worker-1:
     image: spark-fraud:baked
     container_name: fraud_spark_worker_1
@@ -176,8 +184,8 @@ services:
       - spark-master
     command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     environment:
-      SPARK_WORKER_CORES: 1
-      SPARK_WORKER_MEMORY: 2500m
+      SPARK_WORKER_CORES: 2
+      SPARK_WORKER_MEMORY: 5g
       SPARK_WORKER_WEBUI_PORT: 8081
       MINIO_ENDPOINT: ${MINIO_ENDPOINT}
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
@@ -194,11 +202,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1.0'
-          memory: 2500M
+          cpus: '2.0'
+          memory: 6G
         reservations:
-          cpus: '0.5'
-          memory: 1G
+          cpus: '1.0'
+          memory: 3G
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081"]
       interval: 30s
@@ -214,8 +222,8 @@ services:
       - spark-master
     command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     environment:
-      SPARK_WORKER_CORES: 1
-      SPARK_WORKER_MEMORY: 2500m
+      SPARK_WORKER_CORES: 2
+      SPARK_WORKER_MEMORY: 5g
       SPARK_WORKER_WEBUI_PORT: 8081
       MINIO_ENDPOINT: ${MINIO_ENDPOINT}
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
@@ -232,11 +240,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1.0'
-          memory: 2500M
+          cpus: '2.0'
+          memory: 6G
         reservations:
-          cpus: '0.5'
-          memory: 1G
+          cpus: '1.0'
+          memory: 3G
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081"]
       interval: 30s
@@ -245,83 +253,7 @@ services:
       start_period: 60s
     restart: unless-stopped
 
-  spark-worker-3:
-    image: spark-fraud:baked
-    container_name: fraud_spark_worker_3
-    depends_on:
-      - spark-master
-    command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
-    environment:
-      SPARK_WORKER_CORES: 1
-      SPARK_WORKER_MEMORY: 2500m
-      SPARK_WORKER_WEBUI_PORT: 8081
-      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
-      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
-      POSTGRES_DB: ${POSTGRES_DB:-fraud_db}
-      POSTGRES_USER: ${POSTGRES_USER:-fraud_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fraud123}
-    ports:
-      - "8084:8081"
-    volumes:
-      - ./data:/data
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 2500M
-        reservations:
-          cpus: '0.5'
-          memory: 1G
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-    restart: unless-stopped
-
-  spark-worker-4:
-    image: spark-fraud:baked
-    container_name: fraud_spark_worker_4
-    depends_on:
-      - spark-master
-    command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
-    environment:
-      SPARK_WORKER_CORES: 1
-      SPARK_WORKER_MEMORY: 2500m
-      SPARK_WORKER_WEBUI_PORT: 8081
-      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
-      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
-      POSTGRES_DB: ${POSTGRES_DB:-fraud_db}
-      POSTGRES_USER: ${POSTGRES_USER:-fraud_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fraud123}
-    ports:
-      - "8085:8081"
-    volumes:
-      - ./data:/data
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 2500M
-        reservations:
-          cpus: '0.5'
-          memory: 1G
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-    restart: unless-stopped
-
-  # Worker 5 removido para economizar recursos
+  # Workers 3-4 removidos - agora usando 2 workers robustos
 
   # ============================================
   # METABASE - Business Intelligence Dashboard
@@ -406,9 +338,9 @@ services:
 
 # ============================================
 # FRAUD-GENERATOR BATCH - Gera dados em lote para MinIO
-# Recursos: 60% CPU, 8GB RAM
-# Uso: SIZE=30GB docker compose up -d fraud-generator-batch
-# Ou:  SIZE=30GB docker compose run --rm fraud-generator-batch
+# Recursos: 3 CPUs, 4GB RAM (otimizado para coexistir com infra)
+# Uso: docker compose run --rm fraud-generator-batch
+# Default: 5GB de dados (calculado para 4GB RAM disponível)
 # ============================================
   fraud-generator-batch:
     image: brazilian-fraud-generator:latest
@@ -420,17 +352,17 @@ services:
       MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
     command: >
       generate.py
-        --size ${SIZE:-1GB}
+        --size ${SIZE:-5GB}
         --type transactions
         --format ${FORMAT:-parquet}
         --fraud-rate ${FRAUD_RATE:-0.05}
-        --workers ${WORKERS:-4}
+        --workers ${WORKERS:-3}
         --output minio://fraud-data/raw/batch
     deploy:
       resources:
         limits:
-          cpus: '4.0'
-          memory: 6G
+          cpus: '3.0'
+          memory: 4G
         reservations:
-          cpus: '2.0'
+          cpus: '1.5'
           memory: 2G

@@ -19,7 +19,7 @@
 | Dashboard | URL | Descrição |
 |-----------|-----|-----------|
 | 🌊 **Real-Time (Streaming)** | [Dashboard Streaming](https://metabase.abnerfonseca.com.br/public/dashboard/d43f14da-5c01-4ab4-a4a9-8e54d0bcc5dd) | Fraudes em tempo real (atualiza a cada 1 min) |
-| 📦 **Batch Analytics** | [Dashboard Batch](https://metabase.abnerfonseca.com.br/public/dashboard/cd809bc2-c8cd-442e-afae-30a17ac50a0f) | Análise histórica de 51M transações |
+| 📦 **Batch Analytics** | [Dashboard Batch](http://metabase.abnerfonseca.com.br/public/dashboard/3cc49faf-2860-413a-9da8-ff82ffaba34a) | Análise histórica de 51M transações |
 
 ### 🖥️ Infraestrutura
 

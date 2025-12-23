@@ -109,17 +109,21 @@ def streaming_health_check():
 
     @task
     def restart_streaming():
-        """Reinicia o streaming job"""
-        print("🔄 Reiniciando Streaming Job...")
+        """Reinicia o streaming job (APENAS streaming_to_postgres)"""
+        print("🔄 Reiniciando Streaming Job (streaming_to_postgres)...")
         
-        # Comando para reiniciar (mesmo que você rodou manualmente!)
+        # ATUALIZADO: Usa streaming_to_postgres no cluster mode (workers 1-2 dedicados)
+        # streaming_realtime_dashboard foi REMOVIDO para evitar competição
         cmd = """
         docker exec -d fraud_spark_master /opt/spark/bin/spark-submit \
-          --master 'local[2]' \
-          --jars /opt/spark/jars/spark-sql-kafka-0-10_2.12-3.5.3.jar,/opt/spark/jars/kafka-clients-3.5.1.jar,/opt/spark/jars/spark-token-provider-kafka-0-10_2.12-3.5.3.jar,/opt/spark/jars/postgresql-42.7.4.jar \
-          --conf spark.driver.memory=2g \
-          --conf spark.executor.memory=2g \
-          /jobs/streaming/streaming_realtime_dashboard.py
+          --master spark://fraud_spark_master:7077 \
+          --deploy-mode client \
+          --total-executor-cores 2 \
+          --executor-memory 2g \
+          --driver-memory 1g \
+          --conf spark.sql.shuffle.partitions=4 \
+          --conf spark.app.name=Streaming_Kafka_to_PostgreSQL \
+          /jobs/streaming/streaming_to_postgres.py
         """
         
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
@@ -138,6 +142,9 @@ def streaming_health_check():
         TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
         TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
         
+        # === DISCORD (usando variáveis de ambiente) ===
+        DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL")
+        
         message = f"""
 🚨 *ALERTA: Streaming Reiniciado*
 
@@ -149,6 +156,32 @@ Horário: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
 _Verifique os logs para mais detalhes._
         """
+        
+        # Envia pro Discord (se configurado)
+        if DISCORD_WEBHOOK_URL:
+            try:
+                embed = {
+                    "title": "🚨 ALERTA: Streaming Reiniciado",
+                    "description": "O job de streaming foi reiniciado automaticamente.",
+                    "color": 15158332,  # Vermelho
+                    "fields": [
+                        {"name": "Status", "value": str(restart_result.get('status')), "inline": True},
+                        {"name": "Return Code", "value": str(restart_result.get('return_code')), "inline": True},
+                        {"name": "Horário", "value": datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "inline": False}
+                    ],
+                    "footer": {"text": "Verifique os logs para mais detalhes."}
+                }
+                response = requests.post(
+                    DISCORD_WEBHOOK_URL,
+                    json={"username": "🤖 Streaming Health Check", "embeds": [embed]},
+                    headers={"Content-Type": "application/json"},
+                    timeout=10
+                )
+                print(f"✅ Alerta enviado para Discord! Response: {response.status_code}")
+            except Exception as e:
+                print(f"❌ Erro ao enviar Discord: {e}")
+        else:
+            print("⚠️ Discord não configurado. Configure a variável DISCORD_WEBHOOK_URL")
         
         # Envia pro Telegram (se configurado)
         if TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID:
@@ -163,7 +196,7 @@ _Verifique os logs para mais detalhes._
             except Exception as e:
                 print(f"❌ Erro ao enviar Telegram: {e}")
         else:
-            print("⚠️ Telegram não configurado. Configure as variáveis telegram_bot_token e telegram_chat_id")
+            print("⚠️ Telegram não configurado. Configure as variáveis TELEGRAM_BOT_TOKEN e TELEGRAM_CHAT_ID")
         
         return {'alert_sent': True}
 

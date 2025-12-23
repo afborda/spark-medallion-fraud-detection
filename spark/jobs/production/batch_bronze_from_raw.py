@@ -40,11 +40,13 @@ RAW_PATH_FLAT = "s3a://fraud-data/raw/batch"          # fraud-generator original
 RAW_PATH_PARTITIONED = "s3a://fraud-data/raw"          # estrutura particionada
 BRONZE_PATH = "s3a://fraud-data/bronze/batch"
 
-# Otimização de particionamento
-REPARTITION_COUNT = 16
+# Otimização de particionamento (alinhado com 4 cores totais)
+REPARTITION_COUNT = 8
 MAX_PARTITION_BYTES = 134217728  # 128MB em bytes
 
 # Schema das transações do Brazilian Fraud Data Generator (v4-beta - English)
+# NOTA: installments e time_since_last_txn_min são Double porque o fraud-generator
+# pode gerar valores decimais ou nulos que são salvos como Double no Parquet
 transaction_schema = StructType([
     StructField("transaction_id", StringType(), True),
     StructField("customer_id", StringType(), True),
@@ -66,7 +68,7 @@ transaction_schema = StructType([
     StructField("card_number_hash", StringType(), True),
     StructField("card_brand", StringType(), True),
     StructField("card_type", StringType(), True),
-    StructField("installments", IntegerType(), True),
+    StructField("installments", DoubleType(), True),  # Double no Parquet original
     StructField("card_entry", StringType(), True),
     StructField("cvv_validated", BooleanType(), True),
     StructField("auth_3ds", BooleanType(), True),
@@ -74,7 +76,7 @@ transaction_schema = StructType([
     StructField("pix_key_destination", StringType(), True),
     StructField("destination_bank", StringType(), True),
     StructField("distance_from_last_txn_km", DoubleType(), True),
-    StructField("time_since_last_txn_min", IntegerType(), True),
+    StructField("time_since_last_txn_min", DoubleType(), True),  # Double no Parquet original
     StructField("transactions_last_24h", IntegerType(), True),
     StructField("accumulated_amount_24h", DoubleType(), True),
     StructField("unusual_time", BooleanType(), True),
@@ -116,6 +118,9 @@ def main():
         .config("spark.sql.parquet.datetimeRebaseModeInRead", "CORRECTED")
         .config("spark.sql.parquet.outputTimestampType", "TIMESTAMP_MICROS")
         .config("spark.sql.legacy.parquet.nanosAsLong", "true")
+        # FIX: Suporte para TIMESTAMP(NANOS) do PyArrow - converte para TIMESTAMP_MICROS
+        .config("spark.sql.parquet.inferTimestampNTZ.enabled", "true")
+        .config("spark.sql.parquet.enableVectorizedReader", "false")
     ).getOrCreate()
     
     spark.sparkContext.setLogLevel("WARN")
@@ -133,18 +138,19 @@ def main():
     # TENTATIVA 1: Estrutura plana do fraud-generator (raw/batch/) - Parquet
     print("\n🔍 Tentando estrutura plana (fraud-generator)...")
     try:
+        # Ler diretamente o diretório transactions_*.parquet
+        # MinIO armazena como diretórios, então lemos o path diretamente
+        # NÃO usar schema fixo - deixar inferir para compatibilidade
         df_test = spark.read \
-            .option("recursiveFileLookup", "true") \
-            .option("pathGlobFilter", "transactions_*.parquet") \
-            .parquet(RAW_PATH_FLAT)
+            .parquet(f"{RAW_PATH_FLAT}/transactions_*.parquet")
         
         if df_test.head(1):
             df_raw = df_test
             file_format = "parquet"
-            source_path = RAW_PATH_FLAT
+            source_path = f"{RAW_PATH_FLAT}/transactions_*.parquet"
             print(f"   ✅ Encontrados arquivos Parquet em {RAW_PATH_FLAT}")
     except Exception as e:
-        print(f"   ⚠️ Parquet não encontrado em raw/batch/")
+        print(f"   ⚠️ Parquet não encontrado em raw/batch/: {e}")
     
     # TENTATIVA 2: Estrutura plana JSONL (raw/batch/)
     if df_raw is None:
@@ -168,6 +174,7 @@ def main():
         print("\n🔍 Tentando estrutura particionada...")
         try:
             df_test = spark.read \
+                .schema(transaction_schema) \
                 .option("recursiveFileLookup", "true") \
                 .option("pathGlobFilter", "transactions_*.parquet") \
                 .option("basePath", RAW_PATH_PARTITIONED) \
@@ -179,7 +186,7 @@ def main():
                 source_path = f"{RAW_PATH_PARTITIONED}/year=*/month=*/day=*/"
                 print(f"   ✅ Encontrados arquivos Parquet particionados")
         except Exception as e:
-            print(f"   ⚠️ Parquet particionado não encontrado")
+            print(f"   ⚠️ Parquet particionado não encontrado: {e}")
     
     # TENTATIVA 4: Estrutura particionada JSONL
     if df_raw is None:
