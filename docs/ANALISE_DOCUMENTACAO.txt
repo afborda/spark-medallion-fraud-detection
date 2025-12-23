@@ -1,0 +1,84 @@
+# 📋 ANÁLISE E LIMPEZA DE DOCUMENTAÇÃO
+
+## Documentos Identificados (30 arquivos)
+
+### ✅ CRÍTICOS - Manter e Atualizar
+1. **README.md** / **README.pt-BR.md** - Documentação principal (RAIZ)
+2. **ARQUITETURA_COMPLETA.md** - Arquitetura do sistema
+3. **GUIA_COMPLETO_ESTUDO.md** - Guia para reprodução (840 linhas!)
+4. **ANALISE_PROJETO_STATUS.md** - Status atual (NOVO - Dec 23) ⭐
+5. **REGRAS_FRAUDE.md** - Lógica de detecção
+6. **REFERENCIA_RAPIDA.md** - Comandos rápidos
+
+### 🔄 IMPORTANTE - Manter mas Reorganizar
+7. **METABASE_GUIA_RAPIDO.md** - Guia Metabase (NOVO - Dec 23) ⭐
+8. **METABASE_QUERIES.sql** - Queries SQL (NOVO - Dec 23) ⭐
+9. **AJUSTES_REPOSITORIO_FRAUD_GENERATOR.md** - Mudanças lib (NOVO - Dec 23) ⭐
+10. **ERROS_CONHECIDOS.md** - Troubleshooting
+
+### ⚠️ DUPLICADOS / SOBREPOSIÇÃO
+- **PROBLEMA_KAFKA_3M_EXPLICADO.md** + **KAFKA_3M_STREAMING_PROBLEM.md** → UNIFICAR
+- **COMPARACAO_VERSOES_GERACAO.md** + **COMPARATIVO_VERSOES_V1_A_V4.md** → UNIFICAR
+- **MELHORIAS_FUTURAS.md** + **MELHORIAS_IMPLEMENTACAO.md** → UNIFICAR
+- **DASHBOARD_REALTIME.md** + **METABASE_GUIA_RAPIDO.md** → UNIFICAR
+- **AJUSTES_REALIZADOS.md** + **ANALISE_BOAS_PRATICAS_MERCADO.md** → REMOVER (antigos)
+
+### 🗑️ DESATUALIZADO / ESPECÍFICO DE DESENVOLVIMENTO
+- **LEARNING_PROGRESS.md** - Notebook pessoal (40KB, desatualizado)
+- **PROJECT_PLAN.md** - Plano antigo (69KB, obsoleto)
+- **PROPOSTA_OTIMIZACAO_LIB.md** - Proposta que virou realidade
+- **ANALISE_PERFORMANCE_30GB.md** - Teste específico (resolvido)
+- **GIL_OPTIMIZATION_TECHNICAL_ANALYSIS.md** - Análise técnica (resolvida)
+- **BAKING_DEPENDENCIES.md** - Conceito não aplicado
+- **BENCHMARK_HAVERSINE.md** - Benchmark específico
+- **BENCHMARK_JDBC_WRITE.md** - Benchmark específico
+- **OTIMIZACAO_GERACAO_DADOS.md** - Notas de otimização
+- **RECURSOS_VPS_ATUALIZADOS.md** - Hardware specs (info dispersa)
+- **DASHBOARD_REALTIME.md** - Conteúdo duplicado em METABASE_GUIA
+
+### 🔧 AÇÕES RECOMENDADAS
+
+#### 1. UNIFICAR (Criar novo, manter referências)
+- `KAFKA_ISSUES_COMPLETE_GUIDE.md` ← PROBLEMA_KAFKA_3M + KAFKA_3M_STREAMING
+- `GENERATOR_VERSIONS.md` ← COMPARACAO_VERSOES_GERACAO + COMPARATIVO_VERSOES_V1_A_V4
+- `IMPROVEMENTS.md` ← MELHORIAS_FUTURAS + MELHORIAS_IMPLEMENTACAO
+- `DASHBOARD_SETUP.md` ← DASHBOARD_REALTIME + METABASE_GUIA (já melhorado)
+
+#### 2. MANTER E ATUALIZAR
+- README.md (verificar links)
+- ARQUITETURA_COMPLETA.md
+- GUIA_COMPLETO_ESTUDO.md
+- ANALISE_PROJETO_STATUS.md
+- REGRAS_FRAUDE.md
+- REFERENCIA_RAPIDA.md
+- METABASE_GUIA_RAPIDO.md
+- METABASE_QUERIES.sql
+- AJUSTES_REPOSITORIO_FRAUD_GENERATOR.md
+- ERROS_CONHECIDOS.md
+
+#### 3. REMOVER / ARQUIVAR
+- LEARNING_PROGRESS.md (muito antigo)
+- PROJECT_PLAN.md (obsoleto)
+- AJUSTES_REALIZADOS.md (antigo)
+- ANALISE_BOAS_PRATICAS_MERCADO.md (antigo)
+- PROPOSTA_OTIMIZACAO_LIB.md (virou realidade)
+- ANALISE_PERFORMANCE_30GB.md (problema resolvido)
+- GIL_OPTIMIZATION_TECHNICAL_ANALYSIS.md (análise histórica)
+- BAKING_DEPENDENCIES.md (não aplicável)
+- BENCHMARK_HAVERSINE.md (teste pontual)
+- BENCHMARK_JDBC_WRITE.md (teste pontual)
+- OTIMIZACAO_GERACAO_DADOS.md (notas dispersas)
+- RECURSOS_VPS_ATUALIZADOS.md (info desatualizada)
+- DASHBOARD_REALTIME.md (parcialmente duplicado)
+
+---
+
+## 📊 TAMANHO TOTAL
+- **ANTES:** 30 arquivos = ~480 KB
+- **DEPOIS:** 10-12 arquivos = ~150 KB (menos 68%)
+
+## ✨ RESULTADO ESPERADO
+- ✅ Documentação limpa e organizada
+- ✅ Sem duplicação
+- ✅ Fácil de navegar
+- ✅ Atualizada com mudanças recentes (Dec 23)

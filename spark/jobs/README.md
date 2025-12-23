@@ -174,7 +174,7 @@ docker compose ps
 
 ## 📚 Documentação Relacionada
 
-- [PROJECT_PLAN.md](../../PROJECT_PLAN.md) - Plano do projeto
-- [LEARNING_PROGRESS.md](../../LEARNING_PROGRESS.md) - Progresso de aprendizado
+- [docs/INDEX.md](../../docs/INDEX.md) - Índice de documentação
 - [docs/GUIA_COMPLETO_ESTUDO.md](../../docs/GUIA_COMPLETO_ESTUDO.md) - Guia completo
+- [docs/ARQUITETURA_COMPLETA.md](../../docs/ARQUITETURA_COMPLETA.md) - Arquitetura
 - [docs/REFERENCIA_RAPIDA.md](../../docs/REFERENCIA_RAPIDA.md) - Referência rápida
